@@ -1,0 +1,3 @@
+This file is added by the pull request.
+It has a second line.
+And a third line without a final newline.

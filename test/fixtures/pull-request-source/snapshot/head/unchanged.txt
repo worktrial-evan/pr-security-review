@@ -1,0 +1,2 @@
+This file does not change.
+It stays the same in both trees.
