@@ -10,5 +10,7 @@
     "outDir": "../../node_modules/.cache/typescript/reachability"
   },
   "include": ["./**/*.ts"],
+  // The sample repository imports packages that are not installed, so it stays out of bun check
+  "exclude": ["./fixtures/sample-repo"],
   "references": [{ "path": "../shared" }]
 }
