@@ -2,6 +2,7 @@
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { z } from 'zod'
+import { runGit } from '@/pull-request-source/git-command'
 import type { AuditSink } from '@/shared/audit'
 import type { BenchmarkSplit } from '@/shared/benchmark'
 import { resolveCacheDirectory } from '@/shared/cache-directory'
@@ -21,7 +22,6 @@ import {
   resolveRepositoryRoot,
 } from './cases'
 import { describeError } from './error-messages'
-import { cleanGitEnvironment } from './git-environment'
 import { renderResultsPage } from './results-page'
 import {
   type BenchmarkRunResults,
@@ -329,18 +329,16 @@ function buildRunResults({
 
 // read the sha of the repository's head commit, or an empty string when git cannot say
 async function readRepositoryGitSha(): Promise<string> {
-  // ask git for the head commit of the repository
-  const repositoryRoot = resolveRepositoryRoot()
-  const revParseResult = await Bun.$`git -C ${repositoryRoot} rev-parse HEAD`
-    .env(cleanGitEnvironment())
-    .nothrow()
-    .quiet()
-
-  // an empty sha stands for a tree git cannot describe
-  if (revParseResult.exitCode !== 0) {
+  // ask git for the head commit of the repository. an empty sha stands for a tree git cannot describe
+  try {
+    const revParseOutput = await runGit({
+      repoPath: resolveRepositoryRoot(),
+      gitArguments: ['rev-parse', 'HEAD'],
+    })
+    return revParseOutput.trim()
+  } catch {
     return ''
   }
-  return revParseResult.stdout.toString().trim()
 }
 
 // read fetchedAt from the snapshot file of the advisory cache, or an empty string when it is missing or malformed

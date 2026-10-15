@@ -1,13 +1,13 @@
 // opens the pull request source of one benchmark case: a snapshot source over its trees or a git source over its shas, with an unreachable repository classified as a skip
 import { join } from 'node:path'
+import { SnapshotPullRequestSource } from '@/pull-request-source/snapshot-pull-request-source'
 import type { PullRequestSource } from '@/shared/pull-request-source'
+import {
+  OfflineCloneError,
+  openBenchmarkRepository,
+} from './benchmark-repository'
 import type { LoadedBenchmarkCase } from './cases'
 import { describeError } from './error-messages'
-import {
-  GitPullRequestSource,
-  OfflineCloneError,
-} from './git-pull-request-source'
-import { SnapshotPullRequestSource } from './snapshot-pull-request-source'
 
 // the outcome of opening a case's pull request source
 export type PullRequestSourceOpen =
@@ -34,8 +34,8 @@ export async function openPullRequestSource({
     return {
       kind: 'opened',
       pullRequestSource: new SnapshotPullRequestSource({
-        baseDirectory: join(caseDirectory, 'base'),
-        headDirectory: join(caseDirectory, 'head'),
+        baseDir: join(caseDirectory, 'base'),
+        headDir: join(caseDirectory, 'head'),
       }),
     }
   }
@@ -43,7 +43,7 @@ export async function openPullRequestSource({
   // a git case clones into the cache. an unreachable repository skips the case, any other failure fails it
   const { repoUrl, baseSha, headSha } = benchmarkCase.source
   try {
-    const pullRequestSource = await GitPullRequestSource.open({
+    const pullRequestSource = await openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha,

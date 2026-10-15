@@ -1,5 +1,6 @@
 // tests for the results page: the metrics rows, the case rows with their filter attributes, the warnings and html escaping
 import { expect, test } from 'bun:test'
+import { emptyValueText } from '@/report/report-format'
 import { codeReviewFindingSample } from '@/shared/finding.samples'
 import { renderResultsPage } from './results-page'
 import type { BenchmarkRunResults } from './run-results'
@@ -83,7 +84,7 @@ test('renders one row per case with the attributes the filters read and the form
   )
   expect(pageHtml).toContain('<td class="number">$0.0125</td>')
   expect(pageHtml).toContain('<td class="number">1500 ms</td>')
-  expect(pageHtml).toContain('<dt>Model ids</dt><dd>-</dd>')
+  expect(pageHtml).toContain(`<dt>Model ids</dt><dd>${emptyValueText}</dd>`)
   expect(pageHtml).toContain('<dt>LLM cache used</dt><dd>false</dd>')
 })
 

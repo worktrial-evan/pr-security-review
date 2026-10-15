@@ -1,4 +1,7 @@
-// renders the results of a benchmark run as a self-contained html page with a metrics table and a filterable per-case table
+// renders the results of a benchmark run as a self-contained html page with a metrics table and a filterable per-case table, on the report module's escaping, styles and value formats
+import { escapeHtml } from '@/report/html-escape'
+import { pageStyle } from '@/report/page-style'
+import { emptyValueText, formatCostUsd } from '@/report/report-format'
 import { benchmarkCategories, benchmarkSplits } from '@/shared/benchmark'
 import { detectorKinds } from '@/shared/finding'
 import type { BenchmarkRunResults } from './run-results'
@@ -26,19 +29,17 @@ const caseFilters: CaseFilter[] = [
   { attribute: 'status', label: 'Status', values: benchmarkCaseStatuses },
 ]
 
-// the styles of the page, inline so the file needs nothing else
-const pageStyles = `
-  body { font-family: system-ui, sans-serif; margin: 2rem; color: #222; }
-  h1, h2 { font-weight: 600; }
+// the rules the benchmark tables need on top of the report module's stylesheet
+const benchmarkPageStyle = `
   table { border-collapse: collapse; margin-bottom: 2rem; }
-  th, td { border: 1px solid #ccc; padding: 0.3rem 0.6rem; text-align: left; }
-  th { background: #f3f3f3; }
+  th, td { border: 1px solid var(--border); padding: 0.3rem 0.6rem; text-align: left; }
+  th { background: var(--surface); }
   td.number { text-align: right; font-variant-numeric: tabular-nums; }
   dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
   dt { font-weight: 600; }
   dd { margin: 0; }
   .filters { display: flex; gap: 1rem; margin-bottom: 1rem; }
-  .warning { color: #a00; }
+  .warning { color: var(--critical); }
 `
 
 // the script that hides the case rows the selects do not match
@@ -76,7 +77,7 @@ export function renderResultsPage(results: BenchmarkRunResults): string {
 <head>
 <meta charset="utf-8">
 <title>${escapeHtml(title)}</title>
-<style>${pageStyles}</style>
+<style>${pageStyle}${benchmarkPageStyle}</style>
 </head>
 <body>
 <h1>${escapeHtml(title)}</h1>
@@ -177,7 +178,7 @@ function renderTotals(results: BenchmarkRunResults): string {
   const { score } = results
   return `<dl>
 <dt>False positives on clean cases</dt><dd>${score.falsePositivesOnClean}</dd>
-<dt>Total cost</dt><dd>${formatCost(score.totalCostUsd)}</dd>
+<dt>Total cost</dt><dd>${formatCostUsd(score.totalCostUsd)}</dd>
 <dt>Total duration</dt><dd>${formatDuration(score.totalDurationMs)}</dd>
 </dl>`
 }
@@ -213,7 +214,7 @@ function renderCaseTable(caseDetails: BenchmarkCaseDetail[]): string {
 <td class="number">${caseDetail.truePositives}</td>
 <td class="number">${caseDetail.falsePositives}</td>
 <td class="number">${caseDetail.falseNegatives}</td>
-<td class="number">${formatCost(caseDetail.costUsd)}</td>
+<td class="number">${formatCostUsd(caseDetail.costUsd)}</td>
 <td class="number">${formatDuration(caseDetail.durationMs)}</td>
 <td>${escapeHtml(caseDetail.errorMessage ?? '')}</td>
 </tr>`,
@@ -224,12 +225,12 @@ function renderCaseTable(caseDetails: BenchmarkCaseDetail[]): string {
 </table>`
 }
 
-// write a record as key=value pairs, or a dash when it is empty
+// write a record as key=value pairs, or the empty value marker when it is empty
 function formatRecord(record: Record<string, string>): string {
-  // an empty record shows a dash
+  // an empty record shows the marker
   const entries = Object.entries(record)
   if (entries.length === 0) {
-    return '-'
+    return emptyValueText
   }
 
   // join the pairs
@@ -241,29 +242,7 @@ function formatRatio(ratio: number): string {
   return ratio.toFixed(3)
 }
 
-// write a cost in dollars with four decimals
-function formatCost(costUsd: number): string {
-  return `$${costUsd.toFixed(4)}`
-}
-
 // write a duration in whole milliseconds
 function formatDuration(durationMs: number): string {
   return `${Math.round(durationMs)} ms`
-}
-
-// the characters html gives a meaning and their entities
-const htmlEntitiesByCharacter: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-}
-
-// replace every character html gives a meaning with its entity
-function escapeHtml(text: string): string {
-  return text.replace(
-    /[&<>"']/g,
-    (character) => htmlEntitiesByCharacter[character] ?? character,
-  )
 }

@@ -1,5 +1,6 @@
 // validates the benchmark corpus against every check in the corpus spec: the layout and labels of each case, the counts by category and split, and the fixtures the cases derive from
 import { basename, join } from 'node:path'
+import { SnapshotPullRequestSource } from '@/pull-request-source/snapshot-pull-request-source'
 import type { Advisory } from '@/shared/advisory'
 import {
   type BenchmarkCase,
@@ -18,7 +19,6 @@ import {
   readCaseDirectories,
 } from './cases'
 import { checkFixtureApp, readAdvisoryFixture } from './fixtures'
-import { SnapshotPullRequestSource } from './snapshot-pull-request-source'
 
 // how many cases each category holds when the corpus is complete
 const expectedCountsByCategory: Record<BenchmarkCategory, number> = {
@@ -394,8 +394,8 @@ async function checkSnapshotDiff({
 }: LoadedBenchmarkCase): Promise<string[]> {
   // diff the two trees the way the runner does, leaving out anything under node_modules
   const snapshotSource = new SnapshotPullRequestSource({
-    baseDirectory: join(caseDirectory, 'base'),
-    headDirectory: join(caseDirectory, 'head'),
+    baseDir: join(caseDirectory, 'base'),
+    headDir: join(caseDirectory, 'head'),
   })
   const allChangedFiles = await snapshotSource.listChangedFiles()
   const changedFiles = allChangedFiles.filter(

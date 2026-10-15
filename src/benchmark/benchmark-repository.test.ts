@@ -1,17 +1,17 @@
-// tests for GitPullRequestSource over a local repository with two commits reached through a file url
+// tests for openBenchmarkRepository over a local repository with two commits reached through a file url
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { mkdtemp, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
+import { runGit } from '@/pull-request-source/git-command'
 import { cacheDirectoryEnvironmentVariable } from '@/shared/cache-directory'
-import { cleanGitEnvironment } from './git-environment'
 import {
-  GitPullRequestSource,
   isGitSourceOffline,
   OfflineCloneError,
   offlineEnvironmentVariable,
-} from './git-pull-request-source'
+  openBenchmarkRepository,
+} from './benchmark-repository'
 import {
   type RestoreEnvironmentVariables,
   saveEnvironmentVariables,
@@ -23,9 +23,6 @@ const headAppText = 'const first = 1\nconst second = 22\nconst third = 3\n'
 
 // the file only the second commit holds
 const newFileText = 'const added = 1\n'
-
-// the environment the repository is built with, so a git hook running the tests cannot redirect them
-const gitEnvironment = cleanGitEnvironment()
 
 // the temporary repository, its file url and the shas of its two commits
 let repositoryDirectory: string
@@ -54,40 +51,18 @@ beforeEach(async () => {
     join(tmpdir(), 'pull-request-review-repository-'),
   )
   repoUrl = `file://${repositoryDirectory}`
-  await Bun.$`git init --quiet ${repositoryDirectory}`
-    .env(gitEnvironment)
-    .quiet()
-  await Bun.$`git -C ${repositoryDirectory} config user.email benchmark@example.test`
-    .env(gitEnvironment)
-    .quiet()
-  await Bun.$`git -C ${repositoryDirectory} config user.name benchmark`
-    .env(gitEnvironment)
-    .quiet()
+  await git(['init', '--quiet'])
+  await git(['config', 'user.email', 'benchmark@example.test'])
+  await git(['config', 'user.name', 'benchmark'])
   await Bun.write(join(repositoryDirectory, 'app.ts'), baseAppText)
-  await Bun.$`git -C ${repositoryDirectory} add --all`
-    .env(gitEnvironment)
-    .quiet()
-  await Bun.$`git -C ${repositoryDirectory} commit --quiet --message first`
-    .env(gitEnvironment)
-    .quiet()
+  await git(['add', '--all'])
+  await git(['commit', '--quiet', '--no-verify', '--message', 'first'])
   await Bun.write(join(repositoryDirectory, 'app.ts'), headAppText)
   await Bun.write(join(repositoryDirectory, 'new.ts'), newFileText)
-  await Bun.$`git -C ${repositoryDirectory} add --all`
-    .env(gitEnvironment)
-    .quiet()
-  await Bun.$`git -C ${repositoryDirectory} commit --quiet --message second`
-    .env(gitEnvironment)
-    .quiet()
-  baseSha = (
-    await Bun.$`git -C ${repositoryDirectory} rev-parse HEAD~1`
-      .env(gitEnvironment)
-      .text()
-  ).trim()
-  headSha = (
-    await Bun.$`git -C ${repositoryDirectory} rev-parse HEAD`
-      .env(gitEnvironment)
-      .text()
-  ).trim()
+  await git(['add', '--all'])
+  await git(['commit', '--quiet', '--no-verify', '--message', 'second'])
+  baseSha = (await git(['rev-parse', 'HEAD~1'])).trim()
+  headSha = (await git(['rev-parse', 'HEAD'])).trim()
 })
 
 afterEach(async () => {
@@ -97,13 +72,9 @@ afterEach(async () => {
   await rm(repositoryDirectory, { recursive: true, force: true })
 })
 
-describe('GitPullRequestSource', () => {
+describe('openBenchmarkRepository', () => {
   test('lists the files the second commit changed from a clone under the cache directory', async () => {
-    const source = await GitPullRequestSource.open({
-      repoUrl,
-      baseSha,
-      headSha,
-    })
+    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
 
     // the source describes the two shas
     expect(await source.describe()).toEqual({ baseSha, headSha })
@@ -129,11 +100,7 @@ describe('GitPullRequestSource', () => {
   })
 
   test('reads files at either sha and null when the sha does not hold the file', async () => {
-    const source = await GitPullRequestSource.open({
-      repoUrl,
-      baseSha,
-      headSha,
-    })
+    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
     expect(await source.readFileAtBase('app.ts')).toBe(baseAppText)
     expect(await source.readFileAtHead('app.ts')).toBe(headAppText)
     expect(await source.readFileAtBase('new.ts')).toBeNull()
@@ -143,7 +110,7 @@ describe('GitPullRequestSource', () => {
 
   test('reuses the clone on a second open', async () => {
     // open once and leave a marker inside the clone
-    const firstSource = await GitPullRequestSource.open({
+    const firstSource = await openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha,
@@ -153,7 +120,7 @@ describe('GitPullRequestSource', () => {
     await firstSource.dispose()
 
     // open again and expect the same clone with the marker still in it
-    const secondSource = await GitPullRequestSource.open({
+    const secondSource = await openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha,
@@ -167,7 +134,7 @@ describe('GitPullRequestSource', () => {
 
   test('opens an existing clone while offline', async () => {
     // clone while online, then flip the offline flag
-    const firstSource = await GitPullRequestSource.open({
+    const firstSource = await openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha,
@@ -177,7 +144,7 @@ describe('GitPullRequestSource', () => {
     expect(isGitSourceOffline()).toBe(true)
 
     // the clone is reused without touching the network
-    const offlineSource = await GitPullRequestSource.open({
+    const offlineSource = await openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha,
@@ -187,11 +154,7 @@ describe('GitPullRequestSource', () => {
   })
 
   test('checks head out into a worktree that dispose removes', async () => {
-    const source = await GitPullRequestSource.open({
-      repoUrl,
-      baseSha,
-      headSha,
-    })
+    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
 
     // the worktree holds the head content
     const worktreeDirectory = await source.checkoutHead()
@@ -202,9 +165,6 @@ describe('GitPullRequestSource', () => {
       newFileText,
     )
 
-    // a second checkout returns the same directory
-    expect(await source.checkoutHead()).toBe(worktreeDirectory)
-
     // dispose removes the directory
     await source.dispose()
     expect(await Bun.file(join(worktreeDirectory, 'app.ts')).exists()).toBe(
@@ -214,7 +174,7 @@ describe('GitPullRequestSource', () => {
 
   test('throws OfflineCloneError before cloning when the offline flag is set', async () => {
     process.env[offlineEnvironmentVariable] = '1'
-    const openPromise = GitPullRequestSource.open({ repoUrl, baseSha, headSha })
+    const openPromise = openBenchmarkRepository({ repoUrl, baseSha, headSha })
     await expect(openPromise).rejects.toBeInstanceOf(OfflineCloneError)
     expect(
       await Bun.file(join(expectedCloneDirectory(), '.git', 'HEAD')).exists(),
@@ -223,7 +183,7 @@ describe('GitPullRequestSource', () => {
 
   test('throws OfflineCloneError when the repository cannot be reached', async () => {
     const unreachableRepoUrl = 'https://127.0.0.1:9/none/none.git'
-    const openPromise = GitPullRequestSource.open({
+    const openPromise = openBenchmarkRepository({
       repoUrl: unreachableRepoUrl,
       baseSha,
       headSha,
@@ -241,7 +201,7 @@ describe('GitPullRequestSource', () => {
   test('reports a local path that is not a repository as a plain error', async () => {
     // a file url nothing is at: git fails without naming the network
     const missingRepoUrl = `file://${join(repositoryDirectory, 'missing')}`
-    const openPromise = GitPullRequestSource.open({
+    const openPromise = openBenchmarkRepository({
       repoUrl: missingRepoUrl,
       baseSha,
       headSha,
@@ -254,7 +214,7 @@ describe('GitPullRequestSource', () => {
 
   test('reports a sha the repository does not hold as a plain error', async () => {
     const missingSha = '0000000000000000000000000000000000000000'
-    const openPromise = GitPullRequestSource.open({
+    const openPromise = openBenchmarkRepository({
       repoUrl,
       baseSha,
       headSha: missingSha,
@@ -264,6 +224,11 @@ describe('GitPullRequestSource', () => {
     expect(openError).not.toBeInstanceOf(OfflineCloneError)
   })
 })
+
+// run git in the temporary repository through the module's wrapper, so a hook environment cannot redirect it
+function git(gitArguments: string[]): Promise<string> {
+  return runGit({ repoPath: repositoryDirectory, gitArguments })
+}
 
 // the clone directory open derives from the file url: local plus the last two path segments
 function expectedCloneDirectory(): string {

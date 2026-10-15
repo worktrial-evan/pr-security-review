@@ -43,24 +43,12 @@ Loads and validates the labeled corpus under `benchmark/cases`, runs any `Review
 - `BenchmarkRunScore`: the shared `BenchmarkScore` plus `caseDetails`
 - `ScoreBenchmarkOptions`, `scoreBenchmark({ caseOutcomes })`: the pure scorer, returning a `BenchmarkRunScore` validated through `benchmarkScoreSchema`
 
-### unified-diff.ts
+### benchmark-repository.ts
 
-- `parseUnifiedDiff(diffText)`: turns `git diff --unified=0` output into `ChangedFile` values with hunks, added lines numbered on the head side, status, previous path on a rename and the binary flag
-
-### snapshot-pull-request-source.ts
-
-- `SnapshotPullRequestSourceOptions`, `SnapshotPullRequestSource`: a `PullRequestSource` over a `baseDirectory` and a `headDirectory` on disk, diffed through `git diff --no-index`, whose `checkoutHead` returns the head directory
-
-### git-pull-request-source.ts
-
-- `OpenGitPullRequestSourceOptions`, `GitPullRequestSource.open({ repoUrl, baseSha, headSha, cacheDirectory? })`: a `PullRequestSource` over two shas of a repository cloned once under the cache directory, whose `checkoutHead` adds a detached worktree that `dispose` removes
-- `OfflineCloneError`: thrown by `open` when the host cannot be resolved or connected to, or the offline variable is set, with the `repoUrl` it could not reach
+- `OpenBenchmarkRepositoryOptions`, `openBenchmarkRepository({ repoUrl, baseSha, headSha, cacheDirectory? })`: clones the repository once under the cache directory and returns the pull-request-source module's `GitPullRequestSource` over the two shas
+- `OfflineCloneError`: thrown by `openBenchmarkRepository` when the host cannot be resolved or connected to, or the offline variable is set, with the `repoUrl` it could not reach
 - `offlineEnvironmentVariable`: the name `PULL_REQUEST_REVIEW_OFFLINE`
 - `isGitSourceOffline()`: whether that variable is set and non-empty
-
-### git-environment.ts
-
-- `cleanGitEnvironment()`: the process environment without any `GIT_` variable and with `GIT_TERMINAL_PROMPT` set to `0`. Every git command in the module and its tests runs with it
 
 ### case-source.ts
 
@@ -103,7 +91,7 @@ shared, pipeline, report, pull-request-source
 
 Bun and Node built-ins and npm packages are always allowed.
 
-Only `shared` is imported today. The pipeline is passed in as a function, the sources and the diff parser live in this module until `pull-request-source` lands, and the page is rendered here until `report` lands.
+`shared`, `pull-request-source` and `report` are imported today: the snapshot and git sources and `runGit` come from `pull-request-source`, and the page's `escapeHtml`, `pageStyle`, `formatCostUsd` and `emptyValueText` come from `report`. The pipeline is passed in as a function.
 
 ## Files
 
@@ -118,14 +106,8 @@ Only `shared` is imported today. The pipeline is passed in as a function, the so
 - `match-rules.test.ts`: detector mismatch, alias match in both directions, package mismatch, exact id and package comparison, a label without an advisory id, cwe family, line tolerance inside and outside, one-line ranges, different file, no-file and no-lines labels, a prediction without lines, cwe normalization, secret tolerance on both sides and three lines away, and secret labels without a file or a line
 - `score.ts`: `scoreBenchmark`, the greedy one-to-one matching, the per-case counts with the pre-existing findings kept on every status, the micro average, the breakdowns by detector and category, the clean false positive count and the totals
 - `score.test.ts`: duplicate predictions, two labels competing for one prediction, pre-existing exclusion, clean false positive, missed finding, a failed case keeping its pre-existing findings, skipped case, micro average, zero division and breakdown keys
-- `unified-diff.ts`: `parseUnifiedDiff` with the file section split, the extended header lines applied one by one, the hunk header and hunk line parsing and the added line collection
-- `unified-diff.test.ts`: hand-written diffs for an added, modified, deleted, renamed and binary file, context lines with the no-newline marker, several files in one diff, and a diff git produced between two commits
-- `snapshot-pull-request-source.ts`: `SnapshotPullRequestSource` and the tree prefix stripping that makes every path tree-relative
-- `snapshot-pull-request-source.test.ts`: the default and given shas, added, modified and deleted files with head line numbers, equal trees, null reads and the head checkout
-- `git-pull-request-source.ts`: `GitPullRequestSource`, `OfflineCloneError`, the clone path under `benchmark-repos`, the clone and fetch with the offline and network failure classification, the removal of the empty directories a failed clone leaves, and the git command wrapper that never prompts
-- `git-pull-request-source.test.ts`: a two-commit repository reached through a `file://` url: changed files, the clone under the cache directory, clone reuse, an existing clone while offline, the worktree checkout and its removal, the offline error before any clone, an unreachable url leaving no directory behind, a local path that is not a repository as a plain error, and a missing sha
-- `git-environment.ts`: `cleanGitEnvironment`
-- `git-environment.test.ts`: the hook variables are dropped, the other variables are kept and the prompt is off
+- `benchmark-repository.ts`: `openBenchmarkRepository`, `OfflineCloneError`, the clone path under `benchmark-repos`, the clone and fetch through the module's `runGit` with the offline and network failure classification, and the removal of the empty directories a failed clone leaves
+- `benchmark-repository.test.ts`: a two-commit repository reached through a `file://` url: changed files, the clone under the cache directory, clone reuse, an existing clone while offline, the worktree checkout and its removal, the offline error before any clone, an unreachable url leaving no directory behind, a local path that is not a repository as a plain error, and a missing sha
 - `case-source.ts`: `openPullRequestSource` over a snapshot case's trees or a git case's shas, with the skip and fail classification of a git open
 - `case-source.test.ts`: a snapshot case opens on its head directory, an offline git case is skipped, a git case on a path that is not a repository fails
 - `run.ts`: `runBenchmark`, the default review options, the per-case run with the source opened and disposed, the unrun case outcomes, the provenance collection, the results assembly and the results file writes
@@ -153,10 +135,10 @@ Only `shared` is imported today. The pipeline is passed in as a function, the so
 - `runBenchmark` forces `isOffline` to true whatever the caller passes, defaults `advisoryCacheDir` to the advisory fixture directory, and runs the cases in sorted id order.
 - A git case clones once into `<cache directory>/benchmark-repos/<host>/<owner>/<repo>` and reuses the clone. Nothing is cloned when `PULL_REQUEST_REVIEW_OFFLINE` is set and the clone is missing, and a failed clone leaves no empty directory under the cache. Only a clone or fetch whose stderr names a resolution or connection failure is a skip. Any other failure is the case's error. The cache directory is `resolveCacheDirectory()` unless an option overrides it, so nothing is written inside the repository except under `benchmark/results`.
 - Every pull request source is disposed after its case, whether the pipeline returned or threw.
-- Every git command in the module and its tests runs with `cleanGitEnvironment()`. A git hook exports `GIT_DIR` and its siblings to whatever it runs, and a `git init` or `git config` that inherits them acts on the repository that ran the hook instead of the temporary one. The pre-commit hook runs the test suite, so this is what keeps the tests off the real repository.
+- Every git command in the module and its tests runs through the pull-request-source module's `runGit`, which drops the variables a git hook exports. A `git init` or `git config` that inherited `GIT_DIR` would act on the repository that ran the hook instead of the temporary one, and the pre-commit hook runs the test suite.
 - A run writes exactly four files, named from the label with every character outside `A-Za-z0-9._-` replaced by a dash: the timestamped json and html pair and the `latest-<split>` pair, and both json files hold the same content.
 - The checked-in corpus holds 12 sca, 15 code, 4 secrets, 15 clean and 8 real-world cases, each category with at least one dev and one test case, and `bun run benchmark:validate` exits non-zero when any count or check is off.
-- Every label names the detector of its case's category and only the fields its rule reads. Every labeled advisory id is in the advisory fixture as an id or an alias. Every labeled line range of a snapshot case lies within the lines its head adds, checked against the same `git diff --no-index` the runner reads.
+- Every label names the detector of its case's category and only the fields its rule reads. Every labeled advisory id is in the advisory fixture as an id or an alias. Every labeled line range of a snapshot case lies within the lines its head adds, checked against the same snapshot source the runner reads.
 - Every snapshot case's `base/` is the fixture app with at most the changes its description names, and the fixture app's two lockfiles name the same packages at the same versions, every one of them covered by the advisory fixture or listed as known clean. The validator does not check the first half of this: the description is prose.
 - Every `.ts` file under `benchmark/` starts with the file header comment and passes the formatter. The linter is off there through `benchmark/biome.json`.
 
@@ -166,10 +148,8 @@ Only `shared` is imported today. The pipeline is passed in as a function, the so
 
 ## Known gaps
 
-- The module ships its own diff parser and its own snapshot and git sources. When `pull-request-source` lands, the benchmark swaps to its sources and `unified-diff.ts`, `snapshot-pull-request-source.ts` and `git-pull-request-source.ts` go.
-- The results page is rendered here with template strings. When `report` lands, the page moves onto it.
+- The results page builds its own metrics and case tables with template strings on the report module's escaping, stylesheet and value formats. `renderHtmlReport` takes a `ReviewResult`, so a benchmark run has no page to render through it.
 - The advisory fixture is the shared `Advisory` schema in one json file plus a `snapshot.json`. The advisories module decides its own cache format when it lands, and the fixture may need converting to it.
 - No real pipeline has run over the corpus yet. The runner is tested against a stub pipeline only, and `benchmark/results` holds a `.gitkeep` and nothing else. Nothing in `.gitignore` excludes the files a run writes there.
-- `corpus-validation.ts` and `git-pull-request-source.ts` run past the 400 lines a file is split at. The validator holds every check in one place on purpose, and the git source holds the clone, fetch and worktree handling together.
-- `HunkLine.headLine` on a removed line holds the head-side cursor at that point, and a hunk that only removes lines starts the cursor one past `newStart`. A consumer that reads removed-line numbers needs that convention.
+- `corpus-validation.ts` runs past the 400 lines a file is split at. The validator holds every check in one place on purpose.
 - `isDirectory` in `cases.ts` is the same function as the one in `scripts/check-file-headers.ts`. Scripts are not importable from `src`, so a third copy belongs in `src/shared`.

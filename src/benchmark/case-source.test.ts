@@ -4,8 +4,8 @@ import { mkdir, mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { BenchmarkCase } from '@/shared/benchmark'
+import { offlineEnvironmentVariable } from './benchmark-repository'
 import { openPullRequestSource } from './case-source'
-import { offlineEnvironmentVariable } from './git-pull-request-source'
 import {
   type RestoreEnvironmentVariables,
   saveEnvironmentVariables,
