@@ -1,13 +1,13 @@
 {
-  "reviewModelId": "claude-sonnet-5-5",
-  "summarizeModelId": "claude-haiku-5-5",
+  "reviewModelId": "anthropic/claude-sonnet-5-5",
+  "summarizeModelId": "anthropic/claude-haiku-5-5",
   // fill these prices from the provider pricing page
   "prices": {
-    "claude-sonnet-5-5": {
+    "anthropic/claude-sonnet-5-5": {
       "inputUsdPerMillionTokens": 0,
       "outputUsdPerMillionTokens": 0
     },
-    "claude-haiku-5-5": {
+    "anthropic/claude-haiku-5-5": {
       "inputUsdPerMillionTokens": 0,
       "outputUsdPerMillionTokens": 0
     }
