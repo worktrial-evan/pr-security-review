@@ -1,0 +1,12 @@
+{
+  "id": "clean-13-error-handling-added",
+  "split": "test",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head makes the /login route of src/server.ts answer 400 when the request body is not json instead of throwing.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-13-error-handling-added"
+  },
+  "expected": []
+}

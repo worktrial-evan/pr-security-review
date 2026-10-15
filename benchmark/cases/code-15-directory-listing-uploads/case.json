@@ -1,0 +1,20 @@
+{
+  "id": "code-15-directory-listing-uploads",
+  "split": "test",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds an /uploads route that reads the uploads directory and returns an html page linking every stored file.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-15-directory-listing-uploads"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-548",
+      "file": "src/server.ts",
+      "startLine": 104,
+      "endLine": 109
+    }
+  ]
+}

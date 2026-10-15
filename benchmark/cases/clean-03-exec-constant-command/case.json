@@ -1,0 +1,12 @@
+{
+  "id": "clean-03-exec-constant-command",
+  "split": "dev",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head adds readUptime to src/shell.ts, a second Bun.$ call that runs the constant command uptime with no interpolation.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-03-exec-constant-command"
+  },
+  "expected": []
+}

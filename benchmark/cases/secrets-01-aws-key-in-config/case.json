@@ -1,0 +1,18 @@
+{
+  "id": "secrets-01-aws-key-in-config",
+  "split": "dev",
+  "category": "secrets",
+  "isClean": false,
+  "description": "The head adds an asset bucket access key id and secret access key to the defaults in src/config.ts as string literals.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/secrets-01-aws-key-in-config"
+  },
+  "expected": [
+    {
+      "detector": "secrets",
+      "file": "src/config.ts",
+      "startLine": 21
+    }
+  ]
+}

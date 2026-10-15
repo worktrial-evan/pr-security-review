@@ -1,0 +1,20 @@
+{
+  "id": "code-07-ssrf-user-url",
+  "split": "dev",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds a /preview route that fetches whatever url the url query parameter names and returns the start of the response body.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-07-ssrf-user-url"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-918",
+      "file": "src/server.ts",
+      "startLine": 103,
+      "endLine": 104
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<!doctype html>
+<title>greeting</title>
+<h1 id="greeting">hello</h1>
+<script>
+  // show the name from the query string as text, never as markup
+  const name = new URLSearchParams(location.search).get('name') ?? 'stranger'
+  document.getElementById('greeting').textContent = `hello, ${name}`
+</script>

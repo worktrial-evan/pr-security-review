@@ -1,0 +1,23 @@
+{
+  "id": "real-world-03-qs",
+  "split": "test",
+  "category": "real-world",
+  "isClean": false,
+  "description": "The qs package at the parent of the fix commit for GHSA-gqgv-6jq5-jjj9, so the head reverses the fix and reintroduces the vulnerability.",
+  "source": {
+    "kind": "git",
+    "repoUrl": "https://github.com/ljharb/qs.git",
+    "baseSha": "beade029171b8cef9cee0d03ebe577e2dd84976d",
+    "headSha": "8bd4c6cf12898f469838980317fec92007e5112a"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "advisoryId": "GHSA-gqgv-6jq5-jjj9",
+      "cwe": "CWE-20",
+      "file": "lib/parse.js",
+      "startLine": 58,
+      "endLine": 116
+    }
+  ]
+}

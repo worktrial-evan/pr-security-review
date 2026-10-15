@@ -1,0 +1,12 @@
+{
+  "id": "clean-09-logging-added",
+  "split": "dev",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head logs the stored name and size of every accepted upload in the /upload route of src/server.ts.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-09-logging-added"
+  },
+  "expected": []
+}

@@ -7,6 +7,7 @@
     "typecheck": "bun check",
     "check:boundaries": "bun scripts/check-boundaries.ts",
     "check:headers": "bun scripts/check-file-headers.ts",
+    "benchmark:validate": "bun src/benchmark/validate.ts",
     "verify": "bun check && biome check . && bun run check:boundaries && bun run check:headers && bun test",
     "prepare": "lefthook install",
     "refresh-advisories": "bun src/advisories/refresh-advisories-command.ts"

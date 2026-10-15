@@ -1,0 +1,20 @@
+{
+  "id": "code-04-path-traversal-download",
+  "split": "dev",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds a /download/uploads route that joins the name query parameter onto the uploads directory and serves that file with no containment check.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-04-path-traversal-download"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-22",
+      "file": "src/server.ts",
+      "startLine": 81,
+      "endLine": 82
+    }
+  ]
+}

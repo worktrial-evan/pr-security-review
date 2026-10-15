@@ -1,0 +1,20 @@
+{
+  "id": "code-09-md5-password-hashing",
+  "split": "dev",
+  "category": "code",
+  "isClean": false,
+  "description": "The head replaces the Bun.password hashing and verification with a hashPassword helper that hashes passwords with unsalted md5 and compares the hex digests.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-09-md5-password-hashing"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-328",
+      "file": "src/users.ts",
+      "startLine": 76,
+      "endLine": 77
+    }
+  ]
+}

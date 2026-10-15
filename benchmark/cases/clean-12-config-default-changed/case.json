@@ -1,0 +1,12 @@
+{
+  "id": "clean-12-config-default-changed",
+  "split": "test",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head changes the default port in src/config.ts from 3000 to 8080. The jwt secret still has no default.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-12-config-default-changed"
+  },
+  "expected": []
+}

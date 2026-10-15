@@ -1,0 +1,3320 @@
+[
+  {
+    "id": "GHSA-29mw-wpgm-hmr9",
+    "aliases": ["CVE-2020-28500"],
+    "summary": "Regular Expression Denial of Service (ReDoS) in lodash",
+    "details": "All versions of package lodash prior to 4.17.21 are vulnerable to Regular Expression Denial of Service (ReDoS) via the `toNumber`, `trim` and `trimEnd` functions. \n\nSteps to reproduce (provided by reporter Liyuan Chen):\n```js\nvar lo = require('lodash');\n\nfunction build_blank(n) {\n    var ret = \"1\"\n    for (var i = 0; i < n; i++) {\n        ret += \" \"\n    }\n    return ret + \"1\";\n}\nvar s = build_blank(50000) var time0 = Date.now();\nlo.trim(s) \nvar time_cost0 = Date.now() - time0;\nconsole.log(\"time_cost0: \" + time_cost0);\nvar time1 = Date.now();\nlo.toNumber(s) var time_cost1 = Date.now() - time1;\nconsole.log(\"time_cost1: \" + time_cost1);\nvar time2 = Date.now();\nlo.trimEnd(s);\nvar time_cost2 = Date.now() - time2;\nconsole.log(\"time_cost2: \" + time_cost2);\n```",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.trimend",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "lastAffected": "4.5.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.trim",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "lastAffected": "4.5.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.11",
+          "4.17.14",
+          "4.17.15",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-28500"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/github/advisory-database/pull/6139"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/pull/5065"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/pull/5065/commits/02906b8191d3c100c193fe6f7b27d1c40f200bb7"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/c4847ebe7d14540bb28a8b932a9ce1b9ecbfee1a"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpujul2022.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpujan2022.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com//security-alerts/cpujul2021.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-LODASH-1018905"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSNPM-1074893"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWERGITHUBLODASH-1074895"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWER-1074892"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARS-1074894"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGFUJIONWEBJARS-1074896"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20210312-0006"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2020-28500.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/blob/npm/trimEnd.js%23L8"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      },
+      {
+        "type": "WEB",
+        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-637483.pdf"
+      }
+    ],
+    "published": "2022-01-06T20:30:46Z",
+    "modified": "2025-09-29T21:12:31.102523Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-35jh-r3h4-6jhm",
+    "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+    "summary": "Command Injection in lodash",
+    "details": "`lodash` versions prior to 4.17.21 are vulnerable to Command Injection via the template function.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.template",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "lastAffected": "4.5.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-template",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "lastAffected": "1.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "0.10.0",
+          "0.7.0",
+          "0.8.1",
+          "0.8.2",
+          "0.9.0",
+          "0.9.1",
+          "0.9.2",
+          "1.0.0.rc.1",
+          "1.0.0.rc.2",
+          "1.0.0.rc.3",
+          "1.0.1",
+          "1.1.0",
+          "1.1.1",
+          "1.2.0",
+          "1.2.1",
+          "1.3.1",
+          "2.0.0",
+          "2.1.0",
+          "2.2.0",
+          "2.2.1",
+          "2.3.0",
+          "2.4.0",
+          "2.4.1",
+          "3.1.0",
+          "3.10.0",
+          "3.10.1",
+          "3.2.0",
+          "3.3.0",
+          "3.3.1",
+          "3.3.1.1",
+          "3.4.0",
+          "3.5.0",
+          "3.6.0",
+          "3.7.0",
+          "3.9.3",
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.11",
+          "4.17.14",
+          "4.17.15",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-23337"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpujul2022.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpujan2022.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com//security-alerts/cpujul2021.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-LODASH-1040724"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSNPM-1074929"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWERGITHUBLODASH-1074931"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWER-1074928"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARS-1074930"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-ORGFUJIONWEBJARS-1074932"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20210312-0006"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2021-23337.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/blob/ddfd9b11a0126db2302cb70ec9973b66baec0975/lodash.js#L14851"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      },
+      {
+        "type": "WEB",
+        "url": "https://cert-portal.siemens.com/productcert/pdf/ssa-637483.pdf"
+      }
+    ],
+    "published": "2021-05-06T16:05:51Z",
+    "modified": "2026-09-10T03:49:04.067984836Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-3fx5-fwvr-xrjg",
+    "aliases": ["CVE-2015-8315"],
+    "summary": "Regular Expression Denial of Service in ms",
+    "details": "Versions of `ms` prior to 0.7.1 are affected by a regular expression denial of service vulnerability when extremely long version strings are parsed.\n\n## Proof of Concept\n```javascript\nvar ms = require('ms');\nvar genstr = function (len, chr) {\n   var result = \"\";\n   for (i=0; i<=len; i++) {\n       result = result + chr;\n   }\n\n   return result;\n}\n\nms(genstr(process.argv[2], \"5\") + \" minutea\");\n\n```\n\n### Results\nShowing increase in execution time based on the input string.\n```\n$ time node ms.js 10000\n\nreal\t0m0.758s\nuser\t0m0.724s\nsys\t0m0.031s\n\n$ time node ms.js 20000\n\nreal\t0m2.580s\nuser\t0m2.494s\nsys\t0m0.047s\n\n$ time node ms.js 30000\n\nreal\t0m5.747s\nuser\t0m5.483s\nsys\t0m0.080s\n\n$ time node ms.js 80000\n\nreal\t0m41.022s\nuser\t0m38.894s\nsys\t0m0.529s\n```\n",
+    "severityVector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "ms",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "0.7.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-8315"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/unshiftio/millisecond"
+      },
+      {
+        "type": "WEB",
+        "url": "https://nodesecurity.io/advisories/46"
+      },
+      {
+        "type": "WEB",
+        "url": "https://support.f5.com/csp/article/K46337613?utm_source=f5support&amp%3Butm_medium=RSS"
+      },
+      {
+        "type": "WEB",
+        "url": "https://support.f5.com/csp/article/K46337613?utm_source=f5support&amp;utm_medium=RSS"
+      },
+      {
+        "type": "WEB",
+        "url": "https://web.archive.org/web/20200227190911/http://www.securityfocus.com/bid/96389"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.openwall.com/lists/oss-security/2016/04/20/11"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.securityfocus.com/bid/96389"
+      }
+    ],
+    "published": "2017-10-24T18:33:36Z",
+    "modified": "2024-08-01T16:44:35Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-4xc9-xhrj-v574",
+    "aliases": ["CVE-2018-16487"],
+    "summary": "Prototype Pollution in lodash",
+    "details": "Versions of `lodash` before 4.17.11 are vulnerable to prototype pollution. \n\nThe vulnerable functions are 'defaultsDeep', 'merge', and 'mergeWith' which allow a malicious user to modify the prototype of `Object` via `{constructor: {prototype: {...}}}` causing the addition or modification of an existing property that will exist on all objects.\n\n\n\n\n## Recommendation\n\nUpdate to version 4.17.11 or later.",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "0.10.0",
+          "0.7.0",
+          "0.8.1",
+          "0.8.2",
+          "0.9.0",
+          "0.9.1",
+          "0.9.2",
+          "1.0.0.rc.1",
+          "1.0.0.rc.2",
+          "1.0.0.rc.3",
+          "1.0.1",
+          "1.1.0",
+          "1.1.1",
+          "1.2.0",
+          "1.2.1",
+          "1.3.1",
+          "2.0.0",
+          "2.1.0",
+          "2.2.0",
+          "2.2.1",
+          "2.3.0",
+          "2.4.0",
+          "2.4.1",
+          "3.1.0",
+          "3.10.0",
+          "3.10.1",
+          "3.2.0",
+          "3.3.0",
+          "3.3.1",
+          "3.3.1.1",
+          "3.4.0",
+          "3.5.0",
+          "3.6.0",
+          "3.7.0",
+          "3.9.3",
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2018-16487"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/90e6199a161b6445b01454517b40ef65ebecd2ad"
+      },
+      {
+        "type": "WEB",
+        "url": "https://hackerone.com/reports/380873"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2018-16487.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20190919-0004"
+      }
+    ],
+    "published": "2019-02-07T18:16:48Z",
+    "modified": "2025-08-12T21:55:35.778975Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-6fc8-4gx4-v693",
+    "aliases": ["CVE-2021-32640"],
+    "summary": "ReDoS in Sec-Websocket-Protocol header",
+    "details": "### Impact\n\nA specially crafted value of the `Sec-Websocket-Protocol` header can be used to significantly slow down a ws server.\n\n### Proof of concept\n\n```js\nfor (const length of [1000, 2000, 4000, 8000, 16000, 32000]) {\n  const value = 'b' + ' '.repeat(length) + 'x';\n  const start = process.hrtime.bigint();\n\n  value.trim().split(/ *, */);\n\n  const end = process.hrtime.bigint();\n\n  console.log('length = %d, time = %f ns', length, end - start);\n}\n```\n\n### Patches\n\nThe vulnerability was fixed in ws@7.4.6 (https://github.com/websockets/ws/commit/00c425ec77993773d823f018f64a5c44e17023ff) and backported to ws@6.2.2 (https://github.com/websockets/ws/commit/78c676d2a1acefbc05292e9f7ea0a9457704bf1b) and ws@5.2.3 (https://github.com/websockets/ws/commit/76d47c1479002022a3e4357b3c9f0e23a68d4cd2).\n\n### Workarounds\n\nIn vulnerable versions of ws, the issue can be mitigated by reducing the maximum allowed length of the request headers using the [`--max-http-header-size=size`](https://nodejs.org/api/cli.html#cli_max_http_header_size_size) and/or the [`maxHeaderSize`](https://nodejs.org/api/http.html#http_http_createserver_options_requestlistener) options.\n\n### Credits\n\nThe vulnerability was responsibly disclosed along with a fix in private by [Robert McLaughlin](https://github.com/robmcl4) from University of California, Santa Barbara.\n",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "ws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "7.0.0"
+              },
+              {
+                "fixed": "7.4.6"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "ws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "6.0.0"
+              },
+              {
+                "fixed": "6.2.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "ws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "5.0.0"
+              },
+              {
+                "fixed": "5.2.3"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/websockets/ws/security/advisories/GHSA-6fc8-4gx4-v693"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-32640"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/websockets/ws/issues/1895"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/websockets/ws/commit/00c425ec77993773d823f018f64a5c44e17023ff"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/websockets/ws"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.apache.org/thread.html/rdfa7b6253c4d6271e31566ecd5f30b7ce1b8fb2c89d52b8c4e0f4e30@%3Ccommits.tinkerpop.apache.org%3E"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20210706-0005"
+      }
+    ],
+    "published": "2021-05-28T19:19:03Z",
+    "modified": "2026-07-08T06:28:00.103808643Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-869p-cjfg-cm3x",
+    "aliases": ["CVE-2025-65945"],
+    "summary": "auth0/node-jws Improperly Verifies HMAC Signature",
+    "details": "### Overview\nAn improper signature verification vulnerability exists when using auth0/node-jws with the HS256 algorithm under specific conditions.\n\n### Am I Affected?\nYou are affected by this vulnerability if you meet all of the following preconditions:\n\n1. Application uses the auth0/node-jws implementation of JSON Web Signatures, versions <=3.2.2 || 4.0.0\n2. Application uses the jws.createVerify() function for HMAC algorithms\n3. Application uses user-provided data from the JSON Web Signature Protected Header or Payload in the HMAC secret lookup routines\n\nYou are NOT affected by this vulnerability if you meet any of the following preconditions:\n1. Application uses the jws.verify() interface (note: `auth0/node-jsonwebtoken` users fall into this category and are therefore NOT affected by this vulnerability)\n2. Application uses only asymmetric algorithms (e.g. RS256)\n3. Application doesn’t use user-provided data from the JSON Web Signature Protected Header or Payload in the HMAC secret lookup routines\n\n### Fix\nUpgrade auth0/node-jws version to version 3.2.3 or 4.0.1\n\n### Acknowledgement\nOkta would like to thank Félix Charette for discovering this vulnerability.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "3.2.3"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "jws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.0.1"
+              }
+            ]
+          }
+        ],
+        "versions": ["4.0.0"]
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jws/security/advisories/GHSA-869p-cjfg-cm3x"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-65945"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jws/commit/34c45b2c04434f925b638de6a061de9339c0ea2e"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jws/commit/4f6e73f24df42f07d632dec6431ade8eda8d11a6"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/auth0/node-jws"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jws/releases/tag/v3.2.3"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jws/releases/tag/v4.0.1"
+      }
+    ],
+    "published": "2025-12-04T16:54:15Z",
+    "modified": "2026-09-10T03:50:31.797792758Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-8cf7-32gw-wr33",
+    "aliases": ["CVE-2022-23539"],
+    "summary": "jsonwebtoken unrestricted key type could lead to legacy keys usage ",
+    "details": "# Overview\n\nVersions `<=8.5.1` of `jsonwebtoken` library could be misconfigured so that legacy, insecure key types are used for signature verification. For example, DSA keys could be used with the RS256 algorithm. \n\n# Am I affected?\n\nYou are affected if you are using an algorithm and a key type other than the combinations mentioned below\n\n| Key type |  algorithm                                    |\n|----------|------------------------------------------|\n| ec           | ES256, ES384, ES512                      |\n| rsa          | RS256, RS384, RS512, PS256, PS384, PS512 |\n| rsa-pss  | PS256, PS384, PS512                      |\n\nAnd for Elliptic Curve algorithms:\n\n| `alg` | Curve      |\n|-------|------------|\n| ES256 | prime256v1 |\n| ES384 | secp384r1  |\n| ES512 | secp521r1  |\n\n# How do I fix it?\n\nUpdate to version 9.0.0. This version validates for asymmetric key type and algorithm combinations. Please refer to the above mentioned algorithm / key type combinations for the valid secure configuration. After updating to version 9.0.0, If you still intend to continue with signing or verifying tokens using invalid key type/algorithm value combinations, you’ll need to set the `allowInvalidAsymmetricKeyTypes` option to `true` in the `sign()` and/or `verify()` functions.\n\n# Will the fix impact my users?\n\nThere will be no impact, if you update to version 9.0.0 and you already use a valid secure combination of key type and algorithm. Otherwise,  use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility. \n\n",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jsonwebtoken",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "9.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-8cf7-32gw-wr33"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23539"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/auth0/node-jsonwebtoken"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+      }
+    ],
+    "published": "2022-12-22T03:32:22Z",
+    "modified": "2024-06-24T21:23:38Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-8hfj-j24r-96c4",
+    "aliases": ["CVE-2022-24785"],
+    "summary": "Path Traversal: 'dir/../../filename' in moment.locale",
+    "details": "### Impact\nThis vulnerability impacts npm (server) users of moment.js, especially if user provided locale string, eg `fr` is directly used to switch moment locale.\n\n### Patches\nThis problem is patched in 2.29.2, and the patch can be applied to all affected versions (from 1.0.1 up until 2.29.1, inclusive).\n\n### Workarounds\nSanitize user-provided locale name before passing it to moment.js.\n\n### References\n_Are there any links users can visit to find out more?_\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [moment repo](https://github.com/moment/moment)",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "moment",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.29.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "NuGet",
+        "name": "Moment.js",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.29.2"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "1.2.0",
+          "1.3.0",
+          "1.4.0",
+          "1.5.0",
+          "1.5.1",
+          "1.6.0",
+          "1.6.1",
+          "1.6.2",
+          "1.7.0",
+          "1.7.1",
+          "1.7.2",
+          "2.0.0",
+          "2.1.0",
+          "2.10.0",
+          "2.10.1",
+          "2.10.2",
+          "2.10.3",
+          "2.10.5",
+          "2.10.6",
+          "2.11.0",
+          "2.11.1",
+          "2.11.2",
+          "2.12.0",
+          "2.13.0",
+          "2.14.1",
+          "2.14.2",
+          "2.14.3",
+          "2.15.0",
+          "2.15.1",
+          "2.15.2",
+          "2.16.0",
+          "2.17.0",
+          "2.17.1",
+          "2.18.0",
+          "2.18.1",
+          "2.18.2",
+          "2.19.0",
+          "2.19.1",
+          "2.19.2",
+          "2.19.3",
+          "2.19.4",
+          "2.2.0",
+          "2.2.1",
+          "2.20.0",
+          "2.20.1",
+          "2.21.0",
+          "2.22.0",
+          "2.22.1",
+          "2.22.2",
+          "2.23.0",
+          "2.24.0",
+          "2.25.0",
+          "2.25.1",
+          "2.25.2",
+          "2.26.0",
+          "2.27.0",
+          "2.28.0",
+          "2.29.0",
+          "2.29.1",
+          "2.3.0",
+          "2.3.1",
+          "2.4.0",
+          "2.5.0",
+          "2.5.1",
+          "2.6.0",
+          "2.7.0",
+          "2.8.0",
+          "2.8.1",
+          "2.8.2",
+          "2.8.3",
+          "2.8.4",
+          "2.9.0"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/moment/moment/security/advisories/GHSA-8hfj-j24r-96c4"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-24785"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/moment/moment/commit/4211bfc8f15746be4019bba557e29a7ba83d54c5"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/moment/moment"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.debian.org/debian-lts-announce/2023/01/msg00035.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/6QIO6YNLTK2T7SPKDS4JEL45FANLNC2Q"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ORJX2LF6KMPIHP6B2P6KZIVKMLE3LVJ5"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/6QIO6YNLTK2T7SPKDS4JEL45FANLNC2Q"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ORJX2LF6KMPIHP6B2P6KZIVKMLE3LVJ5"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20220513-0006"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20241108-0002"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.tenable.com/security/tns-2022-09"
+      }
+    ],
+    "published": "2022-04-04T21:25:48Z",
+    "modified": "2026-09-10T03:49:28.830024482Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-c2qf-rxjj-qqgw",
+    "aliases": ["CVE-2022-25883"],
+    "summary": "semver vulnerable to Regular Expression Denial of Service",
+    "details": "Versions of the package semver before 7.5.2 on the 7.x branch, before 6.3.1 on the 6.x branch, and all other versions before 5.7.2 are vulnerable to Regular Expression Denial of Service (ReDoS) via the function new Range, when untrusted user data is provided as a range.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "7.0.0"
+              },
+              {
+                "fixed": "7.5.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "6.0.0"
+              },
+              {
+                "fixed": "6.3.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "2.0.0-alpha"
+              },
+              {
+                "fixed": "5.7.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-25883"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/pull/564"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/pull/585"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/pull/593"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/commit/2f8fd41487acf380194579ecb6f8b1bbfe116be0"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/commit/717534ee353682f3bcf33e60a8af4292626d4441"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/commit/928e56d21150da0413a3333a3148b20e741a920c"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/npm/node-semver"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/classes/range.js#L97-L104"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/classes/range.js%23L97-L104"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/internal/re.js#L138"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/internal/re.js#L160"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/internal/re.js%23L138"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/blob/main/internal/re.js%23L160"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20241025-0004"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.snyk.io/vuln/SNYK-JS-SEMVER-3247795"
+      }
+    ],
+    "published": "2023-06-21T06:30:28Z",
+    "modified": "2026-09-10T03:50:02.224637541Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-c7hr-j4mj-j2w6",
+    "aliases": ["CVE-2015-9235"],
+    "summary": "Verification Bypass in jsonwebtoken",
+    "details": "Versions 4.2.1 and earlier of `jsonwebtoken` are affected by a verification bypass vulnerability. This is a result of weak validation of the JWT algorithm type, occuring when an attacker is allowed to arbitrarily specify the JWT algorithm.\n\n\n\n\n## Recommendation\n\nUpdate to version 4.2.2 or later.",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jsonwebtoken",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.2.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-9235"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/commit/1bb584bc382295eeb7ee8c4452a673a77a68b687"
+      },
+      {
+        "type": "WEB",
+        "url": "https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://github.com/advisories/GHSA-c7hr-j4mj-j2w6"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/17"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.timmclean.net/2015/02/25/jwt-alg-none.html"
+      }
+    ],
+    "published": "2018-10-09T00:38:30Z",
+    "modified": "2026-09-10T03:48:15.346337398Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-f23m-r3pf-42rh",
+    "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+    "summary": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+    "details": "### Impact\n\nLodash versions 4.17.23 and earlier are vulnerable to prototype pollution in the `_.unset` and `_.omit` functions. The fix for [CVE-2025-13465](https://github.com/lodash/lodash/security/advisories/GHSA-xxjr-mmjv-4gpg) only guards against string key members, so an attacker can bypass the check by passing array-wrapped path segments. This allows deletion of properties from built-in prototypes such as `Object.prototype`, `Number.prototype`, and `String.prototype`.\n\nThe issue permits deletion of prototype properties but does not allow overwriting their original behavior.\n\n### Patches\n\nThis issue is patched in 4.18.0.\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-amd",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.unset",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/security/advisories/GHSA-f23m-r3pf-42rh"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/security/advisories/GHSA-xxjr-mmjv-4gpg"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-2950"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      }
+    ],
+    "published": "2026-04-01T23:50:27Z",
+    "modified": "2026-09-10T03:50:44.050013812Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-f5x3-32g6-xq36",
+    "aliases": ["CVE-2024-28863"],
+    "summary": "Denial of service while parsing a tar file due to lack of folders count validation",
+    "details": "## Description: \nDuring some analysis today on npm's `node-tar` package I came across the folder creation process, Basicly if you provide node-tar with a path like this `./a/b/c/foo.txt` it would create every folder and sub-folder here a, b and c until it reaches the last folder to create `foo.txt`, In-this case I noticed that there's no validation at all on the amount of folders being created, that said we're actually able to CPU and memory consume the system running node-tar and even crash the nodejs client within few seconds of running it using a path with too many sub-folders inside\n\n## Steps To Reproduce:\nYou can reproduce this issue by downloading the tar file I provided in the resources and using node-tar to extract it, you should get the same behavior as the video\n\n## Proof Of Concept:\nHere's a [video](https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/3i7uojw8s52psar6pg8zkdo4h9io?response-content-disposition=attachment%3B%20filename%3D%22tar-dos-poc.webm%22%3B%20filename%2A%3DUTF-8%27%27tar-dos-poc.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSWWGDXHA%2F20240312%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20240312T080103Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDcaCXVzLXdlc3QtMiJHMEUCID3xYDc6emXVPOg8iVR5dVk0u3gguTPIDJ0OIE%2BKxj17AiEAi%2BGiay1gGMWhH%2F031fvMYnSsa8U7CnpZpxvFAYqNRwgqsQUIQBADGgwwMTM2MTkyNzQ4NDkiDAaj6OgUL3gg4hhLLCqOBUUrOgWSqaK%2FmxN6nKRvB4Who3LIyzswFKm9LV94GiSVFP3zXYA480voCmAHTg7eBL7%2BrYgV2RtXbhF4aCFMCN3qu7GeXkIdH7xwVMi9zXHkekviSKZ%2FsZtVVjn7RFqOCKhJl%2FCoiLQJuDuju%2FtfdTGZbEbGsPgKHoILYbRp81K51zeRL21okjsOehmypkZzq%2BoGrXIX0ynPOKujxw27uqdF4T%2BF9ynodq01vGgwgVBEjHojc4OKOfr1oW5b%2FtGVV59%2BOBVI1hqIKHRG0Ed4SWmp%2BLd1hazGuZPvp52szmegnOj5qr3ubppnKL242bX%2FuAnQKzKK0HpwolqXjsuEeFeM85lxhqHV%2B1BJqaqSHHDa0HUMLZistMRshRlntuchcFQCR6HBa2c8PSnhpVC31zMzvYMfKsI12h4HB6l%2FudrmNrvmH4LmNpi4dZFcio21DzKj%2FRjWmxjH7l8egDyG%2FIgPMY6Ls4IiN7aR1jijYTrBCgPUUHets3BFvqLzHtPF",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "node-tar",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "6.2.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "tar",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "6.2.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/isaacs/node-tar/security/advisories/GHSA-f5x3-32g6-xq36"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-28863"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/isaacs/node-tar/commit/fe8cd57da5686f8695415414bda49206a545f7f7"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/isaacs/node-tar"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20240524-0005"
+      }
+    ],
+    "published": "2024-03-22T16:57:05Z",
+    "modified": "2026-09-10T03:50:10.480254172Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-fvqr-27wr-82fm",
+    "aliases": ["CVE-2018-3721"],
+    "summary": "Prototype Pollution in lodash",
+    "details": "Versions of `lodash` before 4.17.5 are vulnerable to prototype pollution. \n\nThe vulnerable functions are 'defaultsDeep', 'merge', and 'mergeWith' which allow a malicious user to modify the prototype of `Object` via `__proto__` causing the addition or modification of an existing property that will exist on all objects.\n\n\n\n\n## Recommendation\n\nUpdate to version 4.17.5 or later.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.5"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.5"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "0.10.0",
+          "0.7.0",
+          "0.8.1",
+          "0.8.2",
+          "0.9.0",
+          "0.9.1",
+          "0.9.2",
+          "1.0.0.rc.1",
+          "1.0.0.rc.2",
+          "1.0.0.rc.3",
+          "1.0.1",
+          "1.1.0",
+          "1.1.1",
+          "1.2.0",
+          "1.2.1",
+          "1.3.1",
+          "2.0.0",
+          "2.1.0",
+          "2.2.0",
+          "2.2.1",
+          "2.3.0",
+          "2.4.0",
+          "2.4.1",
+          "3.1.0",
+          "3.10.0",
+          "3.10.1",
+          "3.2.0",
+          "3.3.0",
+          "3.3.1",
+          "3.3.1.1",
+          "3.4.0",
+          "3.5.0",
+          "3.6.0",
+          "3.7.0",
+          "3.9.3",
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.2",
+          "4.17.4",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2018-3721"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/d8e069cc3410082e44eb18fcf8e7f3d08ebe1d4a"
+      },
+      {
+        "type": "WEB",
+        "url": "https://hackerone.com/reports/310443"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2018-3721.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20190919-0004"
+      }
+    ],
+    "published": "2018-07-26T15:14:52Z",
+    "modified": "2025-08-12T21:55:16.003066Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-gjcw-v447-2w7q",
+    "aliases": ["CVE-2016-1000223"],
+    "summary": "Forgeable Public/Private Tokens in jws",
+    "details": "Affected versions of the `jws` package allow users to select what algorithm the server will use to verify a provided JWT. A malicious actor can use this behaviour to arbitrarily modify the contents of a JWT while still passing verification. For the common use case of the JWT as a bearer token, the end result is a complete authentication bypass with minimal effort.\n\n\n\n\n## Recommendation\n\nUpdate to version 3.0.0 or later.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jws",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "3.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000223"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/brianloveswords/node-jws/commit/585d0e1e97b6747c10cf5b7689ccc5618a89b299#diff-4ac32a78649ca5bdd8e0ba38b7006a1e"
+      },
+      {
+        "type": "WEB",
+        "url": "https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/brianloveswords/node-jws"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/npm:jws:20160726"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/88"
+      }
+    ],
+    "published": "2020-09-01T15:23:18Z",
+    "modified": "2023-11-08T03:58:07.352660Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-gqgv-6jq5-jjj9",
+    "aliases": ["CVE-2017-1000048"],
+    "summary": "Prototype Pollution Protection Bypass in qs",
+    "details": "Affected version of `qs` are vulnerable to Prototype Pollution because it is possible to bypass the protection. The `qs.parse` function fails to properly prevent an object's prototype to be altered when parsing arbitrary input. Input containing `[` or `]` may bypass the prototype pollution protection and alter the Object prototype. This allows attackers to override properties that will exist in all objects, which may lead to Denial of Service or Remote Code Execution in specific circumstances.\n\n\n## Recommendation\n\nUpgrade to 6.0.4, 6.1.2, 6.2.3, 6.3.2 or later.",
+    "severityVector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "qs",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "6.0.4"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "qs",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "6.1.0"
+              },
+              {
+                "fixed": "6.1.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "qs",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "6.2.0"
+              },
+              {
+                "fixed": "6.2.3"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "qs",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "6.3.0"
+              },
+              {
+                "fixed": "6.3.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2017-1000048"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/ljharb/qs/issues/200"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/ljharb/qs/commit/beade029171b8cef9cee0d03ebe577e2dd84976d"
+      },
+      {
+        "type": "WEB",
+        "url": "https://access.redhat.com/errata/RHSA-2017:2672"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/ljharb/qs"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/npm:qs:20170213"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/1469"
+      }
+    ],
+    "published": "2020-04-30T17:16:47Z",
+    "modified": "2023-11-08T03:58:42.086259Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-hjrf-2m68-5959",
+    "aliases": ["CVE-2022-23541"],
+    "summary": "jsonwebtoken's insecure implementation of key retrieval function could lead to Forgeable Public/Private Tokens from RSA to HMAC",
+    "details": "# Overview\n\nVersions `<=8.5.1` of `jsonwebtoken` library can be misconfigured so that passing a poorly implemented key retrieval function (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) will result in incorrect verification of tokens. There is a possibility of using a different algorithm and key combination in verification  than the one that was used to sign the tokens. Specifically, tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm. This can lead to successful validation of forged tokens. \n\n# Am I affected?\n\nYou will be affected if your application is supporting usage of both symmetric key and asymmetric key in jwt.verify() implementation with the same key retrieval function. \n\n# How do I fix it?\n \nUpdate to version 9.0.0.\n\n# Will the fix impact my users?\n\nThere is no impact for end users",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jsonwebtoken",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "9.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-hjrf-2m68-5959"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23541"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/auth0/node-jsonwebtoken"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+      }
+    ],
+    "published": "2022-12-22T03:33:19Z",
+    "modified": "2024-06-24T21:24:06Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-jf85-cpcp-j695",
+    "aliases": ["CVE-2019-10744", "SNYK-JS-LODASH-450202"],
+    "summary": "Prototype Pollution in lodash",
+    "details": "Versions of `lodash` before 4.17.12 are vulnerable to Prototype Pollution.  The function `defaultsDeep` allows a malicious user to modify the prototype of `Object` via `{constructor: {prototype: {...}}}` causing the addition or modification of an existing property that will exist on all objects.\n\n## Recommendation\n\nUpdate to version 4.17.12 or later.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.12"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.14"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-amd",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.13"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.defaultsdeep",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.6.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.12"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "0.10.0",
+          "0.7.0",
+          "0.8.1",
+          "0.8.2",
+          "0.9.0",
+          "0.9.1",
+          "0.9.2",
+          "1.0.0.rc.1",
+          "1.0.0.rc.2",
+          "1.0.0.rc.3",
+          "1.0.1",
+          "1.1.0",
+          "1.1.1",
+          "1.2.0",
+          "1.2.1",
+          "1.3.1",
+          "2.0.0",
+          "2.1.0",
+          "2.2.0",
+          "2.2.1",
+          "2.3.0",
+          "2.4.0",
+          "2.4.1",
+          "3.1.0",
+          "3.10.0",
+          "3.10.1",
+          "3.2.0",
+          "3.3.0",
+          "3.3.1",
+          "3.3.1.1",
+          "3.4.0",
+          "3.5.0",
+          "3.6.0",
+          "3.7.0",
+          "3.9.3",
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.11",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-10744"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/pull/4336"
+      },
+      {
+        "type": "WEB",
+        "url": "https://access.redhat.com/errata/RHSA-2019:3024"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2019-10744.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20191004-0005"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-LODASH-450202"
+      },
+      {
+        "type": "WEB",
+        "url": "https://support.f5.com/csp/article/K47105354?utm_source=f5support&amp%3Butm_medium=RSS"
+      },
+      {
+        "type": "WEB",
+        "url": "https://support.f5.com/csp/article/K47105354?utm_source=f5support&amp;utm_medium=RSS"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpujan2021.html"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.oracle.com/security-alerts/cpuoct2020.html"
+      }
+    ],
+    "published": "2019-07-10T19:45:23Z",
+    "modified": "2026-09-10T03:47:55.238868631Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-p6mc-m468-83gw",
+    "aliases": ["CVE-2020-8203"],
+    "summary": "Prototype Pollution in lodash",
+    "details": "Versions of lodash prior to 4.17.19 are vulnerable to Prototype Pollution. The functions `pick`, `set`, `setWith`, `update`, `updateWith`, and `zipObjectDeep` allow a malicious user to modify the prototype of Object if the property identifiers are user-supplied. Being affected by this issue requires manipulating objects based on user-provided property values or arrays.\n\nThis vulnerability causes the addition or modification of an existing property that will exist on all objects and may lead to Denial of Service or Code Execution under specific circumstances.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "3.7.0"
+              },
+              {
+                "fixed": "4.17.19"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "3.7.0"
+              },
+              {
+                "fixed": "4.17.20"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.pick",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "lastAffected": "4.4.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.set",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "3.7.0"
+              },
+              {
+                "lastAffected": "4.3.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.setwith",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "lastAffected": "4.3.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.update",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "lastAffected": "4.10.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.updatewith",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "lastAffected": "4.10.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "3.7.0"
+              },
+              {
+                "fixed": "4.17.19"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "3.10.0",
+          "3.10.1",
+          "3.7.0",
+          "3.9.3",
+          "4.0.0",
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.11",
+          "4.17.14",
+          "4.17.15",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5",
+          "4.3.0",
+          "4.5.1",
+          "4.6.1"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-8203"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/issues/4744"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/issues/4874"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/github/advisory-database/pull/2884"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/c84fe82760fb2d3e03a63379b297a1cc1a2fce12"
+      },
+      {
+        "type": "WEB",
+        "url": "https://hackerone.com/reports/712065"
+      },
+      {
+        "type": "WEB",
+        "url": "https://hackerone.com/reports/864701"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/wiki/Changelog#v41719"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2020-8203.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20200724-0006"
+      },
+      {
+        "type": "WEB",
+        "url": "https://web.archive.org/web/20210914001339/https://github.com/lodash/lodash/issues/4744"
+      }
+    ],
+    "published": "2020-07-15T19:15:48Z",
+    "modified": "2025-08-12T21:56:17.174859Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-qw6h-vgh9-j6wx",
+    "aliases": ["CVE-2024-43796"],
+    "summary": "express vulnerable to XSS via response.redirect()",
+    "details": "### Impact\n\nIn express <4.20.0, passing untrusted user input - even after sanitizing it - to `response.redirect()` may execute untrusted code\n\n### Patches\n\nthis issue is patched in express 4.20.0\n\n### Workarounds\n\nusers are encouraged to upgrade to the patched version of express, but otherwise can workaround this issue by making sure any untrusted inputs are safe, ideally by validating them against an explicit allowlist\n\n### Details\n\nsuccessful exploitation of this vector requires the following:\n\n1. The attacker MUST control the input to response.redirect()\n1. express MUST NOT redirect before the template appears\n1. the browser MUST NOT complete redirection before:\n1. the user MUST click on the link in the template\n",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "express",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.20.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "express",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "5.0.0-alpha.1"
+              },
+              {
+                "fixed": "5.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/expressjs/express/security/advisories/GHSA-qw6h-vgh9-j6wx"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-43796"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/expressjs/express/commit/54271f69b511fea198471e6ff3400ab805d6b553"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/expressjs/express"
+      }
+    ],
+    "published": "2024-09-10T19:41:04Z",
+    "modified": "2026-09-10T03:50:18.298562940Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-qwph-4952-7xr6",
+    "aliases": ["CVE-2022-23540"],
+    "summary": "jsonwebtoken vulnerable to signature validation bypass due to insecure default algorithm in jwt.verify()",
+    "details": "# Overview\n\nIn versions <=8.5.1 of jsonwebtoken library, lack of algorithm definition and a falsy secret or key in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification.\n\n# Am I affected?\nYou will be affected if all the following are true in the `jwt.verify()` function:\n- a token with no signature is received\n- no algorithms are specified \n- a falsy (e.g. null, false, undefined) secret or key is passed \n\n# How do I fix it?\n \nUpdate to version 9.0.0 which removes the default support for the none algorithm in the `jwt.verify()` method. \n\n# Will the fix impact my users?\n\nThere will be no impact, if you update to version 9.0.0 and you don’t need to allow for the `none` algorithm. If you need 'none' algorithm, you have to explicitly specify that in `jwt.verify()` options.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:H/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "jsonwebtoken",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "9.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-qwph-4952-7xr6"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23540"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/auth0/node-jsonwebtoken"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+      }
+    ],
+    "published": "2022-12-22T03:32:59Z",
+    "modified": "2025-02-13T18:33:13Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-r5fr-rjxr-66jc",
+    "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-35jh-r3h4-6jhm"],
+    "summary": "lodash vulnerable to Code Injection via `_.template` imports key names",
+    "details": "### Impact\n\nThe fix for [CVE-2021-23337](https://github.com/advisories/GHSA-35jh-r3h4-6jhm) added validation for the `variable` option in `_.template` but did not apply the same validation to `options.imports` key names. Both paths flow into the same `Function()` constructor sink.\n\nWhen an application passes untrusted input as `options.imports` key names, an attacker can inject default-parameter expressions that execute arbitrary code at template compilation time.\n\nAdditionally, `_.template` uses `assignInWith` to merge imports, which enumerates inherited properties via `for..in`. If `Object.prototype` has been polluted by any other vector, the polluted keys are copied into the imports object and passed to `Function()`.\n\n### Patches\n\nUsers should upgrade to version 4.18.0.\n\nThe fix applies two changes:\n1. Validate `importsKeys` against the existing `reForbiddenIdentifierChars` regex (same check already used for the `variable` option)\n2. Replace `assignInWith` with `assignWith` when merging imports, so only own properties are enumerated\n\n### Workarounds\n\nDo not pass untrusted input as key names in `options.imports`. Only use developer-controlled, static key names.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-amd",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.template",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.18.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/security/advisories/GHSA-r5fr-rjxr-66jc"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-4800"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/3469357cff396a26c363f8c1b5a91dde28ba4b1c"
+      },
+      {
+        "type": "WEB",
+        "url": "https://cna.openjsf.org/security-advisories.html"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://github.com/advisories/GHSA-35jh-r3h4-6jhm"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      }
+    ],
+    "published": "2026-04-01T23:51:12Z",
+    "modified": "2026-09-10T03:51:02.970455926Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-rhx6-c78j-4q9w",
+    "aliases": ["CVE-2024-52798"],
+    "summary": "path-to-regexp contains a ReDoS",
+    "details": "### Impact\n\nThe regular expression that is vulnerable to backtracking can be generated in versions before 0.1.12 of `path-to-regexp`, originally reported in CVE-2024-45296\n\n### Patches\n\nUpgrade to 0.1.12.\n\n### Workarounds\n\nAvoid using two parameters within a single path segment, when the separator is not `.` (e.g. no `/:a-:b`). Alternatively, you can define the regex used for both parameters and ensure they do not overlap to allow backtracking.\n\n### References\n\n- https://github.com/advisories/GHSA-9wv6-86v2-598j\n- https://blakeembrey.com/posts/2024-09-web-redos/",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "path-to-regexp",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "0.1.12"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/pillarjs/path-to-regexp/security/advisories/GHSA-rhx6-c78j-4q9w"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-52798"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/pillarjs/path-to-regexp/commit/f01c26a013b1889f0c217c643964513acf17f6a4"
+      },
+      {
+        "type": "WEB",
+        "url": "https://blakeembrey.com/posts/2024-09-web-redos"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/pillarjs/path-to-regexp"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20250124-0002"
+      }
+    ],
+    "published": "2024-12-05T22:40:47Z",
+    "modified": "2026-09-10T03:50:56.223604407Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-rrrm-qjm4-v8hf",
+    "aliases": ["CVE-2022-21680"],
+    "summary": "Inefficient Regular Expression Complexity in marked",
+    "details": "### Impact\n\n_What kind of vulnerability is it?_\n\nDenial of service.\n\nThe regular expression `block.def` may cause catastrophic backtracking against some strings.\nPoC is the following.\n\n```javascript\nimport * as marked from \"marked\";\n\nmarked.parse(`[x]:${' '.repeat(1500)}x ${' '.repeat(1500)} x`);\n```\n\n_Who is impacted?_\n\nAnyone who runs untrusted markdown through marked and does not use a worker with a time limit.\n\n### Patches\n\n_Has the problem been patched?_\n\nYes\n\n_What versions should users upgrade to?_\n\n4.0.10\n\n### Workarounds\n\n_Is there a way for users to fix or remediate the vulnerability without upgrading?_\n\nDo not run untrusted markdown through marked or run marked on a [worker](https://marked.js.org/using_advanced#workers) thread and set a reasonable time limit to prevent draining resources.\n\n### References\n\n_Are there any links users can visit to find out more?_\n\n- https://marked.js.org/using_advanced#workers\n- https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS\n\n### For more information\n\nIf you have any questions or comments about this advisory:\n\n* Open an issue in [marked](https://github.com/markedjs/marked)\n",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "marked",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.0.10"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/markedjs/marked/security/advisories/GHSA-rrrm-qjm4-v8hf"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-21680"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/markedjs/marked/commit/c4a3ccd344b6929afa8a1d50ac54a721e57012c0"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/markedjs/marked"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/markedjs/marked/releases/tag/v4.0.10"
+      },
+      {
+        "type": "WEB",
+        "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AIXDMC3CSHYW3YWVSQOXAWLUYQHAO5UX"
+      }
+    ],
+    "published": "2022-01-14T21:04:41Z",
+    "modified": "2026-09-10T03:49:11.241428213Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-vh95-rmgr-6w4m",
+    "aliases": ["CVE-2020-7598"],
+    "summary": "Prototype Pollution in minimist",
+    "details": "Affected versions of `minimist` are vulnerable to prototype pollution. Arguments are not properly sanitized, allowing an attacker to modify the prototype of `Object`, causing the addition or modification of an existing property that will exist on all objects.  \nParsing the argument `--__proto__.y=Polluted` adds a `y` property with value `Polluted` to all objects. The argument `--__proto__=Polluted` raises and uncaught error and crashes the application.  \nThis is exploitable if attackers have control over the arguments being passed to `minimist`.\n\n\n## Recommendation\n\nUpgrade to versions 0.2.1, 1.2.3 or later.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "minimist",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "0.2.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "minimist",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "1.0.0"
+              },
+              {
+                "fixed": "1.2.3"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-7598"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/10bd4cdf49d9686d48214be9d579a9cdfda37c68"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/38a4d1caead72ef99e824bb420a2528eec03d9ab"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/4cf1354839cb972e38496d35e12f806eea92c11f#diff-a1e0ee62c91705696ddb71aa30ad4f95"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/63e7ed05aa4b1889ec2f3b196426db4500cbda94"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/substack/minimist"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-MINIMIST-559764"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/1179"
+      },
+      {
+        "type": "WEB",
+        "url": "http://lists.opensuse.org/opensuse-security-announce/2020-06/msg00024.html"
+      }
+    ],
+    "published": "2020-04-03T21:48:32Z",
+    "modified": "2026-03-13T22:11:31.390433Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-vp56-6g26-6827",
+    "aliases": ["CVE-2022-2596"],
+    "summary": "node-fetch Inefficient Regular Expression Complexity ",
+    "details": "[node-fetch](https://www.npmjs.com/package/node-fetch) is a light-weight module that brings window.fetch to node.js.\n\nAffected versions of this package are vulnerable to Regular Expression Denial of Service (ReDoS) in the `isOriginPotentiallyTrustworthy()` function in `referrer.js`, when processing a URL string with alternating letters and periods, such as `'http://' + 'a.a.'.repeat(i) + 'a'`.",
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "node-fetch",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "3.0.0"
+              },
+              {
+                "fixed": "3.2.10"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-2596"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/node-fetch/node-fetch/pull/1611"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/node-fetch/node-fetch/commit/28802387292baee467e042e168d92597b5bbbe3d"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/node-fetch/node-fetch"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/node-fetch/node-fetch/releases/tag/v3.2.10"
+      },
+      {
+        "type": "WEB",
+        "url": "https://huntr.dev/bounties/a7e6a136-0a4b-46c4-ad20-802f1dd60bf7"
+      }
+    ],
+    "published": "2022-08-02T00:00:25Z",
+    "modified": "2023-11-08T04:08:52.815695Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-w3w8-37jv-2c58",
+    "aliases": ["CVE-2015-8862"],
+    "summary": "Cross-Site Scripting in mustache",
+    "details": "Versions of `mustache` prior to 2.2.1 are affected by a cross-site scripting vulnerability when attributes in mustache templates are not quoted.\n\n\n\n### Example\nTemplate:\n```<a href={{foo}}/>```\n\nInput:\n```{ 'foo' : 'test.com onload=alert(1)'}```\n\nRendered result:\n```<a href=test.com onload=alert(1)/>```\n\n\n## Recommendation\n\nUpdate to version 2.2.1 or later.\nAlternatively, ensure that all attributes in hmustache templates are encapsulated with quotes.",
+    "severityVector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "mustache",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.2.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-8862"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/janl/mustache.js/commit/378bcca8a5cfe4058f294a3dbb78e8755e8e0da5"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://github.com/advisories/GHSA-w3w8-37jv-2c58"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/janl/mustache.js"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/62"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.tenable.com/security/tns-2016-18"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.openwall.com/lists/oss-security/2016/04/20/11"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.securityfocus.com/bid/96436"
+      }
+    ],
+    "published": "2017-10-24T18:33:36Z",
+    "modified": "2023-11-08T03:58:03.869169Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-w9mr-4mfr-499f",
+    "aliases": ["CVE-2017-20162"],
+    "summary": "Vercel ms Inefficient Regular Expression Complexity vulnerability",
+    "details": "A vulnerability, which was classified as problematic, has been found in vercel ms up to 1.x. This issue affects the function parse of the file index.js. The manipulation of the argument str leads to inefficient regular expression complexity. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. Upgrading to version 2.0.0 is able to address this issue. The name of the patch is caae2988ba2a37765d055c4eee63d383320ee662. It is recommended to upgrade the affected component. The associated identifier of this vulnerability is VDB-217451.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "ms",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2017-20162"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/vercel/ms/pull/89"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/vercel/ms/commit/caae2988ba2a37765d055c4eee63d383320ee662"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/vercel/ms"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/vercel/ms/releases/tag/2.0.0"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20241108-0002"
+      },
+      {
+        "type": "WEB",
+        "url": "https://vuldb.com/?ctiid.217451"
+      },
+      {
+        "type": "WEB",
+        "url": "https://vuldb.com/?id.217451"
+      }
+    ],
+    "published": "2023-01-05T12:30:27Z",
+    "modified": "2025-11-04T16:42:14Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-x5rq-j2xg-h7qm",
+    "aliases": ["CVE-2019-1010266", "SNYK-JS-LODASH-73639"],
+    "summary": "Regular Expression Denial of Service (ReDoS) in lodash",
+    "details": "lodash prior to 4.7.11 is affected by: CWE-400: Uncontrolled Resource Consumption. The impact is: Denial of service. The component is: Date handler. The attack vector is: Attacker provides very long strings, which the library attempts to match using a regular expression. The fixed version is: 4.7.11.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.7.0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.7.0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-amd",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.7.0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "RubyGems",
+        "name": "lodash-rails",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "4.7.0"
+              },
+              {
+                "fixed": "4.17.11"
+              }
+            ]
+          }
+        ],
+        "versions": [
+          "4.11.2",
+          "4.12.0",
+          "4.13.1",
+          "4.14.1",
+          "4.15.0",
+          "4.16.1",
+          "4.16.3",
+          "4.16.4",
+          "4.16.6",
+          "4.17.10",
+          "4.17.2",
+          "4.17.4",
+          "4.17.5"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-1010266"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/issues/3359"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/github/advisory-database/pull/6138"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/5c08f18d365b64063bfbfa686cbb97cdd6267347"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/wiki/Changelog"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/lodash-rails/CVE-2019-1010266.yml"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20190919-0004"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-LODASH-73639"
+      }
+    ],
+    "published": "2019-07-19T16:13:07Z",
+    "modified": "2026-09-10T03:48:25.206281974Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-x6fg-f45m-jf5q",
+    "aliases": ["CVE-2015-8855"],
+    "summary": "Regular Expression Denial of Service in semver",
+    "details": "Versions 4.3.1 and earlier of `semver` are affected by a regular expression denial of service vulnerability when extremely long version strings are parsed.\n\n\n\n## Recommendation\n\nUpdate to version 4.3.2 or later",
+    "severityVector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "1.0.4"
+              },
+              {
+                "fixed": "4.3.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-8855"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/github/advisory-database/pull/7102"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/commit/5c4c9f6e26c7052a42b5ced2a7481c5c9b4363a0"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/npm/node-semver/commit/c80180d8341a8ada0236815c29a2be59864afd70"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://github.com/advisories/GHSA-x6fg-f45m-jf5q"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/npm/node-semver"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.npmjs.com/advisories/31"
+      },
+      {
+        "type": "WEB",
+        "url": "https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.openwall.com/lists/oss-security/2016/04/20/11"
+      },
+      {
+        "type": "WEB",
+        "url": "http://www.securityfocus.com/bid/86957"
+      }
+    ],
+    "published": "2017-10-24T18:33:36Z",
+    "modified": "2026-03-04T15:06:31.969299Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-xvch-5gv4-984h",
+    "aliases": ["CVE-2021-44906"],
+    "summary": "Prototype Pollution in minimist",
+    "details": "Minimist prior to 1.2.6 and 0.2.4 is vulnerable to Prototype Pollution via file `index.js`, function `setKey()` (lines 69-95).",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "minimist",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "1.0.0"
+              },
+              {
+                "fixed": "1.2.6"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "minimist",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "0.2.4"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-44906"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/issues/11"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/substack/minimist/issues/164"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/pull/24"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/34e20b8461118608703d6485326abbb8e35e1703"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/bc8ecee43875261f4f17eb20b1243d3ed15e70eb"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/c2b981977fa834b223b408cfb860f933c9811e4d"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commit/ef9153fc52b6cea0744b2239921c5dcae4697f11"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/Marynk/JavaScript-vulnerability-detection/blob/main/minimist%20PoC.zip"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/minimistjs/minimist/commits/v0.2.4"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/substack/minimist"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/substack/minimist/blob/master/index.js#L69"
+      },
+      {
+        "type": "WEB",
+        "url": "https://security.netapp.com/advisory/ntap-20240621-0006"
+      },
+      {
+        "type": "WEB",
+        "url": "https://snyk.io/vuln/SNYK-JS-MINIMIST-559764"
+      },
+      {
+        "type": "WEB",
+        "url": "https://stackoverflow.com/questions/8588563/adding-custom-properties-to-a-function/20278068#20278068"
+      }
+    ],
+    "published": "2022-03-18T00:01:09Z",
+    "modified": "2026-03-13T22:11:59.523514Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-xxjr-mmjv-4gpg",
+    "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-f23m-r3pf-42rh"],
+    "summary": "Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions",
+    "details": "### Impact\n\nLodash versions 4.0.0 through 4.17.22 are vulnerable to prototype pollution in the `_.unset` and `_.omit` functions. An attacker can pass crafted paths which cause Lodash to delete methods from global prototypes. \n\nThe issue permits deletion of properties but does not allow overwriting their original behavior.  \n\n### Patches\n\nThis issue is patched on 4.17.23.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.23"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash.unset",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "lastAffected": "4.5.2"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-es",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.23"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      },
+      {
+        "ecosystem": "npm",
+        "name": "lodash-amd",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.0.0"
+              },
+              {
+                "fixed": "4.17.23"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/security/advisories/GHSA-xxjr-mmjv-4gpg"
+      },
+      {
+        "type": "ADVISORY",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-13465"
+      },
+      {
+        "type": "WEB",
+        "url": "https://github.com/lodash/lodash/commit/edadd452146f7e4bad4ea684e955708931d84d81"
+      },
+      {
+        "type": "WEB",
+        "url": "https://cert-portal.siemens.com/productcert/html/ssa-253495.html"
+      },
+      {
+        "type": "PACKAGE",
+        "url": "https://github.com/lodash/lodash"
+      }
+    ],
+    "published": "2026-01-21T23:01:22Z",
+    "modified": "2026-09-10T03:50:33.722177022Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "PRR-TEST-0001",
+    "aliases": [],
+    "summary": "Synthetic: semver 7.7.0 through 7.7.1 affected, range closed by last_affected",
+    "details": "A made-up advisory for the benchmark. Its only range has an introduced event and a last_affected event and no fixed event, so a matcher must treat 7.7.1 as affected and 7.7.2 as not affected.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "7.7.0"
+              },
+              {
+                "lastAffected": "7.7.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://example.com/benchmark-advisories/PRR-TEST-0001"
+      }
+    ],
+    "published": "2026-10-15T00:00:00Z",
+    "modified": "2026-10-15T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "PRR-TEST-0002",
+    "aliases": [],
+    "summary": "Synthetic: lodash 4.18.0 affected, listed by exact version only",
+    "details": "A made-up advisory for the benchmark. It has no ranges and lists the one affected version 4.18.0 explicitly, so a matcher must match on the versions list alone.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [],
+        "versions": ["4.18.0"]
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://example.com/benchmark-advisories/PRR-TEST-0002"
+      }
+    ],
+    "published": "2026-10-15T00:00:00Z",
+    "modified": "2026-10-15T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "PRR-TEST-0003",
+    "aliases": [],
+    "summary": "Synthetic: withdrawn advisory covering semver 7.8.0",
+    "details": "A made-up advisory for the benchmark. It covers semver 7.8.0 but is withdrawn, so a reviewer must report nothing for it.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "semver",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "7.8.0"
+              },
+              {
+                "fixed": "7.8.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://example.com/benchmark-advisories/PRR-TEST-0003"
+      }
+    ],
+    "published": "2026-10-15T00:00:00Z",
+    "modified": "2026-10-15T00:00:00Z",
+    "withdrawn": "2026-10-15T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "PRR-TEST-0004",
+    "aliases": [],
+    "summary": "Synthetic: mustache 4.1.0 affected, advisory not reviewed by GitHub",
+    "details": "A made-up advisory for the benchmark. It covers mustache 4.1.0 and GitHub did not review it, so a reviewer reports the finding and may mark it as unreviewed.",
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "mustache",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "4.1.0"
+              },
+              {
+                "fixed": "4.2.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [
+      {
+        "type": "WEB",
+        "url": "https://example.com/benchmark-advisories/PRR-TEST-0004"
+      }
+    ],
+    "published": "2026-10-15T00:00:00Z",
+    "modified": "2026-10-15T00:00:00Z",
+    "isGithubReviewed": false
+  }
+]

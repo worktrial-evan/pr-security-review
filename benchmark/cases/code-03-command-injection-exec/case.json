@@ -1,0 +1,20 @@
+{
+  "id": "code-03-command-injection-exec",
+  "split": "dev",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds a /ping route that interpolates the host query parameter into a shell command run with execSync.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-03-command-injection-exec"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-78",
+      "file": "src/server.ts",
+      "startLine": 104,
+      "endLine": 105
+    }
+  ]
+}

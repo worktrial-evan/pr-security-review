@@ -1,0 +1,19 @@
+{
+  "name": "benchmark-fixture-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/server.ts"
+  },
+  "dependencies": {
+    "jsonwebtoken": "9.0.2",
+    "lodash": "4.17.21",
+    "minimist": "1.2.8",
+    "ms": "1.0.0",
+    "mustache": "4.2.0"
+  },
+  "devDependencies": {
+    "semver": "7.6.3"
+  }
+}

@@ -1,0 +1,13 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: publish the release
+        run: gh release create "v${{ github.run_number }}" --notes "benchmark fixture release"
+        env:
+          GH_TOKEN: ghp_FAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKEFAKE

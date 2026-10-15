@@ -1,0 +1,18 @@
+{
+  "id": "sca-01-direct-prod-vulnerable",
+  "split": "dev",
+  "category": "sca",
+  "isClean": false,
+  "description": "The head downgrades the direct prod dependency ms from 2.1.3 to 1.0.0 in package.json and both lockfiles, a version GHSA-w9mr-4mfr-499f affects. jsonwebtoken keeps its own nested ms 2.1.3.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/sca-01-direct-prod-vulnerable"
+  },
+  "expected": [
+    {
+      "detector": "sca",
+      "packageName": "ms",
+      "advisoryId": "GHSA-w9mr-4mfr-499f"
+    }
+  ]
+}

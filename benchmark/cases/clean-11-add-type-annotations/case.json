@@ -1,0 +1,12 @@
+{
+  "id": "clean-11-add-type-annotations",
+  "split": "test",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head adds explicit type annotations to two locals in findUserByCredentials in src/users.ts. No behavior changes.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-11-add-type-annotations"
+  },
+  "expected": []
+}

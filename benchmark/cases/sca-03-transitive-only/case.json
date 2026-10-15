@@ -1,0 +1,18 @@
+{
+  "id": "sca-03-transitive-only",
+  "split": "dev",
+  "category": "sca",
+  "isClean": false,
+  "description": "The head adds an overrides entry for jws to package.json and pins the transitive jws under jsonwebtoken from 3.2.3 to 3.2.2 in both lockfiles, a version GHSA-869p-cjfg-cm3x affects. No direct dependency changes.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/sca-03-transitive-only"
+  },
+  "expected": [
+    {
+      "detector": "sca",
+      "packageName": "jws",
+      "advisoryId": "GHSA-869p-cjfg-cm3x"
+    }
+  ]
+}

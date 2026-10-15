@@ -1,0 +1,12 @@
+{
+  "id": "clean-14-comment-only-change",
+  "split": "test",
+  "category": "clean",
+  "isClean": true,
+  "description": "The head rewords the comment above the containment check in src/downloads.ts. No code changes.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/clean-14-comment-only-change"
+  },
+  "expected": []
+}

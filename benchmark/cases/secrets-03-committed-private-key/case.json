@@ -1,0 +1,18 @@
+{
+  "id": "secrets-03-committed-private-key",
+  "split": "dev",
+  "category": "secrets",
+  "isClean": false,
+  "description": "The head commits deploy/key.pem, a PEM file holding an RSA private key block.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/secrets-03-committed-private-key"
+  },
+  "expected": [
+    {
+      "detector": "secrets",
+      "file": "deploy/key.pem",
+      "startLine": 1
+    }
+  ]
+}

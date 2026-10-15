@@ -1,0 +1,17 @@
+{
+  "packages": [
+    "buffer-equal-constant-time",
+    "ecdsa-sig-formatter",
+    "jwa",
+    "lodash.includes",
+    "lodash.isboolean",
+    "lodash.isinteger",
+    "lodash.isnumber",
+    "lodash.isplainobject",
+    "lodash.isstring",
+    "lodash.once",
+    "lru-cache",
+    "safe-buffer",
+    "yallist"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "code-12-missing-authorization-admin",
+  "split": "test",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds an /admin/users route that lists every user for any caller with a valid session token, without the admin role check the /admin route makes.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-12-missing-authorization-admin"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-862",
+      "file": "src/server.ts",
+      "startLine": 72,
+      "endLine": 76
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "code-01-sql-injection-concatenation",
+  "split": "dev",
+  "category": "code",
+  "isClean": false,
+  "description": "The head adds a /users/search route whose sqlite query is built by interpolating the name query parameter into the SQL string.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/code-01-sql-injection-concatenation"
+  },
+  "expected": [
+    {
+      "detector": "code-review",
+      "cwe": "CWE-89",
+      "file": "src/server.ts",
+      "startLine": 29,
+      "endLine": 34
+    }
+  ]
+}

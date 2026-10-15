@@ -1,0 +1,18 @@
+{
+  "id": "secrets-04-generic-high-entropy-token",
+  "split": "test",
+  "category": "secrets",
+  "isClean": false,
+  "description": "The head adds src/metrics.ts, which posts the request count to a metrics service with a bearer token held in a const apiToken string literal.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/secrets-04-generic-high-entropy-token"
+  },
+  "expected": [
+    {
+      "detector": "secrets",
+      "file": "src/metrics.ts",
+      "startLine": 4
+    }
+  ]
+}

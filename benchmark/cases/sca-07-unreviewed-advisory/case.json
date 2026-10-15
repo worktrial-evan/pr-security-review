@@ -1,0 +1,18 @@
+{
+  "id": "sca-07-unreviewed-advisory",
+  "split": "dev",
+  "category": "sca",
+  "isClean": false,
+  "description": "The head downgrades mustache from 4.2.0 to 4.1.0 in package.json and both lockfiles, a version the synthetic advisory PRR-TEST-0004 affects although GitHub did not review that advisory.",
+  "source": {
+    "kind": "snapshot",
+    "dir": "benchmark/cases/sca-07-unreviewed-advisory"
+  },
+  "expected": [
+    {
+      "detector": "sca",
+      "packageName": "mustache",
+      "advisoryId": "PRR-TEST-0004"
+    }
+  ]
+}
