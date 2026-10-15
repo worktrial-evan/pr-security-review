@@ -15,7 +15,7 @@ export interface CheckFileHeadersOptions {
 }
 
 // one file that breaks the header rule, and why
-export interface FileHeaderOffense {
+export interface FileHeaderViolation {
   filePath: string
   reason: string
 }
@@ -25,19 +25,19 @@ export interface FileHeaderOffense {
  */
 export async function checkFileHeaders({
   roots,
-}: CheckFileHeadersOptions): Promise<FileHeaderOffense[]> {
-  const offenses: FileHeaderOffense[] = []
+}: CheckFileHeadersOptions): Promise<FileHeaderViolation[]> {
+  const violations: FileHeaderViolation[] = []
 
   // check each root, skipping one that is missing
   for (const root of roots) {
     if (!isDirectory(root)) {
       continue
     }
-    const rootOffenses = await checkRoot(root)
-    offenses.push(...rootOffenses)
+    const rootViolations = await checkRoot(root)
+    violations.push(...rootViolations)
   }
 
-  return offenses
+  return violations
 }
 
 // tell whether a path names an existing directory
@@ -49,8 +49,8 @@ function isDirectory(path: string): boolean {
 }
 
 // check every .ts file under one root, in path order
-async function checkRoot(root: string): Promise<FileHeaderOffense[]> {
-  const offenses: FileHeaderOffense[] = []
+async function checkRoot(root: string): Promise<FileHeaderViolation[]> {
+  const violations: FileHeaderViolation[] = []
 
   // list the files, leaving out anything under node_modules
   const relativePaths = await Array.fromAsync(
@@ -64,14 +64,14 @@ async function checkRoot(root: string): Promise<FileHeaderOffense[]> {
   // record each file that breaks the rule
   for (const relativePath of relevantRelativePaths) {
     const filePath = join(root, relativePath)
-    const reason = await findHeaderOffenseReason(filePath)
+    const reason = await findHeaderViolationReason(filePath)
     if (reason === null) {
       continue
     }
-    offenses.push({ filePath, reason })
+    violations.push({ filePath, reason })
   }
 
-  return offenses
+  return violations
 }
 
 // tell whether a relative path has a node_modules segment
@@ -81,7 +81,7 @@ function isUnderNodeModules(relativePath: string): boolean {
 }
 
 // return why a file breaks the header rule, or null when it follows the rule
-async function findHeaderOffenseReason(
+async function findHeaderViolationReason(
   filePath: string,
 ): Promise<string | null> {
   // read the first two lines
@@ -113,19 +113,19 @@ async function findHeaderOffenseReason(
   return 'line 1 is not a // comment'
 }
 
-// run as a command: print each offender to stderr and exit 1 when any file breaks the rule
+// run as a command: print each violation to stderr and exit 1 when any file breaks the rule
 async function runFromCommandLine(): Promise<void> {
   // take the roots from the arguments, falling back to the defaults
   const argumentRoots = process.argv.slice(2)
   const roots = argumentRoots.length > 0 ? argumentRoots : defaultRoots
 
-  // report every offender with its reason
-  const offenses = await checkFileHeaders({ roots })
-  for (const offense of offenses) {
-    console.error(`${offense.filePath}: ${offense.reason}`)
+  // report every violation with its reason
+  const violations = await checkFileHeaders({ roots })
+  for (const violation of violations) {
+    console.error(`${violation.filePath}: ${violation.reason}`)
   }
 
-  process.exit(offenses.length > 0 ? 1 : 0)
+  process.exit(violations.length > 0 ? 1 : 0)
 }
 
 // run the check only when this file is the entry point, not when a test imports it

@@ -18,7 +18,7 @@ export const benchmarkCategories = [
 export const benchmarkCategorySchema = z.enum(benchmarkCategories)
 export type BenchmarkCategory = z.infer<typeof benchmarkCategorySchema>
 
-// a case checked into the benchmark directory. the objects are strict so a source cannot mix both shapes
+// a source checked into the benchmark directory. the object is strict
 export const snapshotBenchmarkSourceSchema = z.strictObject({
   kind: z.literal('snapshot'),
   dir: z.string(),
@@ -27,7 +27,7 @@ export type SnapshotBenchmarkSource = z.infer<
   typeof snapshotBenchmarkSourceSchema
 >
 
-// a case fetched from a git repository at two revisions
+// a source fetched from a git repository at two revisions. the object is strict
 export const gitBenchmarkSourceSchema = z.strictObject({
   kind: z.literal('git'),
   repoUrl: z.url(),
@@ -86,10 +86,7 @@ export const benchmarkCaseResultSchema = z.object({
 export type BenchmarkCaseResult = z.infer<typeof benchmarkCaseResultSchema>
 
 // the score of a whole benchmark run, overall and broken down by detector and category
-export const benchmarkScoreSchema = z.object({
-  precision: z.number().min(0).max(1),
-  recall: z.number().min(0).max(1),
-  f1: z.number().min(0).max(1),
+export const benchmarkScoreSchema = scoreTripleSchema.extend({
   byDetector: z.partialRecord(detectorKindSchema, scoreTripleSchema),
   byCategory: z.partialRecord(benchmarkCategorySchema, scoreTripleSchema),
   falsePositivesOnClean: z.number().int().nonnegative(),

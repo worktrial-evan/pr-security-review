@@ -68,7 +68,7 @@ export function advanceRunState({
   error,
   now = new Date(),
 }: AdvanceRunStateOptions): RunState {
-  // reject any move out of done or failed, which end a run
+  // reject any move out of done or failed
   if (state.stage === 'done' || state.stage === 'failed') {
     throw new IllegalTransitionError({
       from: state.stage,
@@ -77,7 +77,7 @@ export function advanceRunState({
     })
   }
 
-  // fail from any other stage, which needs the error that explains the failure
+  // fail from any other stage
   if (to === 'failed') {
     return failRunState({ state, error, now })
   }
@@ -145,7 +145,7 @@ function completeCurrentStage(
     0,
   )
 
-  // the current stage started when the last completed stage ended
+  // compute the time spent in the current stage. it started when the last completed stage ended
   const runStartedAtMs = Date.parse(state.startedAt)
   const stageStartedAtMs = runStartedAtMs + completedDurationMs
   const durationMs = now.getTime() - stageStartedAtMs

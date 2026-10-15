@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
 import { checkFileHeaders } from './check-file-headers'
 
-// the checked-in fixture tree with three offenders and two headed files
+// the checked-in fixture tree with three violations and two headed files
 const headerFixturesRoot = join(
   import.meta.dir,
   '..',
@@ -42,14 +42,14 @@ afterAll(async () => {
 
 describe('checkFileHeaders', () => {
   test('reports exactly the headerless, block comment and blank first line fixtures', async () => {
-    const offenses = await checkFileHeaders({ roots: [headerFixturesRoot] })
+    const violations = await checkFileHeaders({ roots: [headerFixturesRoot] })
 
-    // compare by file name so the fixture location does not matter
-    const reportedOffenses = offenses.map((offense) => ({
-      fileName: basename(offense.filePath),
-      reason: offense.reason,
+    // compare by file name and reason
+    const reportedViolations = violations.map((violation) => ({
+      fileName: basename(violation.filePath),
+      reason: violation.reason,
     }))
-    expect(reportedOffenses).toEqual([
+    expect(reportedViolations).toEqual([
       { fileName: 'blank-first-line.ts', reason: 'line 1 is blank' },
       {
         fileName: 'block-comment.ts',
@@ -60,20 +60,23 @@ describe('checkFileHeaders', () => {
   })
 
   test('returns an empty list for a root with only headed files', async () => {
-    const offenses = await checkFileHeaders({ roots: [cleanRoot] })
-    expect(offenses).toEqual([])
+    // run the check on the throwaway tree and expect no violation
+    const violations = await checkFileHeaders({ roots: [cleanRoot] })
+    expect(violations).toEqual([])
   })
 
   test('skips a missing root instead of failing', async () => {
+    // run the check on a root that does not exist and expect no violation
     const missingRoot = join(cleanRoot, 'does-not-exist')
-    const offenses = await checkFileHeaders({ roots: [missingRoot] })
-    expect(offenses).toEqual([])
+    const violations = await checkFileHeaders({ roots: [missingRoot] })
+    expect(violations).toEqual([])
   })
 
-  test('reports offenders from every root given', async () => {
-    const offenses = await checkFileHeaders({
+  test('reports violations from every root given', async () => {
+    // run the check on both roots at once and expect only the fixture violations
+    const violations = await checkFileHeaders({
       roots: [cleanRoot, headerFixturesRoot],
     })
-    expect(offenses).toHaveLength(3)
+    expect(violations).toHaveLength(3)
   })
 })

@@ -1,4 +1,4 @@
-// resolves the directory that holds the caches. caches live outside the repo so every worktree shares them
+// the cache directory every worktree shares. it lives outside the repository and is read from one environment variable
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 

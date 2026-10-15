@@ -8,7 +8,7 @@ import {
   pullRequestReferenceSchema,
 } from './pull-request-source'
 
-// how a review runs. failOnSeverity makes the cli exit non-zero at that severity or above
+// how a review runs. failOnSeverity is the lowest severity that fails the review
 export const reviewOptionsSchema = z.object({
   isLlmEnabled: z.boolean(),
   isCacheEnabled: z.boolean(),

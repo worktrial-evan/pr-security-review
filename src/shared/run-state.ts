@@ -37,21 +37,22 @@ export const runErrorSchema = z.object({
 })
 export type RunError = z.infer<typeof runErrorSchema>
 
-// a run at any stage but failed. the object is strict so an error cannot ride on an active run
-export const activeRunStateSchema = z.strictObject({
-  stage: activeRunStageSchema,
+// the fields every run state has. the object is strict and every state built on it stays strict
+const runStateBaseSchema = z.strictObject({
   runId: z.string(),
   startedAt: z.iso.datetime({ offset: true }),
   completedStages: z.array(completedStageSchema),
 })
+
+// a run at any stage but failed. the object is strict so an error cannot ride on an active run
+export const activeRunStateSchema = runStateBaseSchema.extend({
+  stage: activeRunStageSchema,
+})
 export type ActiveRunState = z.infer<typeof activeRunStateSchema>
 
 // a failed run, which is the only state that holds an error
-export const failedRunStateSchema = z.strictObject({
+export const failedRunStateSchema = runStateBaseSchema.extend({
   stage: z.literal('failed'),
-  runId: z.string(),
-  startedAt: z.iso.datetime({ offset: true }),
-  completedStages: z.array(completedStageSchema),
   error: runErrorSchema,
 })
 export type FailedRunState = z.infer<typeof failedRunStateSchema>

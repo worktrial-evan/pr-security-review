@@ -49,7 +49,7 @@ export async function checkBoundaries({
   const dependencyViolations =
     cruiseResult.summary.violations.map(toBoundaryViolation)
 
-  // add every barrel file on disk the cruise did not report, so an empty barrel is caught too
+  // add every barrel file on disk the cruise did not report. an empty barrel has no edge for the cruise to see
   const reportedBarrelViolations = dependencyViolations.filter(
     (violation) => violation.rule === noBarrelFilesRuleName,
   )

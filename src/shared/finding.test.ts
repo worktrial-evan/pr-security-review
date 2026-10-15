@@ -46,38 +46,41 @@ describe('findingSchema', () => {
 
   test('a parsed id keeps the finding id brand', () => {
     // @ts-expect-error a plain string lacks the finding id brand
-    const plainStringAsId: FindingId = '0123456789abcdef'
+    const plainStringAsFindingId: FindingId = '0123456789abcdef'
 
     // read the id back from a parsed finding as a branded id
     const parsedFinding = findingSchema.parse(scaFindingSample)
-    const parsedId: FindingId = parsedFinding.id
-    expect(parsedId).toBe(scaFindingSample.id)
-    expect(plainStringAsId.length).toBe(16)
+    const parsedFindingId: FindingId = parsedFinding.id
+    expect(parsedFindingId).toBe(scaFindingSample.id)
+    expect(plainStringAsFindingId.length).toBe(16)
   })
 })
 
 describe('createFindingId', () => {
   test('the same detector and stable key give the same id', () => {
     // derive the id twice from the same input
-    const firstId = createFindingId({
+    const firstFindingId = createFindingId({
       detector: 'sca',
       stableKey: 'lodash@4.17.20:GHSA-1',
     })
-    const secondId = createFindingId({
+    const secondFindingId = createFindingId({
       detector: 'sca',
       stableKey: 'lodash@4.17.20:GHSA-1',
     })
-    expect(firstId).toBe(secondId)
+    expect(firstFindingId).toBe(secondFindingId)
   })
 
   test('a different detector gives a different id', () => {
     // derive the id under two detectors from the same stable key
-    const scaId = createFindingId({ detector: 'sca', stableKey: 'same-key' })
-    const secretsId = createFindingId({
+    const scaFindingId = createFindingId({
+      detector: 'sca',
+      stableKey: 'same-key',
+    })
+    const secretsFindingId = createFindingId({
       detector: 'secrets',
       stableKey: 'same-key',
     })
-    expect(scaId).not.toBe(secretsId)
+    expect(scaFindingId).not.toBe(secretsFindingId)
   })
 
   test('an id is 16 lowercase hex characters', () => {

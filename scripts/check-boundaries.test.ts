@@ -29,6 +29,7 @@ describe('checkBoundaries', () => {
   })
 
   test('resolves the alias import to the file inside the target module', async () => {
+    // run the check and expect the alias violation to name the resolved file
     const { violations } = await checkBoundaries({ root: badFixtureRoot })
     expect(violations).toContainEqual({
       from: 'src/audit/alias-bad.ts',
@@ -38,11 +39,14 @@ describe('checkBoundaries', () => {
   })
 
   test('reports each barrel file once', async () => {
+    // run the check and keep only the barrel violations
     const { violations } = await checkBoundaries({ root: badFixtureRoot })
     const barrelViolations = violations.filter(
       (violation) => violation.rule === 'no-barrel-files',
     )
     const barrelSources = barrelViolations.map((violation) => violation.from)
+
+    // expect each barrel file exactly once
     expect(barrelSources.sort()).toEqual([
       'src/llm/index.ts',
       'src/report/index.ts',
@@ -50,11 +54,13 @@ describe('checkBoundaries', () => {
   })
 
   test('reports nothing on the clean fixture', async () => {
+    // run the check on the clean fixture and expect no violation
     const { violations } = await checkBoundaries({ root: cleanFixtureRoot })
     expect(violations).toEqual([])
   })
 
   test('leaves the current directory where it was', async () => {
+    // run the check and compare the working directory before and after
     const workingDirectoryBefore = process.cwd()
     await checkBoundaries({ root: badFixtureRoot })
     expect(process.cwd()).toBe(workingDirectoryBefore)

@@ -30,77 +30,9 @@ const sampleRunError: RunError = {
   step: 'matching',
 }
 
-// build a clock set the given number of milliseconds after the run started
-function clockAt(elapsedMs: number): Date {
-  return new Date(runStartedAt.getTime() + elapsedMs)
-}
-
-// the milliseconds after the run start at which the given stage of a sample state began
-function sampleStageStartMs(stage: ActiveRunStage): number {
-  return activeRunStages.indexOf(stage) * sampleStageDurationMs
-}
-
-// build an active run state at the given stage, with every earlier stage completed in 100 milliseconds
-function buildRunStateAt(stage: ActiveRunStage): ActiveRunState {
-  // complete every stage before the given one
-  const stageIndex = activeRunStages.indexOf(stage)
-  const earlierStages = activeRunStages.slice(0, stageIndex)
-  const completedStages = earlierStages.map((earlierStage) => ({
-    stage: earlierStage,
-    durationMs: sampleStageDurationMs,
-  }))
-
-  return {
-    stage,
-    runId: sampleRunId,
-    startedAt: runStartedAt.toISOString(),
-    completedStages,
-  }
-}
-
-// build a run that failed during matching
-function buildFailedRunState(): FailedRunState {
-  return {
-    ...buildRunStateAt('matching'),
-    stage: 'failed',
-    error: sampleRunError,
-  }
-}
-
-// assert that the advance throws an IllegalTransitionError naming its stages and leaves the input state unchanged
-function expectIllegalTransition(options: AdvanceRunStateOptions): void {
-  // keep a copy of the input to compare after the rejection
-  const stateBeforeAdvance = structuredClone(options.state)
-
-  // catch the error and narrow it for the field checks
-  const caughtError = catchAdvanceError(options)
-  expect(caughtError).toBeInstanceOf(IllegalTransitionError)
-  if (!(caughtError instanceof IllegalTransitionError)) {
-    return
-  }
-
-  // check the stages on the error and in its message
-  expect(caughtError.from).toBe(options.state.stage)
-  expect(caughtError.to).toBe(options.to)
-  expect(caughtError.message).toContain(`'${options.state.stage}'`)
-  expect(caughtError.message).toContain(`'${options.to}'`)
-
-  // check the input state is untouched
-  expect(options.state).toEqual(stateBeforeAdvance)
-}
-
-// run the advance and return what it throws, or null when it does not throw
-function catchAdvanceError(options: AdvanceRunStateOptions): unknown {
-  try {
-    advanceRunState(options)
-  } catch (error) {
-    return error
-  }
-  return null
-}
-
 describe('createRunState', () => {
   test('starts at resolving-pull-request with the run id and no completed stages', () => {
+    // create a run under the injected clock and compare the whole state
     const runState = createRunState({ runId: sampleRunId, now: runStartedAt })
     expect(runState).toEqual({
       stage: 'resolving-pull-request',
@@ -111,7 +43,7 @@ describe('createRunState', () => {
   })
 
   test('defaults the clock to the current time', () => {
-    // read the clock around the call so the start time has to fall between the two readings
+    // read the clock before and after the call
     const beforeCreateMs = Date.now()
     const runState = createRunState({ runId: sampleRunId })
     const afterCreateMs = Date.now()
@@ -123,6 +55,7 @@ describe('createRunState', () => {
   })
 
   test('produces a state that parses against the contract', () => {
+    // create a run and parse it against the contract
     const runState = createRunState({ runId: sampleRunId, now: runStartedAt })
     expect(runStateSchema.parse(runState)).toEqual(runState)
   })
@@ -154,7 +87,7 @@ describe('advanceRunState', () => {
   })
 
   test('leaves the input state unchanged after a legal advance', () => {
-    // advance a copy-compared state
+    // keep a copy of the input and advance it
     const matchingRunState = buildRunStateAt('matching')
     const stateBeforeAdvance = structuredClone(matchingRunState)
     const reachabilityRunState = advanceRunState({
@@ -301,3 +234,72 @@ describe('advanceRunState', () => {
     throw new Error('the skip was not rejected')
   })
 })
+
+// build an active run state at the given stage, with every earlier stage completed in 100 milliseconds
+function buildRunStateAt(stage: ActiveRunStage): ActiveRunState {
+  // complete every stage before the given one
+  const stageIndex = activeRunStages.indexOf(stage)
+  const earlierStages = activeRunStages.slice(0, stageIndex)
+  const completedStages = earlierStages.map((earlierStage) => ({
+    stage: earlierStage,
+    durationMs: sampleStageDurationMs,
+  }))
+
+  return {
+    stage,
+    runId: sampleRunId,
+    startedAt: runStartedAt.toISOString(),
+    completedStages,
+  }
+}
+
+// build a clock set the given number of milliseconds after the run started
+function clockAt(elapsedMs: number): Date {
+  return new Date(runStartedAt.getTime() + elapsedMs)
+}
+
+// the milliseconds after the run start at which the given stage of a sample state began
+function sampleStageStartMs(stage: ActiveRunStage): number {
+  return activeRunStages.indexOf(stage) * sampleStageDurationMs
+}
+
+// assert that the advance throws an IllegalTransitionError naming its stages and leaves the input state unchanged
+function expectIllegalTransition(options: AdvanceRunStateOptions): void {
+  // keep a copy of the input to compare after the rejection
+  const stateBeforeAdvance = structuredClone(options.state)
+
+  // catch the error and narrow it for the field checks
+  const caughtError = catchAdvanceError(options)
+  expect(caughtError).toBeInstanceOf(IllegalTransitionError)
+  if (!(caughtError instanceof IllegalTransitionError)) {
+    return
+  }
+
+  // check the stages on the error and in its message
+  expect(caughtError.from).toBe(options.state.stage)
+  expect(caughtError.to).toBe(options.to)
+  expect(caughtError.message).toContain(`'${options.state.stage}'`)
+  expect(caughtError.message).toContain(`'${options.to}'`)
+
+  // check the input state is untouched
+  expect(options.state).toEqual(stateBeforeAdvance)
+}
+
+// run the advance and return what it throws, or null when it does not throw
+function catchAdvanceError(options: AdvanceRunStateOptions): unknown {
+  try {
+    advanceRunState(options)
+  } catch (error) {
+    return error
+  }
+  return null
+}
+
+// build a run that failed during matching
+function buildFailedRunState(): FailedRunState {
+  return {
+    ...buildRunStateAt('matching'),
+    stage: 'failed',
+    error: sampleRunError,
+  }
+}
