@@ -1,0 +1,33 @@
+# refreshes the OSV npm advisory cache every day. a parse failure fails the run, which flags a change in the OSV format
+name: refresh-advisories
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.3
+      - run: bun install --frozen-lockfile
+      # the cache directory sits outside the checkout, so the index is never committed
+      - name: refresh advisories
+        run: bun run refresh-advisories
+        env:
+          PULL_REQUEST_REVIEW_CACHE_DIR: ${{ runner.temp }}/pull-request-review-cache
+      - name: upload the index and snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: osv-npm-advisories
+          path: ${{ runner.temp }}/pull-request-review-cache/advisories/npm/
+          if-no-files-found: error
+          retention-days: 7

@@ -8,7 +8,8 @@
     "check:boundaries": "bun scripts/check-boundaries.ts",
     "check:headers": "bun scripts/check-file-headers.ts",
     "verify": "bun check && biome check . && bun run check:boundaries && bun run check:headers && bun test",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "refresh-advisories": "bun src/advisories/refresh-advisories-command.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
