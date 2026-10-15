@@ -1,0 +1,37 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "scopes-app",
+      "dependencies": {
+        "web-server": "^1.0.0",
+      },
+      "devDependencies": {
+        "test-runner": "^2.0.0",
+      },
+      "optionalDependencies": {
+        "native-watch": "^1.0.0",
+      },
+      "peerDependencies": {
+        "view-kit": "^18.0.0",
+      },
+    },
+  },
+  "packages": {
+    "assert-kit": ["assert-kit@1.4.0", "", { "dependencies": { "deep-equal-kit": "^1.0.0" } }, "sha512-fixture-assert-kit"],
+
+    "deep-equal-kit": ["deep-equal-kit@1.0.0", "", {}, "sha512-fixture-deep-equal-kit"],
+
+    "fast-json": ["fast-json@3.1.0", "", {}, "sha512-fixture-fast-json"],
+
+    "native-watch": ["native-watch@1.0.1", "", { "os": "darwin" }, "sha512-fixture-native-watch"],
+
+    "shared-util": ["shared-util@1.0.2", "", {}, "sha512-fixture-shared-util"],
+
+    "test-runner": ["test-runner@2.1.0", "", { "dependencies": { "assert-kit": "^1.0.0", "shared-util": "^1.0.0" } }, "sha512-fixture-test-runner"],
+
+    "view-kit": ["view-kit@18.2.0", "", {}, "sha512-fixture-view-kit"],
+
+    "web-server": ["web-server@1.2.0", "", { "dependencies": { "shared-util": "^1.0.0" }, "optionalDependencies": { "fast-json": "^3.0.0" }, "peerDependencies": { "missing-peer": "*", "view-kit": "^18.0.0" }, "optionalPeers": ["missing-peer"] }, "sha512-fixture-web-server"],
+  }
+}

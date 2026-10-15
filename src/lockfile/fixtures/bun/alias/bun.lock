@@ -1,0 +1,17 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "alias-app",
+      "dependencies": {
+        "lodash": "^4.17.21",
+        "lodash-legacy": "npm:lodash@4.17.20",
+      },
+    },
+  },
+  "packages": {
+    "lodash": ["lodash@4.17.21", "", {}, "sha512-fixture-lodash-21"],
+
+    "lodash-legacy": ["lodash@4.17.20", "", {}, "sha512-fixture-lodash-20"],
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "scopes-app",
+  "dependencies": {
+    "web-server": "^1.0.0"
+  },
+  "devDependencies": {
+    "test-runner": "^2.0.0"
+  },
+  "optionalDependencies": {
+    "native-watch": "^1.0.0"
+  },
+  "peerDependencies": {
+    "view-kit": "^18.0.0"
+  }
+}

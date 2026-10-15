@@ -1,0 +1,514 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`parseLockfile with the bun lockfile keeps every version of a package and nested scoped copies 1`] = `
+[
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/format",
+    "scope": "prod",
+    "version": "1.0.4",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/format",
+    "scope": "prod",
+    "version": "2.0.0",
+  },
+  {
+    "dependencyKeys": [
+      "@acme/format@1.0.4",
+      "left-pad@1.1.3",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/logger",
+    "scope": "prod",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.1.3",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+]
+`;
+
+exports[`parseLockfile with the bun lockfile marks dev only, shared, optional and peer dependencies 1`] = `
+[
+  {
+    "dependencyKeys": [
+      "deep-equal-kit@1.0.0",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "assert-kit",
+    "scope": "dev",
+    "version": "1.4.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "deep-equal-kit",
+    "scope": "dev",
+    "version": "1.0.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "fast-json",
+    "scope": "prod",
+    "version": "3.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "native-watch",
+    "scope": "prod",
+    "version": "1.0.1",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "shared-util",
+    "scope": "prod",
+    "version": "1.0.2",
+  },
+  {
+    "dependencyKeys": [
+      "assert-kit@1.4.0",
+      "shared-util@1.0.2",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "test-runner",
+    "scope": "dev",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "view-kit",
+    "scope": "prod",
+    "version": "18.2.0",
+  },
+  {
+    "dependencyKeys": [
+      "fast-json@3.1.0",
+      "shared-util@1.0.2",
+      "view-kit@18.2.0",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "web-server",
+    "scope": "prod",
+    "version": "1.2.0",
+  },
+]
+`;
+
+exports[`parseLockfile with the bun lockfile keeps the real package name of an npm alias 1`] = `
+[
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "lodash",
+    "scope": "prod",
+    "version": "4.17.21",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "lodash-legacy",
+    "realPackageName": "lodash",
+    "scope": "prod",
+    "version": "4.17.20",
+  },
+]
+`;
+
+exports[`parseLockfile with the bun lockfile marks workspace packages and walks their dependencies 1`] = `
+[
+  {
+    "dependencyKeys": [
+      "left-pad@1.3.0",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": true,
+    "isWorkspace": true,
+    "name": "@acme/utils",
+    "scope": "prod",
+    "version": "workspace:packages/utils",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "test-runner",
+    "scope": "dev",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [
+      "@acme/utils@workspace:packages/utils",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": true,
+    "isWorkspace": true,
+    "name": "web",
+    "scope": "prod",
+    "version": "workspace:packages/web",
+  },
+]
+`;
+
+exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball specifiers as unparseable versions 1`] = `
+[
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "file-kit",
+    "scope": "prod",
+    "version": "file:../file-kit",
+  },
+  {
+    "dependencyKeys": [
+      "left-pad@1.3.0",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "git-kit",
+    "scope": "prod",
+    "version": "github:acme/git-kit#4f2a9c1",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "link-kit",
+    "scope": "prod",
+    "version": "link:link-kit",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "tarball-kit",
+    "scope": "prod",
+    "version": "https://example.com/tarball-kit-1.0.0.tgz",
+  },
+]
+`;
+
+exports[`parseLockfile with the npm lockfile keeps every version of a package and nested scoped copies 1`] = `
+[
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/format",
+    "scope": "prod",
+    "version": "1.0.4",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/format",
+    "scope": "prod",
+    "version": "2.0.0",
+  },
+  {
+    "dependencyKeys": [
+      "@acme/format@1.0.4",
+      "left-pad@1.1.3",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "@acme/logger",
+    "scope": "prod",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.1.3",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+]
+`;
+
+exports[`parseLockfile with the npm lockfile marks dev only, shared, optional and peer dependencies 1`] = `
+[
+  {
+    "dependencyKeys": [
+      "deep-equal-kit@1.0.0",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "assert-kit",
+    "scope": "dev",
+    "version": "1.4.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "deep-equal-kit",
+    "scope": "dev",
+    "version": "1.0.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "fast-json",
+    "scope": "prod",
+    "version": "3.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "native-watch",
+    "scope": "prod",
+    "version": "1.0.1",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "shared-util",
+    "scope": "prod",
+    "version": "1.0.2",
+  },
+  {
+    "dependencyKeys": [
+      "assert-kit@1.4.0",
+      "shared-util@1.0.2",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "test-runner",
+    "scope": "dev",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "view-kit",
+    "scope": "prod",
+    "version": "18.2.0",
+  },
+  {
+    "dependencyKeys": [
+      "fast-json@3.1.0",
+      "shared-util@1.0.2",
+      "view-kit@18.2.0",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "web-server",
+    "scope": "prod",
+    "version": "1.2.0",
+  },
+]
+`;
+
+exports[`parseLockfile with the npm lockfile keeps the real package name of an npm alias 1`] = `
+[
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "lodash",
+    "scope": "prod",
+    "version": "4.17.21",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "lodash-legacy",
+    "realPackageName": "lodash",
+    "scope": "prod",
+    "version": "4.17.20",
+  },
+]
+`;
+
+exports[`parseLockfile with the npm lockfile marks workspace packages and walks their dependencies 1`] = `
+[
+  {
+    "dependencyKeys": [
+      "left-pad@1.3.0",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": true,
+    "isWorkspace": true,
+    "name": "@acme/utils",
+    "scope": "prod",
+    "version": "workspace:packages/utils",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "test-runner",
+    "scope": "dev",
+    "version": "2.1.0",
+  },
+  {
+    "dependencyKeys": [
+      "@acme/utils@workspace:packages/utils",
+    ],
+    "isDirect": false,
+    "isVersionUnparseable": true,
+    "isWorkspace": true,
+    "name": "web",
+    "scope": "prod",
+    "version": "workspace:packages/web",
+  },
+]
+`;
+
+exports[`parseLockfile with the npm lockfile keeps git, file, link and tarball specifiers as unparseable versions 1`] = `
+[
+  {
+    "dependencyKeys": [
+      "left-pad@1.3.0",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "file-kit",
+    "scope": "prod",
+    "version": "file:../file-kit",
+  },
+  {
+    "dependencyKeys": [
+      "left-pad@1.3.0",
+    ],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "git-kit",
+    "scope": "prod",
+    "version": "git+ssh://git@github.com/acme/git-kit.git#4f2a9c1",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": false,
+    "isVersionUnparseable": false,
+    "isWorkspace": false,
+    "name": "left-pad",
+    "scope": "prod",
+    "version": "1.3.0",
+  },
+  {
+    "dependencyKeys": [],
+    "isDirect": true,
+    "isVersionUnparseable": true,
+    "isWorkspace": false,
+    "name": "tarball-kit",
+    "scope": "prod",
+    "version": "file:../tarball-kit-1.0.0.tgz",
+  },
+]
+`;

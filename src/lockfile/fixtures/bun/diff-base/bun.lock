@@ -1,0 +1,20 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "diff-app",
+      "dependencies": {
+        "alpha-kit": "^1.0.0",
+        "bravo-kit": "^2.0.0",
+        "charlie-kit": "^1.0.0",
+      },
+    },
+  },
+  "packages": {
+    "alpha-kit": ["alpha-kit@1.0.0", "", {}, "sha512-fixture-alpha-kit"],
+
+    "bravo-kit": ["bravo-kit@2.0.0", "", {}, "sha512-fixture-bravo-kit-20"],
+
+    "charlie-kit": ["charlie-kit@1.0.0", "", {}, "sha512-fixture-charlie-kit"],
+  }
+}

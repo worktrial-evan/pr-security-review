@@ -1,0 +1,8 @@
+{
+  "name": "diff-app",
+  "dependencies": {
+    "alpha-kit": "^1.0.0",
+    "bravo-kit": "^2.1.0",
+    "delta-kit": "^1.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "legacy-app",
+  "dependencies": {
+    "left-pad": "^1.3.0"
+  }
+}

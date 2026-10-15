@@ -1,0 +1,8 @@
+{
+  "name": "specifiers-app",
+  "dependencies": {
+    "file-kit": "file:../file-kit",
+    "git-kit": "github:acme/git-kit#v1.0.0",
+    "tarball-kit": "file:../tarball-kit-1.0.0.tgz"
+  }
+}

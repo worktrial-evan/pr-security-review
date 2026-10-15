@@ -1,0 +1,7 @@
+{
+  "name": "alias-app",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "lodash-legacy": "npm:lodash@4.17.20"
+  }
+}

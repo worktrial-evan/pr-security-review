@@ -1,0 +1,24 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "scoped-app",
+      "dependencies": {
+        "@acme/format": "^2.0.0",
+        "@acme/logger": "^2.0.0",
+        "left-pad": "^1.3.0",
+      },
+    },
+  },
+  "packages": {
+    "@acme/format": ["@acme/format@2.0.0", "", {}, "sha512-fixture-acme-format-2"],
+
+    "@acme/logger": ["@acme/logger@2.1.0", "", { "dependencies": { "@acme/format": "^1.0.0", "left-pad": "^1.1.0" } }, "sha512-fixture-acme-logger"],
+
+    "left-pad": ["left-pad@1.3.0", "", {}, "sha512-fixture-left-pad-13"],
+
+    "@acme/logger/@acme/format": ["@acme/format@1.0.4", "", {}, "sha512-fixture-acme-format-1"],
+
+    "@acme/logger/left-pad": ["left-pad@1.1.3", "", {}, "sha512-fixture-left-pad-11"],
+  }
+}

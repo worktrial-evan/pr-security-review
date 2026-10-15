@@ -1,0 +1,25 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "specifiers-app",
+      "dependencies": {
+        "file-kit": "file:../file-kit",
+        "git-kit": "github:acme/git-kit#v1.0.0",
+        "link-kit": "link:link-kit",
+        "tarball-kit": "https://example.com/tarball-kit-1.0.0.tgz",
+      },
+    },
+  },
+  "packages": {
+    "file-kit": ["file-kit@file:../file-kit", {}],
+
+    "git-kit": ["git-kit@github:acme/git-kit#4f2a9c1", { "dependencies": { "left-pad": "^1.3.0" } }, "acme-git-kit-4f2a9c1"],
+
+    "left-pad": ["left-pad@1.3.0", "", {}, "sha512-fixture-left-pad-13"],
+
+    "link-kit": ["link-kit@link:link-kit", {}],
+
+    "tarball-kit": ["tarball-kit@https://example.com/tarball-kit-1.0.0.tgz", {}],
+  }
+}
