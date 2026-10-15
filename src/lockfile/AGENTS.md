@@ -34,7 +34,7 @@ Bun and Node built-ins and npm packages are always allowed.
 ## Files
 
 - `lockfile-registry.ts`: the file name and parser registries, `detectLockfiles` and `parseLockfile`
-- `lockfile-registry.test.ts`: detection, every fixture case in both formats with explicit assertions and a snapshot, the same projection from both formats, determinism, npm version 1 and an unknown bun version rejected, malformed lockfile and package.json rejected
+- `lockfile-registry.test.ts`: detection, every fixture case in both formats with explicit assertions and a snapshot, the same projection from both formats, determinism, npm version 1 and an unknown bun version rejected, malformed lockfile and package.json rejected, two names that differ only in case kept apart
 - `bun-lock.ts`: the `bun.lock` parser. Reads jsonc with trailing commas and resolves a dependency of key `a/b` through `a/b/d`, then `a/d`, then `d`
 - `npm-lock.ts`: the `package-lock.json` parser for versions 2 and 3. Reads the packages map and resolves dependencies up the node_modules folders the way node does
 - `lockfile-node.ts`: the install node and parsed lockfile types every parser returns, the parser signature, and `toParsedLockfile`
@@ -47,7 +47,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `dependency-graph.ts`: `buildDependencyGraph`
 - `dependency-graph.test.ts`: a transitive path, a direct target, a top level copy found before a nested one, a match by real package name and an unreachable name
 - `lockfile-fixtures.ts`: reads a fixture case into lockfile text or a dependency set for the tests
-- `fixtures/bun/<case>/` and `fixtures/npm/<case>/`: a lockfile and its package.json per case: scoped-multi-version, scopes, alias, workspace, specifiers, diff-base and diff-head. `fixtures/npm/scoped-multi-version` is lockfile version 2 and `fixtures/npm/lockfile-v1` is the rejected version 1
+- `fixtures/bun/<case>/` and `fixtures/npm/<case>/`: a lockfile and its package.json per case: scoped-multi-version, scopes, alias, workspace, specifiers, diff-base and diff-head. `fixtures/npm/scoped-multi-version` is lockfile version 2, `fixtures/npm/lockfile-v1` is the rejected version 1, and `fixtures/npm/case-variant-names` installs both `JSONStream` and `jsonstream`
 - `__snapshots__/lockfile-registry.test.ts.snap`: the sorted projection of every fixture case in both formats
 - `tsconfig.json`: the module's composite TypeScript project. It references `shared`, this module's row of the matrix
 - `AGENTS.md`: this file
@@ -58,6 +58,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - Every resolved version appears once per name@version. Several installed copies of one name@version merge: prod and direct win and their dependency keys are joined.
 - Scope is dev only when the root or a workspace devDependencies reach a version and no production root does. An unreachable version is prod.
 - A version is direct only when the root package.json lists its name and the root resolves that name to it. A nested copy of the same name is not direct.
+- Every package keeps the exact name the lockfile installs it under, with its case unchanged. npm treats `JSONStream` and `jsonstream` as two packages, so they stay two entries. Matching a name against advisory data lowercases it with `normalizePackageName` from `src/shared/package-name.ts`, and that happens outside this module.
 - An alias keeps the installed name as `name` and the aliased package as `realPackageName`, which is set only on an alias.
 - A workspace version is `workspace:<path>` in both formats and has `isWorkspace` true. A git, file, link or tarball dependency keeps its specifier as the version. `isVersionUnparseable` is true for every version that is not valid semver.
 - A dependency that resolves nowhere, such as a missing optional peer, is left out of `dependencyKeys`.

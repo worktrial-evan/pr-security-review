@@ -308,6 +308,25 @@ describe('parseLockfile versions', () => {
   })
 })
 
+describe('parseLockfile names', () => {
+  test('keeps two names that differ only in case as two packages', async () => {
+    const dependencySet = await readFixtureDependencySet({
+      lockfileKind: 'npm',
+      fixtureCase: 'case-variant-names',
+    })
+    expect([...dependencySet.versionsByDependency.keys()]).toEqual([
+      'JSONStream',
+      'jsonstream',
+    ])
+    expect(findDependencyVersion(dependencySet, 'JSONStream@1.3.5').name).toBe(
+      'JSONStream',
+    )
+    expect(findDependencyVersion(dependencySet, 'jsonstream@1.0.3').name).toBe(
+      'jsonstream',
+    )
+  })
+})
+
 // find the one version of a package in a set, failing the test when it is missing
 function findDependencyVersion(
   dependencySet: DependencySet,

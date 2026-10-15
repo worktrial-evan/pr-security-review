@@ -1,0 +1,7 @@
+{
+  "name": "case-variant-app",
+  "dependencies": {
+    "JSONStream": "^1.3.5",
+    "jsonstream": "^1.0.3"
+  }
+}

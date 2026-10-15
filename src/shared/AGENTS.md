@@ -112,7 +112,7 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 
 ### package-name.ts
 
-- `normalizePackageName(packageName)`: returns an npm package name trimmed and lowercased. Every module that keys or looks up data by npm package name uses it, so a name from a lockfile and a name from an advisory compare equal
+- `normalizePackageName(packageName)`: returns an npm package name trimmed and lowercased. A module that matches a package name against advisory data compares names through it, so a name from a lockfile and a name from an advisory compare equal
 
 ## Inputs and outputs
 
@@ -147,7 +147,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `benchmark.test.ts`: a snapshot case, a git case and a score round-trip, a source mixing both shapes is rejected
 - `cache-directory.ts`: the cache directory environment variable name and `resolveCacheDirectory`, which keeps every cache outside the repository so worktrees share it
 - `cache-directory.test.ts`: the variable set returns exactly that path, unset falls back to `.cache/pull-request-review` under the home directory, an empty string falls back the same way. The variable is saved before and restored after each test
-- `package-name.ts`: `normalizePackageName`, the one npm package name rule
+- `package-name.ts`: `normalizePackageName`, the npm package name rule for matching against advisory data
 - `package-name.test.ts`: case, surrounding whitespace, a scoped name and an already normalized name
 - `tsconfig.json`: the module's composite TypeScript project. It references no other module
 - `AGENTS.md`: this file
@@ -161,7 +161,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - A `FindingId` is only made by `findingIdSchema` or `createFindingId`. `createFindingId` is deterministic: the same detector and stable key always give the same id, and the same stable key under two detectors gives two ids.
 - The run state objects are strict, so an error can only sit on a failed run. The benchmark source objects are strict, so a source cannot mix the snapshot and git shapes.
 - `src/shared/**` is a frozen tree. A field is added, renamed or removed only through a change whose proposal names `src/shared` in its Impact section, never by a module change.
-- `normalizePackageName` is the only npm package name rule in the codebase. Another module keys data by package name through it and never keeps its own copy.
+- `normalizePackageName` is the only npm package name rule in the codebase, and no module keeps its own copy. It applies where a name is matched against advisory data. A module that records installed packages, such as the lockfile parser, keeps each exact name, because npm treats names that differ only in case as different packages.
 - `resolveCacheDirectory` never returns a path inside the repository and never creates a directory. It reads one environment variable and nothing else.
 
 ## How to test
