@@ -2,10 +2,7 @@
 import { describe, expect, test } from 'bun:test'
 import type { Advisory } from '@/shared/advisory'
 import { type OsvFixtureName, readOsvFixture } from './osv-fixtures'
-import {
-  listAffectedNpmPackageNames,
-  normalizePackageName,
-} from './package-name'
+import { listAffectedNpmPackageNames } from './package-name'
 import { parseOsvEntry } from './parse-osv'
 
 // parse one fixture and fail the test when it does not parse
@@ -156,11 +153,6 @@ describe('parseOsvEntry', () => {
 })
 
 describe('package names', () => {
-  test('trims and lowercases a name', () => {
-    expect(normalizePackageName(' Haraka ')).toBe('haraka')
-    expect(normalizePackageName('@XMLDom/XMLDom')).toBe('@xmldom/xmldom')
-  })
-
   test('lists the normalized npm packages an advisory affects, each once', async () => {
     const uppercaseAdvisory = await parseFixture('uppercase-name')
     const xmldomAdvisory = await parseFixture('last-affected')

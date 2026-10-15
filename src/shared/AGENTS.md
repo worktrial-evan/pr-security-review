@@ -110,6 +110,10 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 - `cacheDirectoryEnvironmentVariable`: the name `PULL_REQUEST_REVIEW_CACHE_DIR`, so callers and tests set the variable through one constant
 - `resolveCacheDirectory()`: returns the directory that holds every cache. The variable's value when it is set and non-empty, else `.cache/pull-request-review` under the home directory. Creates nothing on disk
 
+### package-name.ts
+
+- `normalizePackageName(packageName)`: returns an npm package name trimmed and lowercased. Every module that keys or looks up data by npm package name uses it, so a name from a lockfile and a name from an advisory compare equal
+
 ## Inputs and outputs
 
 The contract files read nothing and produce nothing at runtime. Other modules parse a value through a schema at their boundary, for example where a detector emits a finding, where the audit sink receives an event, where a benchmark case is loaded from disk or where a model response is validated, and carry the inferred type inside. `createFindingId` takes a detector kind and a stable key and returns a `FindingId`. `resolveCacheDirectory` reads `PULL_REQUEST_REVIEW_CACHE_DIR` from the environment and returns a path outside the repository; the module that owns a cache creates its own subdirectory under it.
@@ -143,6 +147,8 @@ Bun and Node built-ins and npm packages are always allowed.
 - `benchmark.test.ts`: a snapshot case, a git case and a score round-trip, a source mixing both shapes is rejected
 - `cache-directory.ts`: the cache directory environment variable name and `resolveCacheDirectory`, which keeps every cache outside the repository so worktrees share it
 - `cache-directory.test.ts`: the variable set returns exactly that path, unset falls back to `.cache/pull-request-review` under the home directory, an empty string falls back the same way. The variable is saved before and restored after each test
+- `package-name.ts`: `normalizePackageName`, the one npm package name rule
+- `package-name.test.ts`: case, surrounding whitespace, a scoped name and an already normalized name
 - `tsconfig.json`: the module's composite TypeScript project. It references no other module
 - `AGENTS.md`: this file
 
@@ -155,6 +161,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - A `FindingId` is only made by `findingIdSchema` or `createFindingId`. `createFindingId` is deterministic: the same detector and stable key always give the same id, and the same stable key under two detectors gives two ids.
 - The run state objects are strict, so an error can only sit on a failed run. The benchmark source objects are strict, so a source cannot mix the snapshot and git shapes.
 - `src/shared/**` is a frozen tree. A field is added, renamed or removed only through a change whose proposal names `src/shared` in its Impact section, never by a module change.
+- `normalizePackageName` is the only npm package name rule in the codebase. Another module keys data by package name through it and never keeps its own copy.
 - `resolveCacheDirectory` never returns a path inside the repository and never creates a directory. It reads one environment variable and nothing else.
 
 ## How to test

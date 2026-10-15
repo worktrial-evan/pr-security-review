@@ -7,9 +7,9 @@ import {
   advisorySnapshotSchema,
 } from '@/shared/advisory'
 import { resolveCacheDirectory } from '@/shared/cache-directory'
+import { normalizePackageName } from '@/shared/package-name'
 import { loadAdvisoryStore } from './advisory-store'
 import { resolveAdvisoryCachePaths } from './cache-layout'
-import { normalizePackageName } from './package-name'
 
 // the packages the benchmark cases use, plus mustache for a withdrawn entry, xmldom for a last_affected range and faker.js for an entry github has not reviewed
 export const benchmarkAdvisoryPackageNames = [

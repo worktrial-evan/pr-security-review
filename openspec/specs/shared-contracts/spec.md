@@ -177,3 +177,14 @@ The shared module SHALL export `resolveCacheDirectory()`, which returns the one 
 #### Scenario: Environment variable empty
 - **WHEN** `PULL_REQUEST_REVIEW_CACHE_DIR` is set to an empty string
 - **THEN** `resolveCacheDirectory()` returns the same default as when the variable is not set
+
+### Requirement: Package name normalization
+The shared module SHALL export one function that normalizes an npm package name by trimming surrounding whitespace and lowercasing it. Every module that keys or looks up data by npm package name SHALL use it.
+
+#### Scenario: Case and whitespace
+- **WHEN** `' Haraka '` and `'@XMLDom/XMLDom'` are normalized
+- **THEN** the results are `'haraka'` and `'@xmldom/xmldom'`
+
+#### Scenario: Already normalized
+- **WHEN** an already normalized name is normalized again
+- **THEN** it is returned unchanged

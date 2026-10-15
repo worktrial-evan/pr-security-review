@@ -6,8 +6,8 @@ import {
   advisorySchema,
   advisorySnapshotSchema,
 } from '@/shared/advisory'
+import { normalizePackageName } from '@/shared/package-name'
 import { resolveAdvisoryCachePaths } from './cache-layout'
-import { normalizePackageName } from './package-name'
 
 // the advisories a lookup returns, checked against the contract on the way out
 const packageAdvisoriesSchema = z.array(advisorySchema)
