@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "code-style": {
+      "source": "doubleoevan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/code-style/SKILL.md",
+      "computedHash": "f42f003dd9f45dcb23308169a3eefa3b4afab141cd1fe33274be6426d4c48bce"
+    },
+    "git-discipline": {
+      "source": "doubleoevan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/git-discipline/SKILL.md",
+      "computedHash": "653b87637eb44a52146c345015288d983b87f9e3b3dd4e1e24dc0be62fd2863b"
+    },
+    "jsx-conventions": {
+      "source": "doubleoevan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/jsx-conventions/SKILL.md",
+      "computedHash": "a239c611c0f313db9114a85b5d828f22c8cb9a23665413b587a9bd6e08a7f94e"
+    }
+  }
+}

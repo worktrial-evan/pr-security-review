@@ -1,0 +1,57 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Claude Code (shared .claude/skills, .claude/commands and settings.json stay committed)
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
+
+# Codex (shared .agents/skills and AGENTS.md stay committed)
+.codex/sessions/
+.codex/log/
+.codex/history.jsonl
+.codex/auth.json
+.codex/*.local.*
+AGENTS.local.md
+
+# Cursor (shared .cursor/rules, commands and skills stay committed)
+.cursor/mcp.json
+.cursor/*.local.*
+.cursor/chat/
+.cursorindexingignore
+
+# IntelliJ / JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
