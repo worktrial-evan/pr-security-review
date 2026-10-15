@@ -1,0 +1,14 @@
+{
+  // One composite project per module. The references are this module's row of the
+  // allowed-imports matrix in .dependency-cruiser.cjs, so bun check rejects an import
+  // from any other module with TS6307
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outDir": "../../node_modules/.cache/typescript/matcher"
+  },
+  "include": ["./**/*.ts"],
+  "references": [{ "path": "../shared" }]
+}

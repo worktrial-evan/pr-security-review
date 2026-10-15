@@ -1,0 +1,12 @@
+{
+  // The project for the files outside src: the CLI entry, its test and the check scripts.
+  // It is composite like the module projects so the root solution file can reference it
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outDir": "./node_modules/.cache/typescript/root-files"
+  },
+  "include": ["index.ts", "index.test.ts", "scripts/**/*.ts"]
+}

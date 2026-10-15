@@ -15,6 +15,9 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
+    // Path alias
+    "paths": { "@/*": ["./src/*"] },
+
     // Best practices
     "strict": true,
     "skipLibCheck": true,
@@ -26,5 +29,37 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
-  }
+  },
+
+  // The root is a solution file with no files of its own. Every project below extends it,
+  // so the options, the alias and the exclude apply everywhere, and bun check follows the
+  // references like tsc -b. Each src module is one composite project whose references are
+  // its row of the allowed-imports matrix, and tsconfig.root-files.json holds the files
+  // outside src
+  "files": [],
+  "references": [
+    { "path": "./src/shared" },
+    { "path": "./src/audit" },
+    { "path": "./src/run-state" },
+    { "path": "./src/pull-request-source" },
+    { "path": "./src/lockfile" },
+    { "path": "./src/advisories" },
+    { "path": "./src/matcher" },
+    { "path": "./src/reachability" },
+    { "path": "./src/secrets" },
+    { "path": "./src/prompts" },
+    { "path": "./src/llm" },
+    { "path": "./src/report" },
+    { "path": "./src/code-review" },
+    { "path": "./src/summarize" },
+    { "path": "./src/pipeline" },
+    { "path": "./src/benchmark" },
+    { "path": "./src/harness" },
+    { "path": "./src/server" },
+    { "path": "./src/cli" },
+    { "path": "./tsconfig.root-files.json" }
+  ],
+
+  // Fixture trees hold deliberately bad imports that must stay out of bun check
+  "exclude": ["node_modules", "test/fixtures"]
 }

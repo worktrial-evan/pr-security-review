@@ -1,0 +1,5 @@
+# the pre-commit hook runs the one verify chain from package.json so the hook cannot drift from the script
+pre-commit:
+  commands:
+    verify:
+      run: bun run verify

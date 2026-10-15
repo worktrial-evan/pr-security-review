@@ -1,0 +1,6 @@
+{
+  "contextLines": 30,
+  "isLlmEnabled": true,
+  "isCacheEnabled": true,
+  "advisoryStaleHours": 24
+}

@@ -1,32 +1,31 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+# Constraints every change must obey. OpenSpec injects this block into every artifact instruction.
+context: |
+  Runtime and tooling are Bun only, per CLAUDE.md: bun test, bun check, bunx and Bun.file. Never node, npm, npx, jest, vitest or ts-node.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  The code is a modular monolith under src/<module>/. The allowed-imports matrix lives in .dependency-cruiser.cjs and bun run check:boundaries enforces it. A module imports itself, Bun and Node built-ins, npm packages and only the modules the matrix grants. No barrel files: never an index.ts inside a module directory.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Every .ts file under src/, scripts/ and benchmark/ starts with a // comment on line 1 (line 2 after a shebang) stating what the file does. bun run check:headers enforces it.
+
+  Every src/<module>/ has an AGENTS.md following docs/agents-template.md. A change that touches a module updates that module's AGENTS.md in the same change.
+
+  Follow .agents/skills/code-style/SKILL.md for every TypeScript edit and .agents/skills/git-discipline/SKILL.md for every commit decision.
+
+  Never abbreviate pull request in any name: PullRequest in types, pullRequest in values, pull-request in file and module names.
+
+  These files are frozen: package.json, bun.lock, tsconfig.json, biome.json, .dependency-cruiser.cjs, lefthook.yml, .github/workflows/ci.yml, openspec/config.yaml, src/shared/**, docs/agents-template.md, README.md. Only a change whose proposal names them under Impact edits them, so a module change never adds a dependency, a shared contract field or a README section.
+
+  Caches live outside the repo. Every cache (advisories, LLM responses, cloned benchmark repositories) is written under the directory resolveCacheDirectory() from src/shared/cache-directory.ts returns: PULL_REQUEST_REVIEW_CACHE_DIR when set and non-empty, else ~/.cache/pull-request-review. Never add a cache/ directory to the tree or to .gitignore. Tests and CI point the variable at a temporary directory.
+
+  bun run verify runs bun check, biome check, check:boundaries, check:headers and bun test, and must pass before a change is done. The pre-commit hook and CI run the same command.
+
+  Git rules: never push, never merge, never archive a change on your own. One commit per change, made only after the user archives it, holding the implementation, the planning artifacts and the archived change together. Stage files as they are finished.
+
+  Never write a real token into a file, fixture or log.
+
+# Rules added to the built-in guidance for one artifact, keyed by artifact id.
+rules:
+  tasks:
+    - 'The last two tasks of every change are "bun run verify passes" and "module AGENTS.md updated", in that order'
+    - Every task states how to verify it

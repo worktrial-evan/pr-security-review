@@ -55,3 +55,6 @@ AGENTS.local.md
 *.ipr
 *.iws
 .fleet/
+
+# review run output (written at runtime)
+runs/
