@@ -1,0 +1,140 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`assembleReviewPacket matches the snapshot over the named fixtures at 30 context lines 1`] = `
+{
+  "chunks": [
+    {
+      "chunkCount": 1,
+      "chunkNumber": 1,
+      "file": "src/config/load-settings.ts",
+      "lineCount": 61,
+      "text": 
+"file: src/config/load-settings.ts
+status: modified
+chunk: 1 of 1
+@@ +11,61 @@
+11   export const setting11 = readSetting('setting-11')
+12   export const setting12 = readSetting('setting-12')
+13   export const setting13 = readSetting('setting-13')
+14   export const setting14 = readSetting('setting-14')
+15   export const setting15 = readSetting('setting-15')
+16   export const setting16 = readSetting('setting-16')
+17   export const setting17 = readSetting('setting-17')
+18   export const setting18 = readSetting('setting-18')
+19   export const setting19 = readSetting('setting-19')
+20   export const setting20 = readSetting('setting-20')
+21   export const setting21 = readSetting('setting-21')
+22   export const setting22 = readSetting('setting-22')
+23   export const setting23 = readSetting('setting-23')
+24   export const setting24 = readSetting('setting-24')
+25   export const setting25 = readSetting('setting-25')
+26   export const setting26 = readSetting('setting-26')
+27   export const setting27 = readSetting('setting-27')
+28   export const setting28 = readSetting('setting-28')
+29   export const setting29 = readSetting('setting-29')
+30   export const setting30 = readSetting('setting-30')
+31   export const setting31 = readSetting('setting-31')
+32   export const setting32 = readSetting('setting-32')
+33   export const setting33 = readSetting('setting-33')
+34   export const setting34 = readSetting('setting-34')
+35   export const setting35 = readSetting('setting-35')
+36   export const setting36 = readSetting('setting-36')
+37   export const setting37 = readSetting('setting-37')
+38   export const setting38 = readSetting('setting-38')
+39   export const setting39 = readSetting('setting-39')
+40   export const setting40 = readSetting('setting-40')
+41 + export const isTracingEnabled = readSetting('tracing') === 'on'
+42   export const setting42 = readSetting('setting-42')
+43   export const setting43 = readSetting('setting-43')
+44   export const setting44 = readSetting('setting-44')
+45   export const setting45 = readSetting('setting-45')
+46   export const setting46 = readSetting('setting-46')
+47   export const setting47 = readSetting('setting-47')
+48   export const setting48 = readSetting('setting-48')
+49   export const setting49 = readSetting('setting-49')
+50   export const setting50 = readSetting('setting-50')
+51   export const setting51 = readSetting('setting-51')
+52   export const setting52 = readSetting('setting-52')
+53   export const setting53 = readSetting('setting-53')
+54   export const setting54 = readSetting('setting-54')
+55   export const setting55 = readSetting('setting-55')
+56   export const setting56 = readSetting('setting-56')
+57   export const setting57 = readSetting('setting-57')
+58   export const setting58 = readSetting('setting-58')
+59   export const setting59 = readSetting('setting-59')
+60   export const setting60 = readSetting('setting-60')
+61   export const setting61 = readSetting('setting-61')
+62   export const setting62 = readSetting('setting-62')
+63   export const setting63 = readSetting('setting-63')
+64   export const setting64 = readSetting('setting-64')
+65   export const setting65 = readSetting('setting-65')
+66   export const setting66 = readSetting('setting-66')
+67   export const setting67 = readSetting('setting-67')
+68   export const setting68 = readSetting('setting-68')
+69   export const setting69 = readSetting('setting-69')
+70   export const setting70 = readSetting('setting-70')
+71   export const setting71 = readSetting('setting-71')"
+,
+    },
+    {
+      "chunkCount": 1,
+      "chunkNumber": 1,
+      "file": "src/http/parse-request.ts",
+      "lineCount": 4,
+      "text": 
+"file: src/http/parse-request.ts
+status: renamed
+renamed from: src/http/request-parser.ts
+chunk: 1 of 1
+@@ +4,3 @@
+4   export function parseRequest(rawRequest: string): ParsedRequest {
+0 -   const headerText = rawRequest.split("\\r\\n\\r\\n")[0]
+5 +   const headerText = rawRequest.split('\\r\\n\\r\\n')[0] ?? ''
+6     return { headers: parseHeaders(headerText) }"
+,
+    },
+    {
+      "chunkCount": 1,
+      "chunkNumber": 1,
+      "file": "src/users/find-user.ts",
+      "lineCount": 7,
+      "text": 
+"file: src/users/find-user.ts
+status: modified
+chunk: 1 of 1
+@@ +12,7 @@
+12   export async function findUser(request: HttpRequest): Promise<HttpResponse> {
+13     const database = await connectDatabase()
+14 +   const userId = request.query.id
+15 +   const rows = await database.query("SELECT * FROM users WHERE id = " + userId)
+16     if (rows.length === 0) {
+17       return notFound()
+18     }"
+,
+    },
+  ],
+  "hash": "3f5f81a250872b5f8c4925bd421e5ef83bfa654f0be7fceb4f35f389acdf36b4",
+  "skippedFiles": [
+    {
+      "file": "assets/logo.png",
+      "reason": "binary",
+    },
+    {
+      "file": "bun.lock",
+      "reason": "lockfile",
+    },
+    {
+      "file": "dist/app.min.js",
+      "reason": "generated",
+    },
+    {
+      "file": "src/legacy/old-handler.ts",
+      "reason": "deleted",
+    },
+    {
+      "file": "src/metrics/report-usage.ts",
+      "reason": "no-added-lines",
+    },
+  ],
+}
+`;
