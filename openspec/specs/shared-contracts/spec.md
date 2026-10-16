@@ -135,7 +135,7 @@ The review contract SHALL define ReviewOptions, ReviewMetadata, StepError, Revie
 
 #### Scenario: Data fields
 - **WHEN** the review contract is used
-- **THEN** ReviewOptions has isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDir, reviewModelId, summarizeModelId, contextLines and optional failOnSeverity; ReviewMetadata has runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions record, modelIds record, groundingRejectionCount and degradedSteps; StepError has step, message, isFatal; ReviewResult has metadata, findings, errors
+- **THEN** ReviewOptions has isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDir, reviewModelId, summarizeModelId, contextLines and optional failOnSeverity; ReviewMetadata has runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions record, modelIds record, groundingRejectionCount, suspectedPromptInjectionCount and degradedSteps; StepError has step, message, isFatal; ReviewResult has metadata, findings, errors
 
 #### Scenario: ReviewPipeline shape
 - **WHEN** a pipeline is typed as a ReviewPipeline

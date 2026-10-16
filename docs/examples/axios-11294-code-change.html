@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security review 20261016-013526-18cc1a80</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --background: #ffffff;
+  --text: #1c2128;
+  --muted-text: #59636e;
+  --border: #d1d9e0;
+  --surface: #f6f8fa;
+  --link: #0969da;
+  --critical: #a40e26;
+  --high: #c2410c;
+  --medium: #9a6700;
+  --low: #1a7f37;
+  --info: #57606a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1117;
+    --text: #e6edf3;
+    --muted-text: #9198a1;
+    --border: #3d444d;
+    --surface: #151b23;
+    --link: #4493f8;
+    --critical: #ff7b72;
+    --high: #ffa657;
+    --medium: #e3b341;
+    --low: #56d364;
+    --info: #9198a1;
+  }
+}
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  padding: 16px;
+  background: var(--background);
+  color: var(--text);
+  font: 14px/1.5 system-ui, sans-serif;
+}
+a { color: var(--link); }
+code { font: 12px ui-monospace, monospace; word-break: break-all; }
+h1 { margin: 0 0 12px; font-size: 20px; }
+.run-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 16px;
+  margin: 0 0 12px;
+}
+.run-details dt { color: var(--muted-text); }
+.run-details dd { margin: 0; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 8px; }
+.counts ul { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
+.counts strong { font-size: 18px; }
+.counts .severity-critical strong { color: var(--critical); }
+.counts .severity-high strong { color: var(--high); }
+.counts .severity-medium strong { color: var(--medium); }
+.counts .severity-low strong { color: var(--low); }
+.origin-line { margin: 0 0 16px; color: var(--muted-text); }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.filter { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.filter summary { padding: 4px 10px; cursor: pointer; user-select: none; }
+.filter-values { display: flex; flex-direction: column; padding: 4px 10px 8px; }
+.row-count { margin: 6px 0 0 auto; color: var(--muted-text); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--surface); white-space: nowrap; }
+th button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+th[aria-sort="ascending"] button::after { content: " \25B2"; }
+th[aria-sort="descending"] button::after { content: " \25BC"; }
+tr.finding { cursor: pointer; }
+tr.finding:hover { background: var(--surface); }
+tr.finding.muted { opacity: 0.55; }
+td.empty { color: var(--muted-text); }
+.badge { padding: 1px 8px; border: 1px solid currentColor; border-radius: 999px; font-size: 12px; }
+.badge.severity-critical { color: var(--critical); }
+.badge.severity-high { color: var(--high); }
+.badge.severity-medium { color: var(--medium); }
+.badge.severity-low { color: var(--low); }
+.badge.severity-info { color: var(--info); }
+tr.detail td { background: var(--surface); }
+.detail-list { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; }
+.detail-list dt { color: var(--muted-text); }
+.detail-list dd { margin: 0; }
+.detail-list ol, .detail-list ul { margin: 0; padding-left: 20px; }
+</style>
+</head>
+<body>
+<header>
+<h1>Pull request security review</h1>
+<dl class="run-details"><dt>Ran at</dt><dd><time datetime="2026-10-16T01:35:26.245Z">2026-10-16T01:35:26.245Z</time></dd><dt>Pull request</dt><dd><a href="https://github.com/axios/axios/pull/11294" rel="noreferrer">axios/axios#11294</a></dd><dt>Base sha</dt><dd><code>28e9b84ac59c034260c1927f4a0b7c022b6b0071</code></dd><dt>Head sha</dt><dd><code>68a7d77df3739b38cc91f7cf790a1440aa566368</code></dd><dt>Run id</dt><dd><code>20261016-013526-18cc1a80</code></dd><dt>Duration</dt><dd>13s</dd><dt>Total cost</dt><dd>$0.0753</dd><dt>Advisory snapshot</dt><dd>–</dd><dt>Prompts</dt><dd>code-review v1, summarize v1</dd><dt>Models</dt><dd>code-review: anthropic/claude-sonnet-5-5, summarize: anthropic/claude-haiku-5-5</dd><dt>Suspected prompt injections</dt><dd>0</dd></dl>
+<div class="counts"><ul aria-label="Introduced findings by severity"><li class="severity-critical" data-severity="critical" data-count="0"><strong>0</strong> critical</li><li class="severity-high" data-severity="high" data-count="0"><strong>0</strong> high</li><li class="severity-medium" data-severity="medium" data-count="0"><strong>0</strong> medium</li><li class="severity-low" data-severity="low" data-count="0"><strong>0</strong> low</li><li class="severity-info" data-severity="info" data-count="0"><strong>0</strong> info</li></ul><ul aria-label="Introduced findings by detector"><li class="detector-sca" data-detector="sca" data-count="0"><strong>0</strong> sca</li><li class="detector-code-review" data-detector="code-review" data-count="0"><strong>0</strong> code-review</li><li class="detector-secrets" data-detector="secrets" data-count="0"><strong>0</strong> secrets</li></ul></div>
+<p class="origin-line">0 pre-existing, 0 introduced by this pull request. Counts above include introduced findings only.</p>
+</header>
+<main>
+<section class="filters" aria-label="Filters"><details class="filter" data-filter="detector"><summary data-label="Detector">Detector</summary><div class="filter-values"><label><input type="checkbox" value="sca"> sca</label><label><input type="checkbox" value="code-review"> code-review</label><label><input type="checkbox" value="secrets"> secrets</label></div></details><details class="filter" data-filter="severity"><summary data-label="Severity">Severity</summary><div class="filter-values"><label><input type="checkbox" value="critical"> critical</label><label><input type="checkbox" value="high"> high</label><label><input type="checkbox" value="medium"> medium</label><label><input type="checkbox" value="low"> low</label><label><input type="checkbox" value="info"> info</label></div></details><details class="filter" data-filter="dependencyScope"><summary data-label="Dependency scope">Dependency scope</summary><div class="filter-values"><label><input type="checkbox" value="prod"> prod</label><label><input type="checkbox" value="dev"> dev</label></div></details><details class="filter" data-filter="githubReviewed"><summary data-label="GitHub reviewed">GitHub reviewed</summary><div class="filter-values"><label><input type="checkbox" value="yes"> yes</label><label><input type="checkbox" value="no"> no</label></div></details><details class="filter" data-filter="reachability"><summary data-label="Reachability">Reachability</summary><div class="filter-values"><label><input type="checkbox" value="direct-imported"> direct-imported</label><label><input type="checkbox" value="direct-unused"> direct-unused</label><label><input type="checkbox" value="transitive"> transitive</label></div></details><details class="filter" data-filter="matcherAgreement"><summary data-label="Matcher agreement">Matcher agreement</summary><div class="filter-values"><label><input type="checkbox" value="both"> both</label><label><input type="checkbox" value="handwritten-only"> handwritten-only</label><label><input type="checkbox" value="oracle-only"> oracle-only</label><label><input type="checkbox" value="oracle-unavailable"> oracle-unavailable</label></div></details><details class="filter" data-filter="introduced"><summary data-label="Introduced by pull request">Introduced by pull request</summary><div class="filter-values"><label><input type="checkbox" value="yes"> yes</label><label><input type="checkbox" value="no"> no</label></div></details><p class="row-count" aria-live="polite">Showing <span id="rows-shown">0</span> of <span id="rows-total">0</span> findings</p></section>
+<div class="table-scroll">
+<table id="findings">
+<thead><tr><th scope="col" data-column="severity" aria-sort="none"><button type="button">Severity</button></th><th scope="col" data-column="detector" aria-sort="none"><button type="button">Detector</button></th><th scope="col" data-column="title" aria-sort="none"><button type="button">Title</button></th><th scope="col" data-column="location" aria-sort="none"><button type="button">File and lines</button></th><th scope="col" data-column="package" aria-sort="none"><button type="button">Package and version</button></th><th scope="col" data-column="advisory" aria-sort="none"><button type="button">Advisory</button></th><th scope="col" data-column="githubReviewed" aria-sort="none"><button type="button">GitHub reviewed</button></th><th scope="col" data-column="dependencyScope" aria-sort="none"><button type="button">Dependency scope</button></th><th scope="col" data-column="reachability" aria-sort="none"><button type="button">Reachability</button></th><th scope="col" data-column="matcherAgreement" aria-sort="none"><button type="button">Matcher agreement</button></th><th scope="col" data-column="cwe" aria-sort="none"><button type="button">CWE</button></th><th scope="col" data-column="confidence" aria-sort="none"><button type="button">Confidence</button></th><th scope="col" data-column="introduced" aria-sort="none"><button type="button">Introduced by pull request</button></th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</main>
+<script type="application/json" id="report-data">{"rows":[],"severityOrder":["critical","high","medium","low","info"]}</script>
+<script>function selectRows({
+  rows,
+  selections,
+  sort,
+  severityOrder
+}) {
+  const filteredRows = rows.filter((row) => matchesSelections(row, selections));
+  if (sort === null)
+    return filteredRows.map((row) => row.findingId);
+  const rowsWithValue = filteredRows.filter((row) => row.cells[sort.column] !== null), rowsWithoutValue = filteredRows.filter((row) => row.cells[sort.column] === null), directionFactor = sort.direction === "ascending" ? 1 : -1;
+  return [...[...rowsWithValue].sort((leftRow, rightRow) => directionFactor * compareCells({
+    left: leftRow.cells[sort.column],
+    right: rightRow.cells[sort.column],
+    column: sort.column,
+    severityOrder
+  })), ...rowsWithoutValue].map((row) => row.findingId);
+}
+
+function matchesSelections(row, selections) {
+  for (const [column, selectedValues] of Object.entries(selections)) {
+    if (selectedValues === void 0 || selectedValues.length === 0)
+      continue;
+    const cellValue = row.cells[column];
+    if (cellValue === null || !selectedValues.includes(String(cellValue)))
+      return !1;
+  }
+  return !0;
+}
+
+function compareCells({
+  left,
+  right,
+  column,
+  severityOrder
+}) {
+  if (column === "severity")
+    return severityOrder.indexOf(String(left)) - severityOrder.indexOf(String(right));
+  if (typeof left === "number" && typeof right === "number")
+    return left - right;
+  return String(left).localeCompare(String(right), void 0, { numeric: !0 });
+}
+
+(() => {
+  // read the rows and the severity order the server embedded
+  const data = JSON.parse(document.getElementById('report-data').textContent)
+  const tableBody = document.querySelector('#findings tbody')
+
+  // pair each finding row with its detail row
+  const rowPairs = new Map()
+  for (const row of tableBody.querySelectorAll('tr.finding')) {
+    const findingId = row.dataset.findingId
+    const detail = tableBody.querySelector('tr.detail[data-detail-for="' + findingId + '"]')
+    rowPairs.set(findingId, { row: row, detail: detail })
+  }
+
+  // the filters and sort the reader has chosen
+  const selections = {}
+  let sort = null
+
+  // choose the visible rows, then hide the others and put the visible ones in order
+  function refresh() {
+    const visibleIds = selectRows({
+      rows: data.rows,
+      selections: selections,
+      sort: sort,
+      severityOrder: data.severityOrder,
+    })
+    const visibleIdSet = new Set(visibleIds)
+    const hiddenIds = Array.from(rowPairs.keys()).filter((id) => !visibleIdSet.has(id))
+
+    // hide a filtered row with its detail and keep an open detail open
+    for (const id of visibleIds.concat(hiddenIds)) {
+      const pair = rowPairs.get(id)
+      const isVisible = visibleIdSet.has(id)
+      const isExpanded = pair.row.getAttribute('aria-expanded') === 'true'
+      pair.row.hidden = !isVisible
+      pair.detail.hidden = !isVisible || !isExpanded
+      tableBody.append(pair.row, pair.detail)
+    }
+
+    // show the counts and the sort direction
+    document.getElementById('rows-shown').textContent = String(visibleIds.length)
+    for (const header of document.querySelectorAll('#findings th[data-column]')) {
+      const isSorted = sort !== null && sort.column === header.dataset.column
+      header.setAttribute('aria-sort', isSorted ? sort.direction : 'none')
+    }
+  }
+
+  // refresh when a checkbox changes and show how many values are selected
+  for (const filter of document.querySelectorAll('details.filter')) {
+    const summary = filter.querySelector('summary')
+    filter.addEventListener('change', () => {
+      const checkedInputs = filter.querySelectorAll('input:checked')
+      const checkedValues = Array.from(checkedInputs).map((input) => input.value)
+      selections[filter.dataset.filter] = checkedValues
+      const suffix = checkedValues.length > 0 ? ' (' + checkedValues.length + ')' : ''
+      summary.textContent = summary.dataset.label + suffix
+      refresh()
+    })
+  }
+
+  // sort ascending on the first click of a header and flip the direction on the next
+  for (const header of document.querySelectorAll('#findings th[data-column]')) {
+    header.querySelector('button').addEventListener('click', () => {
+      const column = header.dataset.column
+      const isSameColumn = sort !== null && sort.column === column
+      const isAscending = isSameColumn && sort.direction === 'ascending'
+      sort = { column: column, direction: isAscending ? 'descending' : 'ascending' }
+      refresh()
+    })
+  }
+
+  // open or close the detail of a row
+  function toggleRow(row) {
+    const isExpanded = row.getAttribute('aria-expanded') === 'true'
+    row.setAttribute('aria-expanded', String(!isExpanded))
+    rowPairs.get(row.dataset.findingId).detail.hidden = isExpanded
+  }
+
+  // expand a row on click, except when the click is on a link
+  tableBody.addEventListener('click', (event) => {
+    if (event.target.closest('a')) {
+      return
+    }
+    const row = event.target.closest('tr.finding')
+    if (row) {
+      toggleRow(row)
+    }
+  })
+
+  // expand a focused row on enter or space
+  tableBody.addEventListener('keydown', (event) => {
+    const isActivationKey = event.key === 'Enter' || event.key === ' '
+    if (isActivationKey && event.target.matches('tr.finding')) {
+      event.preventDefault()
+      toggleRow(event.target)
+    }
+  })
+
+  refresh()
+})()
+</script>
+</body>
+</html>

@@ -6,7 +6,8 @@ finds secrets in the lines a pull request adds
 
 ## Public API
 
-- `detectSecrets({ changedFiles })` in `detect-secrets.ts`: scans only the added lines of each `ChangedFile` and returns a `SecretFinding` for every credential found, in file, line and rule order
+- `detectSecrets({ changedFiles })` in `detect-secrets.ts`: scans only the added lines of each `ChangedFile` and returns a `SecretFinding` for every credential found, in file, line and rule order. Lines longer than `maxScannedLineLength` are skipped
+- `listOverlongAddedLines({ changedFiles })`, `OverlongAddedLine` and `maxScannedLineLength` in `detect-secrets.ts`: the added lines skipped for being longer than 4,000 characters, each with its file, line and length, so the caller can note them in the audit log
 - `secretRules`, `SecretRule`, `genericMinimumValueLength`, `genericMinimumEntropy` in `rules.ts`: the rule table and the limits of the generic rule
 - `isAllowlistedValue`, `isAllowlistedFile`, `isAllowlistedLine`, `calculateShannonEntropy` in `allowlist.ts`: the skip checks and the entropy measure
 
@@ -22,10 +23,10 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## Files
 
-- `detect-secrets.ts`: `detectSecrets` and the line loop, fingerprint and finding construction
+- `detect-secrets.ts`: `detectSecrets` and the line loop, fingerprint and finding construction, and `listOverlongAddedLines`
 - `rules.ts`: the rule table
 - `allowlist.ts`: the value, file and line skip checks and the entropy helper
-- `detect-secrets.test.ts`: added lines only, allowlists, one finding per value, fingerprints, ids and the value never appearing in a finding
+- `detect-secrets.test.ts`: added lines only, a line over the length limit skipped and listed, a line at the limit scanned, allowlists, one finding per value, fingerprints, ids and the value never appearing in a finding
 - `rules.test.ts`: one positive and one negative line per rule
 - `allowlist.test.ts`: each allowlist check and the entropy measure
 
@@ -66,4 +67,4 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - Private key bodies on the lines after the header are not scanned.
 - No git history scan and no check of a credential against its provider.
-- The detector is not wired into the pipeline yet.
+- A secret on an added line longer than 4,000 characters is not found. The pipeline notes every such line in the audit log.

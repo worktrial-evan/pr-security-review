@@ -16,7 +16,7 @@ import {
   type PullRequestSourceOpen,
 } from './case-source'
 import {
-  benchmarkAdvisoryFixtureDirectory,
+  benchmarkAdvisoryCacheDirectory,
   type LoadedBenchmarkCase,
   loadBenchmarkCases,
   resolveRepositoryRoot,
@@ -53,7 +53,7 @@ const defaultReviewOptions: ReviewOptions = {
   isLlmEnabled: true,
   isCacheEnabled: true,
   isOffline: true,
-  advisoryCacheDir: benchmarkAdvisoryFixtureDirectory,
+  advisoryCacheDir: benchmarkAdvisoryCacheDirectory,
   reviewModelId: '',
   summarizeModelId: '',
   contextLines: 30,
@@ -341,12 +341,14 @@ async function readRepositoryGitSha(): Promise<string> {
   }
 }
 
-// read fetchedAt from the snapshot file of the advisory cache, or an empty string when it is missing or malformed
+// read fetchedAt from the npm snapshot file of the advisory cache. return an empty string when it is missing or malformed
 async function readAdvisorySnapshotDate(
   advisoryCacheDirectory: string,
 ): Promise<string> {
   // a missing snapshot file dates nothing
-  const snapshotFile = Bun.file(join(advisoryCacheDirectory, 'snapshot.json'))
+  const snapshotFile = Bun.file(
+    join(advisoryCacheDirectory, 'advisories', 'npm', 'snapshot.json'),
+  )
   if (!(await snapshotFile.exists())) {
     return ''
   }

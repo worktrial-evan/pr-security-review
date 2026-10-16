@@ -1,6 +1,9 @@
 // tests for the AI SDK provider's model id resolution: both providers and an unknown prefix
 import { describe, expect, test } from 'bun:test'
-import { resolveLanguageModel } from './ai-sdk-llm-provider'
+import {
+  resolveLanguageModel,
+  resolveSamplingTemperature,
+} from './ai-sdk-llm-provider'
 
 describe('resolveLanguageModel', () => {
   test('resolves an anthropic model id', () => {
@@ -23,5 +26,16 @@ describe('resolveLanguageModel', () => {
     expect(() => resolveLanguageModel('openai/gpt-x')).toThrow(
       'model id openai/gpt-x must start with',
     )
+  })
+})
+
+describe('resolveSamplingTemperature', () => {
+  test('sends no temperature to anthropic and 0 to fireworks', () => {
+    expect(
+      resolveSamplingTemperature('anthropic/claude-sonnet-5-5'),
+    ).toBeUndefined()
+    expect(
+      resolveSamplingTemperature('fireworks/accounts/fireworks/models/glm'),
+    ).toBe(0)
   })
 })

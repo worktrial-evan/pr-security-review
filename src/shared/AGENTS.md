@@ -75,7 +75,7 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 ### review.ts
 
 - `reviewOptionsSchema`, `ReviewOptions`: isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDir, reviewModelId, summarizeModelId, contextLines, optional failOnSeverity
-- `reviewMetadataSchema`, `ReviewMetadata`: runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions, modelIds, groundingRejectionCount, degradedSteps
+- `reviewMetadataSchema`, `ReviewMetadata`: runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions, modelIds, groundingRejectionCount, suspectedPromptInjectionCount, degradedSteps
 - `stepErrorSchema`, `StepError`: step, message, isFatal
 - `reviewResultSchema`, `ReviewResult`: metadata, findings, errors
 - `ReviewPipelineOptions`, `ReviewPipeline`: a function of `{ pullRequestSource, reviewOptions, auditSink }` returning a promise of a `ReviewResult`

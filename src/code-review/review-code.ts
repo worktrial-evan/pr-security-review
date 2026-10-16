@@ -39,6 +39,7 @@ export interface ReviewCodeOptions {
   isLlmEnabled: boolean
   contextLines: number
   modelId: string
+  promptVersion?: number
   promptsDirectory?: string
   maxChunkLines?: number
 }
@@ -71,6 +72,7 @@ export async function reviewCode({
   isLlmEnabled,
   contextLines,
   modelId,
+  promptVersion,
   promptsDirectory,
   maxChunkLines,
 }: ReviewCodeOptions): Promise<CodeReviewResult> {
@@ -80,6 +82,7 @@ export async function reviewCode({
     auditSink,
     runId,
     modelId,
+    promptVersion,
     promptsDirectory,
   })
 
@@ -100,12 +103,13 @@ export async function reviewCode({
   return finishReview(reviewSession, reviewTotals)
 }
 
-// the client, audit sink, run, model and prompt location one review runs with
+// the client and audit sink and run and model one review runs with. also the prompt version and location
 interface OpenReviewSessionOptions {
   llmClient: LlmClient
   auditSink: AuditSink
   runId: string
   modelId: string
+  promptVersion?: number
   promptsDirectory?: string
 }
 
@@ -115,11 +119,13 @@ async function openReviewSession({
   auditSink,
   runId,
   modelId,
+  promptVersion,
   promptsDirectory,
 }: OpenReviewSessionOptions): Promise<ReviewSession> {
-  // load the rubric at its highest version
+  // load the rubric at the given version. without one take the highest version
   const template = await loadPrompt({
     id: codeReviewPromptId,
+    version: promptVersion,
     promptsDirectory,
   })
 

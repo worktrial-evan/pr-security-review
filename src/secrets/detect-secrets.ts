@@ -14,6 +14,16 @@ import { genericMinimumEntropy, type SecretRule, secretRules } from './rules'
 // the number of hex characters of the sha256 digest kept as a fingerprint
 const fingerprintLength = 12
 
+// the longest added line the detector scans. a longer line is skipped and listed
+export const maxScannedLineLength = 4000
+
+// an added line skipped for its length
+export interface OverlongAddedLine {
+  file: string
+  line: number
+  length: number
+}
+
 export interface DetectSecretsOptions {
   changedFiles: ChangedFile[]
 }
@@ -42,12 +52,40 @@ export function detectSecrets({
   return secretFindings
 }
 
-// scan the added lines of one file, leaving out lines marked secrets-allow
+/** Returns every added line the detector skips for being longer than maxScannedLineLength. */
+export function listOverlongAddedLines({
+  changedFiles,
+}: DetectSecretsOptions): OverlongAddedLine[] {
+  const overlongAddedLines: OverlongAddedLine[] = []
+
+  // list the long lines of every file the detector scans
+  for (const changedFile of changedFiles) {
+    if (isAllowlistedFile(changedFile.path)) {
+      continue
+    }
+    for (const addedLine of changedFile.addedLines) {
+      if (addedLine.text.length > maxScannedLineLength) {
+        overlongAddedLines.push({
+          file: changedFile.path,
+          line: addedLine.line,
+          length: addedLine.text.length,
+        })
+      }
+    }
+  }
+
+  return overlongAddedLines
+}
+
+// scan the added lines of one file. leave out lines marked secrets-allow and lines over the length limit
 function detectSecretsInFile(changedFile: ChangedFile): SecretFinding[] {
   const secretFindings: SecretFinding[] = []
 
   for (const addedLine of changedFile.addedLines) {
     if (isAllowlistedLine(addedLine.text)) {
+      continue
+    }
+    if (addedLine.text.length > maxScannedLineLength) {
       continue
     }
     const addedLineToScan = {

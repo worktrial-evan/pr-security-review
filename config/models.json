@@ -1,15 +1,15 @@
 {
   "reviewModelId": "anthropic/claude-sonnet-5-5",
   "summarizeModelId": "anthropic/claude-haiku-5-5",
-  // fill these prices from the provider pricing page
+  // prices from the Anthropic pricing table on 2026-10-15. haiku is priced for prompts up to 100K tokens
   "prices": {
     "anthropic/claude-sonnet-5-5": {
-      "inputUsdPerMillionTokens": 0,
-      "outputUsdPerMillionTokens": 0
+      "inputUsdPerMillionTokens": 2,
+      "outputUsdPerMillionTokens": 10
     },
     "anthropic/claude-haiku-5-5": {
-      "inputUsdPerMillionTokens": 0,
-      "outputUsdPerMillionTokens": 0
+      "inputUsdPerMillionTokens": 0.1,
+      "outputUsdPerMillionTokens": 0.5
     }
   }
 }

@@ -194,6 +194,7 @@ function makeReviewResult(findings: Finding[]): ReviewResult {
       promptVersions: cannedPromptVersions,
       modelIds: cannedModelIds,
       groundingRejectionCount: 0,
+      suspectedPromptInjectionCount: 0,
       degradedSteps: [],
     },
     findings,

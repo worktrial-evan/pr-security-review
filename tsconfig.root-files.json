@@ -9,8 +9,9 @@
     "outDir": "./node_modules/.cache/typescript/root-files"
   },
   "include": ["index.ts", "index.test.ts", "scripts/**/*.ts"],
-  // the validate-matcher script imports these modules, so the project references them
+  // the cli entry and the validate-matcher script import these modules. the project references them
   "references": [
+    { "path": "./src/cli" },
     { "path": "./src/shared" },
     { "path": "./src/lockfile" },
     { "path": "./src/advisories" },

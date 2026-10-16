@@ -9,6 +9,7 @@ Loads and validates the labeled corpus under `benchmark/cases`, runs any `Review
 ### cases.ts
 
 - `benchmarkCasesDirectory`, `benchmarkAdvisoryFixtureDirectory`, `benchmarkFixtureAppDirectory`: the absolute paths of `benchmark/cases`, `benchmark/fixtures/advisories` and `benchmark/fixtures/app`, resolved from the repository root
+- `benchmarkAdvisoryCacheDirectory`: the absolute path of `benchmark/fixtures`, the advisory cache root holding `advisories/npm/` that a run hands the pipeline
 - `LoadedBenchmarkCase`: a `BenchmarkCase` with the `caseDirectory` it was read from
 - `LoadBenchmarkCasesOptions`, `loadBenchmarkCases({ casesDirectory?, split? })`: reads every `case.json`, throws on the first one that does not parse, keeps one split when asked, and returns the cases sorted by id
 - `CaseRead`, `readCaseDirectories(casesDirectory)`: one read per case directory in name order, each loaded or failed with the directory name and the message
@@ -132,7 +133,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - Matching is greedy and one-to-one: expected findings in label order, each taking the first unmatched prediction that satisfies its rule, and a prediction matches at most one expected finding. Detectors are compared before any other rule. Package names and advisory ids are compared exactly.
 - A failed case contributes every expected finding as a false negative and scores no prediction. A skipped case has zero counts and is left out of the totals, the breakdowns and the cost and duration sums.
 - The scorer is pure: no file or network access, and the shared part of its result passes `benchmarkScoreSchema` before it is returned.
-- `runBenchmark` forces `isOffline` to true whatever the caller passes, defaults `advisoryCacheDir` to the advisory fixture directory, and runs the cases in sorted id order.
+- `runBenchmark` forces `isOffline` to true whatever the caller passes, defaults `advisoryCacheDir` to `benchmark/fixtures`, the cache root of the advisory fixture, reads the run's snapshot date from its `advisories/npm/snapshot.json`, and runs the cases in sorted id order.
 - A git case clones once into `<cache directory>/benchmark-repos/<host>/<owner>/<repo>` and reuses the clone. Nothing is cloned when `PULL_REQUEST_REVIEW_OFFLINE` is set and the clone is missing, and a failed clone leaves no empty directory under the cache. Only a clone or fetch whose stderr names a resolution or connection failure is a skip. Any other failure is the case's error. The cache directory is `resolveCacheDirectory()` unless an option overrides it, so nothing is written inside the repository except under `benchmark/results`.
 - Every pull request source is disposed after its case, whether the pipeline returned or threw.
 - Every git command in the module and its tests runs through the pull-request-source module's `runGit`, which drops the variables a git hook exports. A `git init` or `git config` that inherited `GIT_DIR` would act on the repository that ran the hook instead of the temporary one, and the pre-commit hook runs the test suite.
@@ -150,6 +151,6 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - The results page builds its own metrics and case tables with template strings on the report module's escaping, stylesheet and value formats. `renderHtmlReport` takes a `ReviewResult`, so a benchmark run has no page to render through it.
 - The advisory fixture is the shared `Advisory` schema in one json file plus a `snapshot.json`. The advisories module decides its own cache format when it lands, and the fixture may need converting to it.
-- No real pipeline has run over the corpus yet. The runner is tested against a stub pipeline only, and `benchmark/results` holds a `.gitkeep` and nothing else. Nothing in `.gitignore` excludes the files a run writes there.
+- `runBenchmark` defaults its advisory cache to `benchmark/fixtures`, the advisories module's 18-package subset, which lacks nine corpus advisories such as both `ms` advisories and the `PRR-TEST` entries. `bun index.ts benchmark run` passes a cache built from `advisories.json` instead, and any other caller has to do the same. The runner's tests use a stub pipeline. `benchmark/results` holds the baseline of both splits, and `latest-<split>` copies it. Nothing in `.gitignore` excludes the files a run writes there.
 - `corpus-validation.ts` runs past the 400 lines a file is split at. The validator holds every check in one place on purpose.
 - `isDirectory` in `cases.ts` is the same function as the one in `scripts/check-file-headers.ts`. Scripts are not importable from `src`, so a third copy belongs in `src/shared`.

@@ -1,4 +1,4 @@
-// the model provider backed by the Vercel AI SDK: generateObject at temperature 0 with no tools, for anthropic and fireworks models
+// the model provider backed by the Vercel AI SDK. generateObject with no tools for anthropic and fireworks models. fireworks runs at temperature 0
 import { anthropic } from '@ai-sdk/anthropic'
 import { fireworks } from '@ai-sdk/fireworks'
 import {
@@ -40,6 +40,16 @@ export function resolveLanguageModel(modelId: string): ResolvedLanguageModel {
   return fireworks(modelName)
 }
 
+/**
+ * Returns the temperature to send for a model id. Anthropic models get none because current Claude models reject a non-default value.
+ */
+export function resolveSamplingTemperature(
+  modelId: string,
+): number | undefined {
+  const { provider } = parseModelId(modelId)
+  return provider === 'anthropic' ? undefined : 0
+}
+
 // send one request and return the model's JSON unvalidated
 async function generateWithAiSdk(
   request: LlmProviderRequest,
@@ -48,14 +58,15 @@ async function generateWithAiSdk(
   const languageModel = resolveLanguageModel(request.modelId)
   const outputSchema = jsonSchema(request.outputJsonSchema as JSONSchema7)
 
-  // call once at temperature 0. the client owns every retry
+  // call once at the model's sampling temperature. the client owns every retry
+  const temperature = resolveSamplingTemperature(request.modelId)
   try {
     const generateObjectResult = await generateObject({
       model: languageModel,
       instructions: request.system,
       prompt: request.user,
       schema: outputSchema,
-      temperature: 0,
+      ...(temperature === undefined ? {} : { temperature }),
       maxRetries: 0,
     })
     return {

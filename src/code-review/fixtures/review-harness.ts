@@ -43,6 +43,8 @@ export interface RunReviewOptions {
   maxChunkLines?: number
   clientModelId?: string
   reviewModelId?: string
+  promptVersion?: number
+  promptsDirectory?: string
 }
 
 // the review result with the provider that answered it and the audit sink it wrote to
@@ -75,6 +77,8 @@ export async function runReview({
   maxChunkLines,
   clientModelId = defaultClientModelId,
   reviewModelId = defaultReviewModelId,
+  promptVersion,
+  promptsDirectory,
 }: RunReviewOptions): Promise<ReviewRun> {
   // wire the fake provider, the zero-priced models and the memory audit sink
   const provider = createFakeLlmProvider({ [codeReviewPromptId]: replies })
@@ -100,6 +104,8 @@ export async function runReview({
     isLlmEnabled,
     contextLines,
     modelId: reviewModelId,
+    promptVersion,
+    promptsDirectory,
     maxChunkLines,
   })
 

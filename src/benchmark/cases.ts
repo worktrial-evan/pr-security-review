@@ -21,6 +21,12 @@ export const benchmarkAdvisoryFixtureDirectory = join(
   'fixtures',
   'advisories',
 )
+// the advisory cache root the pipeline loads the pinned advisory fixture from. it holds advisories/npm
+export const benchmarkAdvisoryCacheDirectory = join(
+  resolveRepositoryRoot(),
+  'benchmark',
+  'fixtures',
+)
 export const benchmarkFixtureAppDirectory = join(
   resolveRepositoryRoot(),
   'benchmark',

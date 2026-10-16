@@ -85,7 +85,37 @@ export async function refreshAdvisories({
     sha256,
   })
 
-  // write both files beside their final paths, then move them into place
+  // write the index and the snapshot into the cache
+  const writeAdvisoryCacheResult = await writeAdvisoryCache({
+    ecosystem,
+    cacheDir,
+    advisoriesByPackage,
+    snapshot,
+  })
+  return { snapshot, ...writeAdvisoryCacheResult }
+}
+
+// the ecosystem and cache to write with the indexed advisories and their snapshot
+export interface WriteAdvisoryCacheOptions {
+  ecosystem: AdvisoryEcosystem
+  cacheDir: string
+  advisoriesByPackage: Map<string, Advisory[]>
+  snapshot: AdvisorySnapshot
+}
+
+// where the index and snapshot were written and how many packages the index holds
+export type WriteAdvisoryCacheResult = Omit<RefreshAdvisoriesResult, 'snapshot'>
+
+/**
+ * Writes an advisory index and its snapshot into the cache layout loadAdvisoryStore reads, replacing what is there.
+ */
+export async function writeAdvisoryCache({
+  ecosystem,
+  cacheDir,
+  advisoriesByPackage,
+  snapshot,
+}: WriteAdvisoryCacheOptions): Promise<WriteAdvisoryCacheResult> {
+  // write both files beside their final paths. then move them into place
   const { ecosystemDirectory, indexPath, snapshotPath } =
     resolveAdvisoryCachePaths({ cacheDir, ecosystem })
   await mkdir(ecosystemDirectory, { recursive: true })
@@ -94,13 +124,7 @@ export async function refreshAdvisories({
     path: snapshotPath,
     content: `${JSON.stringify(snapshot, null, 2)}\n`,
   })
-
-  return {
-    snapshot,
-    indexPath,
-    snapshotPath,
-    packageCount: advisoriesByPackage.size,
-  }
+  return { indexPath, snapshotPath, packageCount: advisoriesByPackage.size }
 }
 
 /**

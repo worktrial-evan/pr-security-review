@@ -2,5 +2,9 @@
   "contextLines": 30,
   "isLlmEnabled": true,
   "isCacheEnabled": true,
-  "advisoryStaleHours": 24
+  "advisoryStaleHours": 24,
+  "reviewPromptVersion": "1",
+  "maxChangedFiles": 200,
+  "maxFileBytes": 1000000,
+  "maxReviewCostUsd": 2
 }

@@ -12,6 +12,7 @@ The LLM client behind the `LlmClient` contract: structured generate calls on a c
 - `LlmHttpError`: a provider request that failed with an http status. Has `statusCode`
 - `LlmProvider`, `LlmProviderRequest`, `LlmProviderResponse`: the boundary between the client and a model provider
 - `createAiSdkLlmProvider()`: the provider that calls the Vercel AI SDK `generateObject`
+- `resolveSamplingTemperature(modelId)`: 0 for a fireworks model and undefined for an anthropic model
 - `resolveLanguageModel(modelId)`, `ResolvedLanguageModel`: the AI SDK model for an `anthropic/<model>` or `fireworks/<model>` id
 - `createFakeLlmProvider(repliesByPromptId)`, `FakeLlmProvider`, `FakeLlmReply`, `FakeLlmRepliesByPromptId`: a provider with canned outputs and http errors keyed by prompt id, which records every request
 - `readModelConfig(configPath)`: reads and validates `config/models.json`, comments allowed
@@ -40,7 +41,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `llm-client.test.ts`: cache miss then hit at zero cost, a changed user text missing, caching disabled, the validation retry passing and failing, 429 retried, 503 exhausted after four attempts, 400 not retried, an unpriced model, an unknown provider prefix, and the audit event on success, cache hit, http failure and validation failure
 - `llm-call-event.ts`: the llm-call audit event and the record of a failed call
 - `llm-provider.ts`: the `LlmProvider` boundary and `LlmHttpError`
-- `ai-sdk-llm-provider.ts`: the AI SDK provider, `generateObject` at temperature 0 with no tools and no SDK retries
+- `ai-sdk-llm-provider.ts`: the AI SDK provider, `generateObject` with no tools and no SDK retries, and `resolveSamplingTemperature`
 - `ai-sdk-llm-provider.test.ts`: anthropic and fireworks model ids resolve, an unknown prefix throws
 - `fake-llm-provider.ts`: the fake provider keyed by prompt id
 - `llm-cache.ts`: the cache key, the entry schema, and reading and writing entries
@@ -56,7 +57,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## Invariants
 
-- Every request runs at temperature 0 and never passes tools.
+- Every request never passes tools. A fireworks request runs at temperature 0. An anthropic request sends no temperature, because current Claude models reject a non-default value. Reruns are reproduced by the response cache, not by sampling.
 - The cache key is the sha256 of the model id, prompt hash, system text, user text and the JSON schema form of the output schema. Changing any one of them misses the cache.
 - Only output that passed the schema is cached, under the key of the original request, never the key of the validation retry.
 - A cache hit never calls the provider and reports zero usage and `costUsd` 0.

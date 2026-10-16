@@ -136,3 +136,40 @@ A run writes its results under `benchmark/results`:
 - `<timestamp>-<label>.json` holds the label, split and time of the run, the repository git sha, the prompt versions and model ids, the advisory snapshot date, whether the LLM cache was used, the score, and every case with its counts, matched pairs, unmatched predictions, pre-existing findings, cost, duration and status.
 - `latest-<split>.json` holds the same content for the most recent run of that split.
 - Beside each JSON file an HTML page of the same name shows the metrics table, the breakdowns and a per-case table that can be filtered by category, split and status.
+
+Run the pipeline over a split, or both, and print the latest metrics with:
+
+```
+bun index.ts benchmark run --split all --label <name>
+bun index.ts benchmark show
+```
+
+`benchmark run` matches dependencies against `benchmark/fixtures/advisories/advisories.json`, written into a temporary advisory cache for the run. Each case writes its audit log under `runs/<runId>/audit.jsonl`.
+
+## Baseline
+
+The baseline was recorded on 2026-10-16 with this change applied on top of commit `707bdba`, before any tuning: code-review prompt v1 on `anthropic/claude-sonnet-5-5`, summaries on `anthropic/claude-haiku-5-5`, osv-scanner 2.7.0 as the dependency cross-check, and the corpus advisory fixture dated 2026-10-15. Every case completed and none was skipped. The results are `benchmark/results/baseline-dev.json` and `benchmark/results/baseline-test.json`, each with its HTML page.
+
+| Split | Cases | Precision | Recall | F1 | Clean false positives | Cost |
+| --- | --- | --- | --- | --- | --- | --- |
+| dev | 37 | 0.818 | 0.692 | 0.750 | 1 | $0.4128 |
+| test | 17 | 0.875 | 0.636 | 0.737 | 0 | $0.1942 |
+
+By detector, F1 on dev and then test: dependencies 1.000 and 1.000, code review 0.621 and 0.545, secrets 0.800 and 1.000.
+
+The first run started with no cached model responses for the corpus: 86 of its 87 model calls missed the cache. A second run of both splits right after it answered all 84 calls from the cache, cost $0.00 and gave the same counts on every case.
+
+The dev misses and false positives point at the next work. `code-05-hardcoded-credential` cannot be found by the reviewer, because CWE-798 is not on its CWE allowlist. `secrets-01-aws-key-in-config` is missed by the secrets rules. The rest are code review: misses on `code-06`, `code-09`, `code-10` and three real-world cases, and false positives on `code-06`, `code-10`, `real-world-07-ws` and the clean case `clean-05-refactor-moves-vulnerable-code`.
+
+## Measured variance
+
+Anthropic models run at their default temperature, so a run without the cache can differ from the one before it. The dev split was run three times with `--no-cache` on 2026-10-16:
+
+| Run | Precision | Recall | F1 | Code review F1 | Cost |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 0.818 | 0.692 | 0.750 | 0.621 | $0.4113 |
+| 2 | 0.810 | 0.654 | 0.723 | 0.571 | $0.4145 |
+| 3 | 0.818 | 0.692 | 0.750 | 0.621 | $0.4180 |
+
+F1 has a mean of 0.741, a range of 0.723 to 0.750 and a standard deviation of 0.015. All of the spread comes from one case: run 2 missed `code-01-sql-injection-concatenation`, which the other runs and the baseline found. Dependency and secrets scores did not move. A change to the code-review prompt that moves dev F1 by less than about 0.03 is inside this noise.
+

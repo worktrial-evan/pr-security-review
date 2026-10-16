@@ -1,25 +1,12 @@
-// command-line entry for pr-review. builds the commander program and prints usage until the real commands land
+// command-line entry for pr-review. runs the cli on the process arguments and exits with its status
+import { createCliHandlers } from '@/cli/cli-handlers'
+import { runCli } from '@/cli/program'
+import { createProcessOutput } from '@/cli/terminal-text'
 
-import { Command } from 'commander'
-
-// build the program with its name, description and one optional command argument
-const program: Command = new Command()
-  .name('pr-review')
-  .description('Reviews a pull request for security problems')
-  .argument('[command]', 'the command to run')
-  .showHelpAfterError()
-  .action(runCommand)
-
-// run the program against the process arguments
-program.parse()
-
-// print help and exit 0 with no command, or reject the unknown command and exit 1
-function runCommand(commandName: string | undefined): never {
-  // print help to stdout and exit 0 when no command was given
-  if (commandName === undefined) {
-    program.help()
-  }
-
-  // print the unknown command and the help text to stderr and exit 1
-  program.error(`unknown command '${commandName}'`, { exitCode: 1 })
-}
+// run the command and hand its status to the process
+const output = createProcessOutput()
+process.exitCode = await runCli({
+  commandArguments: process.argv.slice(2),
+  handlers: createCliHandlers(output),
+  output,
+})

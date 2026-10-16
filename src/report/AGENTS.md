@@ -29,7 +29,7 @@ Bun and Node built-ins and npm packages are always allowed.
 ## Files
 
 - `render-html.ts`: assembles the page and embeds the row data as JSON that cannot close its script element
-- `render-header.ts`: the run details, the counts of introduced findings and the pre-existing versus introduced line
+- `render-header.ts`: the run details with the suspected prompt injection count, the counts of introduced findings and the pre-existing versus introduced line
 - `render-table.ts`: the filter controls, the table header with sort buttons, the finding rows and their hidden detail rows
 - `render-detail.ts`: the expanded detail of a finding and the advisory links
 - `report-rows.ts`: the column list and the finding-to-row mapping

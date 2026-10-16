@@ -34,6 +34,9 @@ describe('renderHtmlReport header', () => {
     expect(fixtureHtml).toContain(
       '<dt>Advisory snapshot</dt><dd>2026-10-14</dd>',
     )
+    expect(fixtureHtml).toContain(
+      '<dt>Suspected prompt injections</dt><dd>1</dd>',
+    )
   })
 
   test('shows every prompt id with its version and every model id', () => {

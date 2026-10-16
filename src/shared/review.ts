@@ -22,6 +22,7 @@ export const reviewOptionsSchema = z.object({
 export type ReviewOptions = z.infer<typeof reviewOptionsSchema>
 
 // what a review ran against and what it cost. the records are keyed by step name
+// suspectedPromptInjectionCount counts the injection attempts the model reported in the reviewed content
 export const reviewMetadataSchema = z.object({
   runId: z.string(),
   startedAt: z.iso.datetime({ offset: true }),
@@ -35,6 +36,7 @@ export const reviewMetadataSchema = z.object({
   promptVersions: z.record(z.string(), z.string()),
   modelIds: z.record(z.string(), z.string()),
   groundingRejectionCount: z.number().int().nonnegative(),
+  suspectedPromptInjectionCount: z.number().int().nonnegative(),
   degradedSteps: z.array(z.string()),
 })
 export type ReviewMetadata = z.infer<typeof reviewMetadataSchema>

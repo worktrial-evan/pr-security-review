@@ -53,6 +53,10 @@ function renderRunDetails(metadata: ReviewMetadata): string {
       html: renderRecord(metadata.promptVersions, formatPrompt),
     },
     { label: 'Models', html: renderRecord(metadata.modelIds, formatModel) },
+    {
+      label: 'Suspected prompt injections',
+      html: String(metadata.suspectedPromptInjectionCount),
+    },
   ]
   const detailHtml = details.map(
     ({ label, html }) => `<dt>${label}</dt><dd>${html}</dd>`,

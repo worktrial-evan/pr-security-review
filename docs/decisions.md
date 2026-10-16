@@ -91,3 +91,32 @@ Next to it, `.worktreeinclude` at the repository root lists `.env` and `.env.loc
 Every name spells out pull request: `PullRequest` in types, `pullRequest` in values, `pull-request` in file and module names, and "pull request" in prose. The source module, its interface and reference types, the introduced-by flag on a finding and the first run stage all carried the two-letter abbreviation and now read `src/pull-request-source`, `PullRequestSource`, `PullRequestReference`, `isIntroducedByPullRequest` and `resolving-pull-request`, with the matrix, the module docs, the README diagrams and the `add-foundation` artifacts renamed to match.
 
 The code-style skill already bans abbreviations in variable names, and this was the one abbreviation the brief had introduced. Spelling it out once, before any module fills in, means no later change has to decide between the two spellings and no grep for the concept splits. The product name `pr-review` (package name, CLI name, README title) and the repository name `pr-security-review` are the two exceptions and are never renamed. The rule is stated in the `openspec/config.yaml` context and the root `AGENTS.md`, and the CVSS vector component `PR:H` in a sample advisory stays because there `PR` means Privileges Required.
+
+## 2026-10-15: The CLI moves into `src/cli` and `index.ts` only runs it
+
+`add-pipeline-and-cli` replaces the usage stub. The commander program and every command live in `src/cli`, and the root `index.ts` passes the process arguments, the real handlers and a sanitizing output to `runCli` and sets the exit code. The program takes its handlers as a parameter, so the argument parsing tests record the parsed options without cloning anything, and `tsconfig.root-files.json` references `src/cli` so `bun check` follows the entry into it. This supersedes the entry above that kept `src/cli` empty.
+
+## 2026-10-15: Eleven pipeline steps run under ten run-state stages
+
+The pipeline has eleven steps and the run-state contract has ten stages. Loading advisories runs under `matching` beside the match itself, dedupe runs under `summarizing` before the summaries, and assembling the result runs under `rendering`. Adding stages would have been a second edit to `src/shared` in one change. Each step writes its own step-start and step-end events and its own entry in `stepDurations`, so the audit log and the metadata still separate every step.
+
+## 2026-10-15: An aborted review returns a result instead of throwing
+
+When describing the pull request or collecting its files fails, `runReview` moves the run to failed and returns a `ReviewResult` with one fatal `StepError` and no findings. The contract already has `isFatal`, the report and the JSON can show what happened, and the audit log ends with a `run aborted` note. The CLI exits 2 on it. The benchmark's per-case pipeline throws on it instead, so the runner records the case as failed.
+
+## 2026-10-15: `advisoryCacheDir` is the cache root
+
+`ReviewOptions.advisoryCacheDir` names the directory that holds `advisories/npm/`, the directory `loadAdvisoryStore` takes, and the CLI sets it to `resolveCacheDirectory()`. The benchmark runner's default pointed at `benchmark/fixtures/advisories`, one level too deep for the store, so it now points at `benchmark/fixtures` and reads its snapshot date from `advisories/npm/snapshot.json`.
+
+## 2026-10-15: The benchmark matches against the corpus advisories, built into a cache per run
+
+The corpus labels are checked against `benchmark/fixtures/advisories/advisories.json`, 35 advisories that include synthetic `PRR-TEST` entries. The advisory store loads the cache layout, and the committed layout under `benchmark/fixtures/advisories/npm/` is the advisories module's 18-package subset of the real export, which lacks nine of those advisories. `bun index.ts benchmark run` indexes `advisories.json` with the advisories module's own `indexAdvisoriesByPackage` and `writeAdvisoryCache` into a temporary directory and points the run at it. The subset stays as it is because `validate-matcher` and its accepted disagreements are built on it. A committed second copy in the cache layout would drift from `advisories.json`.
+
+## 2026-10-15: A dependency finding is introduced only when its advisory did not already affect the base
+
+The matcher marks a finding introduced when the pull request adds or changes the version. `docs/benchmark.md` defines an introduced dependency finding as one whose head version is in the advisory's range while the base version is not, decided at the alias level. The pipeline's matching step also matches the base lockfile and sets a head finding to pre-existing when the base had the same advisory id or one of its aliases for the same installed package. That leaves the merged matcher unchanged. Without it, `sca-09-imported-through-subpath` reported two advisories that already affected lodash at base as introduced.
+
+## 2026-10-15: Anthropic requests send no temperature
+
+Current Claude models, Sonnet 5.5 and Haiku 5.5 among them, return a 400 for a non-default temperature. The llm provider sends temperature 0 only to fireworks models and leaves anthropic models on their default. A rerun is reproduced by the response cache, whose key holds the prompt, the model and the output schema. A run with `--no-cache` can differ from the run before it, and the variance runs measure by how much.
+

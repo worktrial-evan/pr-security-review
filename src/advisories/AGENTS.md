@@ -8,6 +8,7 @@ Builds a local cache of the OSV npm advisories from the bulk export and serves i
 
 - `refreshAdvisories({ ecosystem, cacheDir, sourceUrl?, now? })` in `refresh-advisories.ts`: downloads the OSV export, parses every entry, and writes the index and snapshot. Returns the snapshot, both paths and the package count. `sourceUrl` replaces the OSV URL in tests.
 - `AdvisoryParseError` in `refresh-advisories.ts`: thrown when any entry does not parse. Its `failures` list each entry name and message.
+- `writeAdvisoryCache({ ecosystem, cacheDir, advisoriesByPackage, snapshot })`, `WriteAdvisoryCacheOptions` and `WriteAdvisoryCacheResult` in `refresh-advisories.ts`: write an indexed advisory list and its snapshot into the cache layout `loadAdvisoryStore` reads, replacing each file in one move. A refresh writes through it, and the CLI writes the benchmark corpus fixture through it.
 - `indexAdvisoriesByPackage(advisories)` in `refresh-advisories.ts`: groups advisories under every npm package they affect, sorted by package name and then by advisory id.
 - `loadAdvisoryStore(cacheDir)` in `advisory-store.ts`: loads the npm index and snapshot into memory and returns an `AdvisoryStore`.
 - `isSnapshotOlderThan(snapshot, hours)` in `advisory-store.ts`: says whether a snapshot was fetched more than that many hours ago.

@@ -8,7 +8,7 @@ import type { BenchmarkCase } from '@/shared/benchmark'
 import { cacheDirectoryEnvironmentVariable } from '@/shared/cache-directory'
 import type { ReviewOptions } from '@/shared/review'
 import { offlineEnvironmentVariable } from './benchmark-repository'
-import { benchmarkAdvisoryFixtureDirectory } from './cases'
+import { benchmarkAdvisoryCacheDirectory } from './cases'
 import { runBenchmark } from './run'
 import type { BenchmarkRunResults } from './run-results'
 import {
@@ -73,7 +73,7 @@ beforeEach(async () => {
   await writeSnapshotCase(cleanCase)
   await writeSnapshotCase(scaCase)
   await Bun.write(
-    join(advisoryCacheDirectory, 'snapshot.json'),
+    join(advisoryCacheDirectory, 'advisories', 'npm', 'snapshot.json'),
     JSON.stringify({ fetchedAt: advisorySnapshotDate }),
   )
 })
@@ -131,11 +131,16 @@ describe('runBenchmark', () => {
     // every call read the fixture directory and the run is dated by the fixture snapshot
     for (const call of stubPipeline.calls) {
       expect(call.reviewOptions.advisoryCacheDir).toBe(
-        benchmarkAdvisoryFixtureDirectory,
+        benchmarkAdvisoryCacheDirectory,
       )
     }
     const fixtureSnapshot = await Bun.file(
-      join(benchmarkAdvisoryFixtureDirectory, 'snapshot.json'),
+      join(
+        benchmarkAdvisoryCacheDirectory,
+        'advisories',
+        'npm',
+        'snapshot.json',
+      ),
     ).json()
     expect(results.advisorySnapshotDate).toBe(fixtureSnapshot.fetchedAt)
   })

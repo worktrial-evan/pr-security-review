@@ -59,6 +59,7 @@ const reviewResultSample: ReviewResult = {
       summarize: 'claude-haiku-4-5',
     },
     groundingRejectionCount: 1,
+    suspectedPromptInjectionCount: 0,
     degradedSteps: ['summarizing'],
   },
   findings: [scaFindingSample, codeReviewFindingSample, secretFindingSample],

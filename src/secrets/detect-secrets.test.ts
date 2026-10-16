@@ -3,7 +3,11 @@
 import { describe, expect, test } from 'bun:test'
 import { findingSchema } from '@/shared/finding'
 import type { ChangedFile } from '@/shared/pull-request-source'
-import { detectSecrets } from './detect-secrets'
+import {
+  detectSecrets,
+  listOverlongAddedLines,
+  maxScannedLineLength,
+} from './detect-secrets'
 
 // values built inside the test so no realistic credential is committed
 const githubToken = `ghp_${'Ab3dE5gH'.repeat(4)}Ab3d`
@@ -87,6 +91,34 @@ describe('detectSecrets', () => {
       createChangedFile('.env.example', [line]),
     ]
     expect(detectSecrets({ changedFiles })).toEqual([])
+  })
+
+  test('skips and lists an added line over the length limit', () => {
+    // a minified line of 5000 characters with a token inside it
+    const padding = 'x'.repeat(5000 - githubToken.length - 20)
+    const overlongText = `const token = '${githubToken}' // ${padding}`
+    const changedFile = createChangedFile('dist/app.min.js', [
+      'const name = "app"',
+      overlongText,
+    ])
+
+    // expect no finding and the line listed with its length
+    expect(overlongText.length).toBeGreaterThan(maxScannedLineLength)
+    expect(detectSecrets({ changedFiles: [changedFile] })).toEqual([])
+    expect(listOverlongAddedLines({ changedFiles: [changedFile] })).toEqual([
+      { file: 'dist/app.min.js', line: 2, length: overlongText.length },
+    ])
+  })
+
+  test('scans a line at exactly the length limit', () => {
+    // pad a token line to the limit
+    const tokenLine = `const token = '${githubToken}'`
+    const limitText = tokenLine.padEnd(maxScannedLineLength, ' ')
+    const changedFile = createChangedFile('src/config.ts', [limitText])
+
+    // expect the token found and nothing listed
+    expect(detectSecrets({ changedFiles: [changedFile] })).toHaveLength(1)
+    expect(listOverlongAddedLines({ changedFiles: [changedFile] })).toEqual([])
   })
 
   test('skips a line that ends in a secrets-allow comment', () => {

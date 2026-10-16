@@ -8,7 +8,7 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 
 ### review-code.ts
 
-- `reviewCode({ changedFiles, llmClient, auditSink, runId, isLlmEnabled, contextLines, modelId, promptsDirectory, maxChunkLines })`: reviews the changed files and returns a `CodeReviewResult`. `promptsDirectory` defaults to the repository's `prompts/`, `maxChunkLines` to `defaultMaxChunkLines`
+- `reviewCode({ changedFiles, llmClient, auditSink, runId, isLlmEnabled, contextLines, modelId, promptVersion, promptsDirectory, maxChunkLines })`: reviews the changed files and returns a `CodeReviewResult`. `promptVersion` picks the prompt file and defaults to the highest version present. `promptsDirectory` defaults to the repository's `prompts/`, `maxChunkLines` to `defaultMaxChunkLines`
 - `ReviewCodeOptions`: the options `reviewCode` takes
 - `CodeReviewResult`: `findings` as `CodeReviewFinding[]`, `groundingRejectionCount`, `injectionAttemptCount`, `failedChunkCount` and `promptVersion`
 
@@ -102,6 +102,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## Files
 
+- `prompt-version.test.ts`: the given prompt version is loaded, and the highest version is loaded without one
 - `review-code.ts`: `reviewCode`, the session, the disabled path, the packet note, the chunk loop, the totals, dedupe, finding shaping with `createFindingId` and the finding events
 - `review-code.test.ts`: against the fake provider through the harness: the disabled run, one request per chunk in packet order with the user turn equal to the fence of each chunk text, a file split into three chunks sent in chunk order, the fence described in the system turn, a provider error rethrown, the finding shape with its provenance on a review model that differs from the client model and a 16 hex id that is stable across runs and differs by CWE, and the packet note and finding events
 - `review-code-answers.test.ts`: the answers of the fake provider: injection attempts as notes with their count, a fabricated evidence line dropped with a note and the count, each other grounding rejection reason dropped with a note naming it, a grounded finding kept, a duplicate across two chunks collapsed to the higher confidence, two CWEs on one range both kept, and the schema failure path skipping one chunk and keeping the other

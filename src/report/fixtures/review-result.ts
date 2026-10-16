@@ -39,6 +39,7 @@ export const fixtureReviewResult: ReviewResult = {
       summarize: 'claude-haiku-4-5',
     },
     groundingRejectionCount: 2,
+    suspectedPromptInjectionCount: 1,
     degradedSteps: ['summarize'],
   },
   findings: [
