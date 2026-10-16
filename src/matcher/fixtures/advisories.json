@@ -1,0 +1,474 @@
+[
+  {
+    "id": "GHSA-RANG-0001",
+    "aliases": [],
+    "summary": "range-kit: two fixed ranges",
+    "details": "introduced 0 fixed 1.0.5, and introduced 2.0.0 fixed 2.0.3",
+    "severityScore": 9.8,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "range-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.5"
+              }
+            ]
+          },
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "2.0.0"
+              },
+              {
+                "fixed": "2.0.3"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-RANG-0002",
+    "aliases": [],
+    "summary": "range-kit: a second advisory on early versions",
+    "details": "introduced 0 fixed 1.0.1, a second group on range-kit 1.0.0",
+    "severityScore": 9.8,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "range-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.1"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-LAST-0001",
+    "aliases": [],
+    "summary": "last-kit: last affected range",
+    "details": "introduced 1.0.0 last affected 1.2.0",
+    "severityScore": 7,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "last-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "1.0.0"
+              },
+              {
+                "lastAffected": "1.2.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-OPEN-0001",
+    "aliases": [],
+    "summary": "open-kit: no upper event",
+    "details": "introduced 2.0.0 with no fixed or last affected event",
+    "severityScore": 4,
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "open-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "2.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-LIST-0001",
+    "aliases": [],
+    "summary": "listed-kit: versions list only",
+    "details": "no ranges, two listed versions including one that is not semver",
+    "severityScore": 3.9,
+    "severityVector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "listed-kit",
+        "ranges": [],
+        "versions": ["0.5.0", "1.0.0.1"]
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-ECOS-0001",
+    "aliases": [],
+    "summary": "eco-kit: ecosystem range and no score",
+    "details": "an ECOSYSTEM range introduced 0 fixed 1.0.0, no CVSS entry",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "eco-kit",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": false
+  },
+  {
+    "id": "GHSA-PREA-0001",
+    "aliases": [],
+    "summary": "pre-kit: fixed at the release",
+    "details": "introduced 0 fixed 1.0.0, so 1.0.0-beta.1 is affected",
+    "severityScore": 5,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "pre-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-PREB-0002",
+    "aliases": [],
+    "summary": "pre-kit: introduced at the release",
+    "details": "introduced 1.0.0 with no upper event, so 1.0.0-beta.1 is not affected",
+    "severityScore": 5,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "pre-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "1.0.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-WITH-0001",
+    "aliases": ["CVE-2024-9001"],
+    "summary": "withdrawn-kit: withdrawn advisory",
+    "details": "introduced 0 with no upper event, withdrawn",
+    "severityScore": 9.1,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "withdrawn-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "withdrawn": "2024-03-01T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-GITR-0001",
+    "aliases": [],
+    "summary": "git-kit: GIT range beside a SEMVER range",
+    "details": "a GIT range over commits and a SEMVER range introduced 0 fixed 1.1.0",
+    "severityScore": 6.5,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "git-kit",
+        "ranges": [
+          {
+            "type": "GIT",
+            "events": [
+              {
+                "introduced": "0000000000000000000000000000000000000000"
+              },
+              {
+                "fixed": "1111111111111111111111111111111111111111"
+              }
+            ]
+          },
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.1.0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-ALIA-0001",
+    "aliases": ["CVE-2024-0001"],
+    "summary": "alias-kit: the GHSA side of an alias pair",
+    "details": "introduced 0 fixed 1.0.9, aliases the CVE entry",
+    "severityScore": 5,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "alias-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.9"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "CVE-2024-0001",
+    "aliases": [],
+    "summary": "alias-kit: the CVE side of an alias pair",
+    "details": "introduced 0 fixed 1.0.5, lists no alias of its own",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "alias-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.0.5"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": false
+  },
+  {
+    "id": "GHSA-LODA-0001",
+    "aliases": [],
+    "summary": "lodash: reviewed advisory for the alias lookup",
+    "details": "introduced 0 fixed 4.17.21",
+    "severityScore": 7.5,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "lodash",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.17.21"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-PYPI-0001",
+    "aliases": [],
+    "summary": "pypi-kit: another ecosystem only",
+    "details": "affects the PyPI package of the same name and nothing on npm",
+    "severityScore": 9.8,
+    "severityVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "PyPI",
+        "name": "pypi-kit",
+        "ranges": [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  },
+  {
+    "id": "GHSA-ANYV-0001",
+    "aliases": [],
+    "summary": "any-kit: every parseable version",
+    "details": "introduced 0 with no upper event",
+    "severityScore": 8.1,
+    "severityVector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+    "affected": [
+      {
+        "ecosystem": "npm",
+        "name": "any-kit",
+        "ranges": [
+          {
+            "type": "SEMVER",
+            "events": [
+              {
+                "introduced": "0"
+              }
+            ]
+          }
+        ],
+        "versions": []
+      }
+    ],
+    "references": [],
+    "published": "2024-01-01T00:00:00Z",
+    "modified": "2024-01-02T00:00:00Z",
+    "isGithubReviewed": true
+  }
+]

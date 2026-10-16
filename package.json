@@ -10,7 +10,8 @@
     "benchmark:validate": "bun src/benchmark/validate.ts",
     "verify": "bun check && biome check . && bun run check:boundaries && bun run check:headers && bun test",
     "prepare": "lefthook install",
-    "refresh-advisories": "bun src/advisories/refresh-advisories-command.ts"
+    "refresh-advisories": "bun src/advisories/refresh-advisories-command.ts",
+    "validate-matcher": "bun scripts/validate-matcher.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
