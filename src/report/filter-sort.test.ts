@@ -47,12 +47,13 @@ describe('selectRows filters', () => {
 
   test('combines filters with AND', () => {
     const ids = selectFixtureIds(
-      { detector: ['sca'], severity: ['high'] },
+      { detector: ['dependency'], severity: ['high'] },
       null,
     )
     const expectedIds = fixtureReviewResult.findings
       .filter(
-        (finding) => finding.detector === 'sca' && finding.severity === 'high',
+        (finding) =>
+          finding.detector === 'dependency' && finding.severity === 'high',
       )
       .map((finding) => finding.id)
     expect(ids).toEqual(expectedIds)
@@ -65,10 +66,10 @@ describe('selectRows filters', () => {
     expect(severitiesShown).toEqual(new Set(['critical', 'info']))
   })
 
-  test('hides rows of other detectors when an sca-only filter has a selection', () => {
+  test('hides rows of other detectors when a dependency-only filter has a selection', () => {
     const ids = selectFixtureIds({ reachability: ['transitive'] }, null)
     const detectorsShown = new Set(readColumn(ids, 'detector'))
-    expect(detectorsShown).toEqual(new Set(['sca']))
+    expect(detectorsShown).toEqual(new Set(['dependency']))
     expect(ids.length).toBeGreaterThan(0)
   })
 
@@ -82,7 +83,7 @@ describe('selectRows filters', () => {
 
   test('returns nothing when no row matches', () => {
     const ids = selectFixtureIds(
-      { detector: ['secrets'], cwe: ['CWE-89'] },
+      { detector: ['secrets'], vulnerabilityType: ['CWE-89'] },
       null,
     )
     expect(ids).toEqual([])
@@ -124,21 +125,27 @@ describe('selectRows sorting', () => {
   test('puts rows with a dash last in both directions', () => {
     const ascendingIds = selectFixtureIds(
       {},
-      { column: 'cwe', direction: 'ascending' },
+      { column: 'vulnerabilityType', direction: 'ascending' },
     )
     const descendingIds = selectFixtureIds(
       {},
-      { column: 'cwe', direction: 'descending' },
+      { column: 'vulnerabilityType', direction: 'descending' },
     )
-    const cweCount = fixtureRows.filter((row) => row.cells.cwe !== null).length
-    expect(readColumn(ascendingIds, 'cwe').slice(cweCount)).toEqual(
-      new Array(fixtureRows.length - cweCount).fill(null),
-    )
-    expect(readColumn(descendingIds, 'cwe').slice(cweCount)).toEqual(
-      new Array(fixtureRows.length - cweCount).fill(null),
-    )
-    expect(readColumn(ascendingIds, 'cwe')[0]).toBe('CWE-22')
-    expect(readColumn(descendingIds, 'cwe')[0]).toBe('CWE-918')
+    const vulnerabilityTypeCount = fixtureRows.filter(
+      (row) => row.cells.vulnerabilityType !== null,
+    ).length
+    expect(
+      readColumn(ascendingIds, 'vulnerabilityType').slice(
+        vulnerabilityTypeCount,
+      ),
+    ).toEqual(new Array(fixtureRows.length - vulnerabilityTypeCount).fill(null))
+    expect(
+      readColumn(descendingIds, 'vulnerabilityType').slice(
+        vulnerabilityTypeCount,
+      ),
+    ).toEqual(new Array(fixtureRows.length - vulnerabilityTypeCount).fill(null))
+    expect(readColumn(ascendingIds, 'vulnerabilityType')[0]).toBe('CWE-22')
+    expect(readColumn(descendingIds, 'vulnerabilityType')[0]).toBe('CWE-918')
   })
 
   test('reverses the order of different values when the direction flips', () => {
@@ -157,7 +164,7 @@ describe('selectRows sorting', () => {
     // each detector group must keep the finding order whichever way the column sorts
     for (const direction of ['ascending', 'descending'] as const) {
       const ids = selectFixtureIds({}, { column: 'detector', direction })
-      for (const detector of ['sca', 'code-review', 'secrets']) {
+      for (const detector of ['dependency', 'code-review', 'secrets']) {
         const idsOfDetector = ids.filter(
           (id) => readColumn([id], 'detector')[0] === detector,
         )
@@ -192,7 +199,10 @@ describe('getFilterSortSource', () => {
 
     const options = {
       rows: fixtureRows,
-      selections: { detector: ['sca', 'code-review'], introduced: ['yes'] },
+      selections: {
+        detector: ['dependency', 'code-review'],
+        introduced: ['yes'],
+      },
       sort: { column: 'severity', direction: 'ascending' } as SortState,
       severityOrder,
     }

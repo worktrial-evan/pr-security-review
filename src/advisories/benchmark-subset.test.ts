@@ -5,14 +5,14 @@ import { loadAdvisoryStore } from './advisory-store'
 import { resolveAdvisoryCachePaths } from './cache-layout'
 import { listAffectedNpmPackageNames } from './package-name'
 import {
-  benchmarkAdvisoryCacheDir,
+  benchmarkAdvisoryCacheDirectory,
   benchmarkAdvisoryPackageNames,
 } from './write-advisory-subset'
 
 // the store loaded from the committed subset
 let subsetStore: AdvisoryStore
 beforeAll(async () => {
-  subsetStore = await loadAdvisoryStore(benchmarkAdvisoryCacheDir)
+  subsetStore = await loadAdvisoryStore(benchmarkAdvisoryCacheDirectory)
 })
 
 // say whether any range of the advisory ends at a last affected version
@@ -39,7 +39,7 @@ describe('benchmark advisory subset', () => {
 
   test('holds exactly the listed packages', async () => {
     const { indexPath } = resolveAdvisoryCachePaths({
-      cacheDir: benchmarkAdvisoryCacheDir,
+      cacheDirectory: benchmarkAdvisoryCacheDirectory,
       ecosystem: 'npm',
     })
     const subsetIndex: Record<string, unknown> =

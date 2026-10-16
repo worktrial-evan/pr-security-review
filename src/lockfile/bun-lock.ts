@@ -205,11 +205,11 @@ function readPackageEntryManifest({
   packageKey,
   packageEntry,
 }: ReadPackageEntryManifestOptions): PackageManifest {
-  const packageInfo =
+  const packageMetadata =
     packageEntry
       .slice(1)
       .find((element) => typeof element === 'object' && element !== null) ?? {}
-  const manifestParseResult = packageManifestSchema.safeParse(packageInfo)
+  const manifestParseResult = packageManifestSchema.safeParse(packageMetadata)
   if (!manifestParseResult.success) {
     throw new LockfileParseError({
       lockfileKind: 'bun',

@@ -4,10 +4,13 @@ import type { ExpectedFinding } from '@/shared/benchmark'
 import type { Finding } from '@/shared/finding'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from '@/shared/finding.samples'
-import { areCwesInSameFamily, matchesExpectedFinding } from './match-rules'
+import {
+  areVulnerabilityTypesInSameFamily,
+  matchesExpectedFinding,
+} from './match-rules'
 
 // the sample secret finding is pre-existing, so the secret tests use an introduced copy
 const introducedSecretFinding: Finding = {
@@ -16,14 +19,14 @@ const introducedSecretFinding: Finding = {
 }
 
 // the labels that match each sample finding exactly
-const expectedScaFinding: ExpectedFinding = {
-  detector: 'sca',
+const expectedDependencyFinding: ExpectedFinding = {
+  detector: 'dependency',
   packageName: 'lodash',
   advisoryId: 'GHSA-35jh-r3h4-6jhm',
 }
 const expectedCodeReviewFinding: ExpectedFinding = {
   detector: 'code-review',
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   file: 'src/users.ts',
   startLine: 42,
   endLine: 44,
@@ -36,9 +39,9 @@ const expectedSecretFinding: ExpectedFinding = {
 
 describe('detector check', () => {
   test('detector mismatch', () => {
-    // an sca label and a code-review prediction sharing a file and lines
+    // a dependency label and a code-review prediction sharing a file and lines
     const expectedFinding: ExpectedFinding = {
-      ...expectedScaFinding,
+      ...expectedDependencyFinding,
       file: 'src/users.ts',
       startLine: 42,
       endLine: 44,
@@ -56,13 +59,13 @@ describe('dependency match rule', () => {
   test('alias matches', () => {
     // expect the CVE while the prediction reports the GHSA id with that CVE as an alias
     const expectedFinding: ExpectedFinding = {
-      ...expectedScaFinding,
+      ...expectedDependencyFinding,
       advisoryId: 'CVE-2021-23337',
     }
     expect(
       matchesExpectedFinding({
         expectedFinding,
-        predictedFinding: scaFindingSample,
+        predictedFinding: dependencyFindingSample,
       }),
     ).toBe(true)
   })
@@ -70,13 +73,13 @@ describe('dependency match rule', () => {
   test('alias matches the other way round', () => {
     // expect the GHSA id while the prediction reports the CVE with the GHSA id as an alias
     const predictedFinding: Finding = {
-      ...scaFindingSample,
+      ...dependencyFindingSample,
       advisoryId: 'CVE-2021-23337',
       aliases: ['GHSA-35jh-r3h4-6jhm'],
     }
     expect(
       matchesExpectedFinding({
-        expectedFinding: expectedScaFinding,
+        expectedFinding: expectedDependencyFinding,
         predictedFinding,
       }),
     ).toBe(true)
@@ -85,13 +88,13 @@ describe('dependency match rule', () => {
   test('package differs', () => {
     // the same advisory id on a different package
     const expectedFinding: ExpectedFinding = {
-      ...expectedScaFinding,
+      ...expectedDependencyFinding,
       packageName: 'underscore',
     }
     expect(
       matchesExpectedFinding({
         expectedFinding,
-        predictedFinding: scaFindingSample,
+        predictedFinding: dependencyFindingSample,
       }),
     ).toBe(false)
   })
@@ -99,36 +102,36 @@ describe('dependency match rule', () => {
   test('ids and package names compare exactly', () => {
     // a lowercase advisory id and a capitalized package name match nothing
     const lowercaseIdFinding: ExpectedFinding = {
-      ...expectedScaFinding,
+      ...expectedDependencyFinding,
       advisoryId: 'ghsa-35jh-r3h4-6jhm',
     }
     const capitalizedPackageFinding: ExpectedFinding = {
-      ...expectedScaFinding,
+      ...expectedDependencyFinding,
       packageName: 'Lodash',
     }
     expect(
       matchesExpectedFinding({
         expectedFinding: lowercaseIdFinding,
-        predictedFinding: scaFindingSample,
+        predictedFinding: dependencyFindingSample,
       }),
     ).toBe(false)
     expect(
       matchesExpectedFinding({
         expectedFinding: capitalizedPackageFinding,
-        predictedFinding: scaFindingSample,
+        predictedFinding: dependencyFindingSample,
       }),
     ).toBe(false)
   })
 
   test('a label without an advisory id matches nothing', () => {
     const expectedFinding: ExpectedFinding = {
-      detector: 'sca',
+      detector: 'dependency',
       packageName: 'lodash',
     }
     expect(
       matchesExpectedFinding({
         expectedFinding,
-        predictedFinding: scaFindingSample,
+        predictedFinding: dependencyFindingSample,
       }),
     ).toBe(false)
   })
@@ -139,11 +142,11 @@ describe('code match rule', () => {
     // CWE-79 expected and CWE-80 predicted in the same file and lines
     const expectedFinding: ExpectedFinding = {
       ...expectedCodeReviewFinding,
-      cwe: 'CWE-79',
+      vulnerabilityType: 'CWE-79',
     }
     const predictedFinding: Finding = {
       ...codeReviewFindingSample,
-      cwe: 'CWE-80',
+      vulnerabilityType: 'CWE-80',
     }
     expect(matchesExpectedFinding({ expectedFinding, predictedFinding })).toBe(
       true,
@@ -212,7 +215,7 @@ describe('code match rule', () => {
   })
 
   test('different file', () => {
-    // the same cwe and lines in another file
+    // the same vulnerabilityType and lines in another file
     const predictedFinding: Finding = {
       ...codeReviewFindingSample,
       file: 'src/orders.ts',
@@ -225,11 +228,11 @@ describe('code match rule', () => {
     ).toBe(false)
   })
 
-  test('no expected file matches on the cwe alone', () => {
-    // a label with only a cwe against a prediction far away in another file
+  test('no expected file matches on the vulnerabilityType alone', () => {
+    // a label with only a vulnerabilityType against a prediction far away in another file
     const expectedFinding: ExpectedFinding = {
       detector: 'code-review',
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
     }
     const predictedFinding: Finding = {
       ...codeReviewFindingSample,
@@ -246,7 +249,7 @@ describe('code match rule', () => {
     // a label with a file but no lines against a prediction far down the same file
     const expectedFinding: ExpectedFinding = {
       detector: 'code-review',
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
       file: 'src/users.ts',
     }
     const predictedFinding: Finding = {
@@ -273,19 +276,31 @@ describe('code match rule', () => {
     ).toBe(false)
   })
 
-  test('cwe compares without case, prefix, separator or leading zeros', () => {
+  test('vulnerabilityType compares without case, prefix, separator or leading zeros', () => {
     // lowercase, a bare number, a space, a leading zero and a family member all normalize before the comparison
-    expect(areCwesInSameFamily({ firstCwe: 'cwe-89', secondCwe: '89' })).toBe(
-      true,
-    )
-    expect(areCwesInSameFamily({ firstCwe: '79', secondCwe: 'cwe-80' })).toBe(
-      true,
-    )
     expect(
-      areCwesInSameFamily({ firstCwe: 'CWE 79', secondCwe: 'CWE-079' }),
+      areVulnerabilityTypesInSameFamily({
+        firstVulnerabilityType: 'cwe-89',
+        secondVulnerabilityType: '89',
+      }),
     ).toBe(true)
     expect(
-      areCwesInSameFamily({ firstCwe: 'CWE-79', secondCwe: 'CWE-89' }),
+      areVulnerabilityTypesInSameFamily({
+        firstVulnerabilityType: '79',
+        secondVulnerabilityType: 'cwe-80',
+      }),
+    ).toBe(true)
+    expect(
+      areVulnerabilityTypesInSameFamily({
+        firstVulnerabilityType: 'CWE 79',
+        secondVulnerabilityType: 'CWE-079',
+      }),
+    ).toBe(true)
+    expect(
+      areVulnerabilityTypesInSameFamily({
+        firstVulnerabilityType: 'CWE-79',
+        secondVulnerabilityType: 'CWE-89',
+      }),
     ).toBe(false)
   })
 })

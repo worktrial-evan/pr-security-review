@@ -6,7 +6,7 @@
   "description": "The head adds a GitHub Actions deploy workflow at .github/workflows/deploy.yml with a personal access token written into the GH_TOKEN environment variable.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/secrets-02-github-token-in-workflow"
+    "directory": "benchmark/cases/secrets-02-github-token-in-workflow"
   },
   "expected": [
     {

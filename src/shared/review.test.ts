@@ -2,7 +2,7 @@
 import { describe, expect, test } from 'bun:test'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from './finding.samples'
 import {
@@ -17,7 +17,7 @@ const reviewOptionsSample: ReviewOptions = {
   isLlmEnabled: true,
   isCacheEnabled: true,
   isOffline: false,
-  advisoryCacheDir: 'cache/advisories',
+  advisoryCacheDirectory: 'cache/advisories',
   reviewModelId: 'claude-sonnet-4-5',
   summarizeModelId: 'claude-haiku-4-5',
   contextLines: 30,
@@ -32,7 +32,7 @@ const reviewResultSample: ReviewResult = {
     finishedAt: '2026-10-15T08:31:12.000Z',
     pullRequestReference: {
       owner: 'octocat',
-      repo: 'hello-world',
+      repository: 'hello-world',
       number: 42,
       url: 'https://github.com/octocat/hello-world/pull/42',
     },
@@ -62,7 +62,11 @@ const reviewResultSample: ReviewResult = {
     suspectedPromptInjectionCount: 0,
     degradedSteps: ['summarizing'],
   },
-  findings: [scaFindingSample, codeReviewFindingSample, secretFindingSample],
+  findings: [
+    dependencyFindingSample,
+    codeReviewFindingSample,
+    secretFindingSample,
+  ],
   errors: [
     {
       step: 'summarizing',
@@ -87,6 +91,6 @@ describe('reviewResultSchema', () => {
     expect(parsedReviewResult).toEqual(reviewResultSample)
     expect(
       parsedReviewResult.findings.map((finding) => finding.detector),
-    ).toEqual(['sca', 'code-review', 'secrets'])
+    ).toEqual(['dependency', 'code-review', 'secrets'])
   })
 })

@@ -6,7 +6,7 @@
   "description": "The express package at the parent of the fix commit for GHSA-qw6h-vgh9-j6wx, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/expressjs/express.git",
+    "repositoryUrl": "https://github.com/expressjs/express.git",
     "baseSha": "54271f69b511fea198471e6ff3400ab805d6b553",
     "headSha": "125bb742a38cd97938a3932b47cc301e41c31f5d"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-qw6h-vgh9-j6wx",
-      "cwe": "CWE-79",
+      "vulnerabilityType": "CWE-79",
       "file": "lib/response.js",
       "startLine": 972,
       "endLine": 972

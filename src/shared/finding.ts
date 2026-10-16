@@ -8,7 +8,7 @@ export const severitySchema = z.enum(severities)
 export type Severity = z.infer<typeof severitySchema>
 
 // the detectors that produce findings
-export const detectorKinds = ['sca', 'code-review', 'secrets'] as const
+export const detectorKinds = ['dependency', 'code-review', 'secrets'] as const
 export const detectorKindSchema = z.enum(detectorKinds)
 export type DetectorKind = z.infer<typeof detectorKindSchema>
 
@@ -62,9 +62,9 @@ export const findingBaseSchema = z.object({
 })
 export type FindingBase = z.infer<typeof findingBaseSchema>
 
-// a vulnerable dependency found by the sca detector
-export const scaFindingSchema = findingBaseSchema.extend({
-  detector: z.literal('sca'),
+// a vulnerable dependency found by the dependency detector
+export const dependencyFindingSchema = findingBaseSchema.extend({
+  detector: z.literal('dependency'),
   packageName: z.string(),
   version: z.string(),
   advisoryId: z.string(),
@@ -79,12 +79,12 @@ export const scaFindingSchema = findingBaseSchema.extend({
   isVersionUnparseable: z.boolean(),
   matcherAgreement: matcherAgreementSchema,
 })
-export type ScaFinding = z.infer<typeof scaFindingSchema>
+export type DependencyFinding = z.infer<typeof dependencyFindingSchema>
 
 // a weakness in the changed code found by the code-review detector
 export const codeReviewFindingSchema = findingBaseSchema.extend({
   detector: z.literal('code-review'),
-  cwe: z.string(),
+  vulnerabilityType: z.string(),
   evidence: z.array(z.string()),
   sourceToSink: z.string(),
   promptVersion: z.string(),
@@ -102,7 +102,7 @@ export type SecretFinding = z.infer<typeof secretFindingSchema>
 
 // a finding of any detector, selected by its detector field
 export const findingSchema = z.discriminatedUnion('detector', [
-  scaFindingSchema,
+  dependencyFindingSchema,
   codeReviewFindingSchema,
   secretFindingSchema,
 ])

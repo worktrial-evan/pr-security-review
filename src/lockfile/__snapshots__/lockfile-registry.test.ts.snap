@@ -8,7 +8,7 @@ exports[`parseLockfile with the bun lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/format",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.4",
   },
   {
@@ -17,7 +17,7 @@ exports[`parseLockfile with the bun lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/format",
-    "scope": "prod",
+    "scope": "production",
     "version": "2.0.0",
   },
   {
@@ -29,7 +29,7 @@ exports[`parseLockfile with the bun lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/logger",
-    "scope": "prod",
+    "scope": "production",
     "version": "2.1.0",
   },
   {
@@ -38,7 +38,7 @@ exports[`parseLockfile with the bun lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.1.3",
   },
   {
@@ -47,13 +47,13 @@ exports[`parseLockfile with the bun lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
 ]
 `;
 
-exports[`parseLockfile with the bun lockfile marks dev only, shared, optional and peer dependencies 1`] = `
+exports[`parseLockfile with the bun lockfile marks development only, shared, optional and peer dependencies 1`] = `
 [
   {
     "dependencyKeys": [
@@ -63,7 +63,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "assert-kit",
-    "scope": "dev",
+    "scope": "development",
     "version": "1.4.0",
   },
   {
@@ -72,7 +72,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "deep-equal-kit",
-    "scope": "dev",
+    "scope": "development",
     "version": "1.0.0",
   },
   {
@@ -81,7 +81,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "fast-json",
-    "scope": "prod",
+    "scope": "production",
     "version": "3.1.0",
   },
   {
@@ -90,7 +90,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "native-watch",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.1",
   },
   {
@@ -99,7 +99,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "shared-util",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.2",
   },
   {
@@ -111,7 +111,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "test-runner",
-    "scope": "dev",
+    "scope": "development",
     "version": "2.1.0",
   },
   {
@@ -120,7 +120,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "view-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "18.2.0",
   },
   {
@@ -133,7 +133,7 @@ exports[`parseLockfile with the bun lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "web-server",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.2.0",
   },
 ]
@@ -147,7 +147,7 @@ exports[`parseLockfile with the bun lockfile keeps the real package name of an n
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "lodash",
-    "scope": "prod",
+    "scope": "production",
     "version": "4.17.21",
   },
   {
@@ -157,7 +157,7 @@ exports[`parseLockfile with the bun lockfile keeps the real package name of an n
     "isWorkspace": false,
     "name": "lodash-legacy",
     "realPackageName": "lodash",
-    "scope": "prod",
+    "scope": "production",
     "version": "4.17.20",
   },
 ]
@@ -173,7 +173,7 @@ exports[`parseLockfile with the bun lockfile marks workspace packages and walks 
     "isVersionUnparseable": true,
     "isWorkspace": true,
     "name": "@acme/utils",
-    "scope": "prod",
+    "scope": "production",
     "version": "workspace:packages/utils",
   },
   {
@@ -182,7 +182,7 @@ exports[`parseLockfile with the bun lockfile marks workspace packages and walks 
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
   {
@@ -191,7 +191,7 @@ exports[`parseLockfile with the bun lockfile marks workspace packages and walks 
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "test-runner",
-    "scope": "dev",
+    "scope": "development",
     "version": "2.1.0",
   },
   {
@@ -202,7 +202,7 @@ exports[`parseLockfile with the bun lockfile marks workspace packages and walks 
     "isVersionUnparseable": true,
     "isWorkspace": true,
     "name": "web",
-    "scope": "prod",
+    "scope": "production",
     "version": "workspace:packages/web",
   },
 ]
@@ -216,7 +216,7 @@ exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "file-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "file:../file-kit",
   },
   {
@@ -227,7 +227,7 @@ exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "git-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "github:acme/git-kit#4f2a9c1",
   },
   {
@@ -236,7 +236,7 @@ exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
   {
@@ -245,7 +245,7 @@ exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "link-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "link:link-kit",
   },
   {
@@ -254,7 +254,7 @@ exports[`parseLockfile with the bun lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "tarball-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "https://example.com/tarball-kit-1.0.0.tgz",
   },
 ]
@@ -268,7 +268,7 @@ exports[`parseLockfile with the npm lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/format",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.4",
   },
   {
@@ -277,7 +277,7 @@ exports[`parseLockfile with the npm lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/format",
-    "scope": "prod",
+    "scope": "production",
     "version": "2.0.0",
   },
   {
@@ -289,7 +289,7 @@ exports[`parseLockfile with the npm lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "@acme/logger",
-    "scope": "prod",
+    "scope": "production",
     "version": "2.1.0",
   },
   {
@@ -298,7 +298,7 @@ exports[`parseLockfile with the npm lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.1.3",
   },
   {
@@ -307,13 +307,13 @@ exports[`parseLockfile with the npm lockfile keeps every version of a package an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
 ]
 `;
 
-exports[`parseLockfile with the npm lockfile marks dev only, shared, optional and peer dependencies 1`] = `
+exports[`parseLockfile with the npm lockfile marks development only, shared, optional and peer dependencies 1`] = `
 [
   {
     "dependencyKeys": [
@@ -323,7 +323,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "assert-kit",
-    "scope": "dev",
+    "scope": "development",
     "version": "1.4.0",
   },
   {
@@ -332,7 +332,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "deep-equal-kit",
-    "scope": "dev",
+    "scope": "development",
     "version": "1.0.0",
   },
   {
@@ -341,7 +341,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "fast-json",
-    "scope": "prod",
+    "scope": "production",
     "version": "3.1.0",
   },
   {
@@ -350,7 +350,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "native-watch",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.1",
   },
   {
@@ -359,7 +359,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "shared-util",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.0.2",
   },
   {
@@ -371,7 +371,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "test-runner",
-    "scope": "dev",
+    "scope": "development",
     "version": "2.1.0",
   },
   {
@@ -380,7 +380,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "view-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "18.2.0",
   },
   {
@@ -393,7 +393,7 @@ exports[`parseLockfile with the npm lockfile marks dev only, shared, optional an
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "web-server",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.2.0",
   },
 ]
@@ -407,7 +407,7 @@ exports[`parseLockfile with the npm lockfile keeps the real package name of an n
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "lodash",
-    "scope": "prod",
+    "scope": "production",
     "version": "4.17.21",
   },
   {
@@ -417,7 +417,7 @@ exports[`parseLockfile with the npm lockfile keeps the real package name of an n
     "isWorkspace": false,
     "name": "lodash-legacy",
     "realPackageName": "lodash",
-    "scope": "prod",
+    "scope": "production",
     "version": "4.17.20",
   },
 ]
@@ -433,7 +433,7 @@ exports[`parseLockfile with the npm lockfile marks workspace packages and walks 
     "isVersionUnparseable": true,
     "isWorkspace": true,
     "name": "@acme/utils",
-    "scope": "prod",
+    "scope": "production",
     "version": "workspace:packages/utils",
   },
   {
@@ -442,7 +442,7 @@ exports[`parseLockfile with the npm lockfile marks workspace packages and walks 
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
   {
@@ -451,7 +451,7 @@ exports[`parseLockfile with the npm lockfile marks workspace packages and walks 
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "test-runner",
-    "scope": "dev",
+    "scope": "development",
     "version": "2.1.0",
   },
   {
@@ -462,7 +462,7 @@ exports[`parseLockfile with the npm lockfile marks workspace packages and walks 
     "isVersionUnparseable": true,
     "isWorkspace": true,
     "name": "web",
-    "scope": "prod",
+    "scope": "production",
     "version": "workspace:packages/web",
   },
 ]
@@ -478,7 +478,7 @@ exports[`parseLockfile with the npm lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "file-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "file:../file-kit",
   },
   {
@@ -489,7 +489,7 @@ exports[`parseLockfile with the npm lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "git-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "git+ssh://git@github.com/acme/git-kit.git#4f2a9c1",
   },
   {
@@ -498,7 +498,7 @@ exports[`parseLockfile with the npm lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": false,
     "isWorkspace": false,
     "name": "left-pad",
-    "scope": "prod",
+    "scope": "production",
     "version": "1.3.0",
   },
   {
@@ -507,7 +507,7 @@ exports[`parseLockfile with the npm lockfile keeps git, file, link and tarball s
     "isVersionUnparseable": true,
     "isWorkspace": false,
     "name": "tarball-kit",
-    "scope": "prod",
+    "scope": "production",
     "version": "file:../tarball-kit-1.0.0.tgz",
   },
 ]

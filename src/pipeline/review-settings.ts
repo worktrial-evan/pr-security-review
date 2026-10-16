@@ -39,7 +39,7 @@ export interface ReviewSettingsOverrides {
   isLlmEnabled?: boolean
   isCacheEnabled?: boolean
   isOffline?: boolean
-  advisoryCacheDir?: string
+  advisoryCacheDirectory?: string
   reviewModelId?: string
   summarizeModelId?: string
   reviewPromptVersion?: string
@@ -82,7 +82,8 @@ export async function loadReviewSettings({
     isLlmEnabled: overrides.isLlmEnabled ?? reviewConfig.isLlmEnabled,
     isCacheEnabled: overrides.isCacheEnabled ?? reviewConfig.isCacheEnabled,
     isOffline: overrides.isOffline ?? false,
-    advisoryCacheDir: overrides.advisoryCacheDir ?? resolveCacheDirectory(),
+    advisoryCacheDirectory:
+      overrides.advisoryCacheDirectory ?? resolveCacheDirectory(),
     reviewModelId: overrides.reviewModelId ?? modelConfig.reviewModelId,
     summarizeModelId:
       overrides.summarizeModelId ?? modelConfig.summarizeModelId,

@@ -230,7 +230,7 @@ describe('root', () => {
 
     expect(helpRun.exitCode).toBe(0)
     expect(helpRun.standardOutput).toContain(
-      'Usage: pr-review [options] [command]',
+      'Usage: pull-request-review [options] [command]',
     )
     expect(helpRun.standardOutput).toContain('review [options] <pull-request>')
     expect(unknownRun.exitCode).toBe(1)

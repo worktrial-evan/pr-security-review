@@ -19,18 +19,18 @@ const millisecondsPerHour = 60 * 60 * 1000
  * Loads the npm advisory index and snapshot under the cache directory into an in-memory AdvisoryStore.
  */
 export async function loadAdvisoryStore(
-  cacheDir: string,
+  cacheDirectory: string,
 ): Promise<AdvisoryStore> {
   // locate both files and fail with the fix when the cache was never built
   const { indexPath, snapshotPath } = resolveAdvisoryCachePaths({
-    cacheDir,
+    cacheDirectory,
     ecosystem: 'npm',
   })
   const indexFile = Bun.file(indexPath)
   const snapshotFile = Bun.file(snapshotPath)
   if (!(await indexFile.exists()) || !(await snapshotFile.exists())) {
     throw new Error(
-      `no advisory cache under ${cacheDir}. run bun run refresh-advisories first`,
+      `no advisory cache under ${cacheDirectory}. run bun run refresh-advisories first`,
     )
   }
 

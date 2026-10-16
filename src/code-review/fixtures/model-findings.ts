@@ -3,7 +3,7 @@ import type { ModelFinding } from '../model-output'
 
 // a grounded finding on the second added line of sqlInjectionChangedFile in ./changed-files
 export const sqlInjectionModelFinding: ModelFinding = {
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   title: 'SQL query built from the id query parameter',
   severity: 'high',
   confidence: 0.95,

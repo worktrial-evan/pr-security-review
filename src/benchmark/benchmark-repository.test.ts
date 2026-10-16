@@ -26,7 +26,7 @@ const newFileText = 'const added = 1\n'
 
 // the temporary repository, its file url and the shas of its two commits
 let repositoryDirectory: string
-let repoUrl: string
+let repositoryUrl: string
 let baseSha: string
 let headSha: string
 
@@ -50,7 +50,7 @@ beforeEach(async () => {
   repositoryDirectory = await mkdtemp(
     join(tmpdir(), 'pull-request-review-repository-'),
   )
-  repoUrl = `file://${repositoryDirectory}`
+  repositoryUrl = `file://${repositoryDirectory}`
   await git(['init', '--quiet'])
   await git(['config', 'user.email', 'benchmark@example.test'])
   await git(['config', 'user.name', 'benchmark'])
@@ -74,7 +74,11 @@ afterEach(async () => {
 
 describe('openBenchmarkRepository', () => {
   test('lists the files the second commit changed from a clone under the cache directory', async () => {
-    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
+    const source = await openBenchmarkRepository({
+      repositoryUrl,
+      baseSha,
+      headSha,
+    })
 
     // the source describes the two shas
     expect(await source.describe()).toEqual({ baseSha, headSha })
@@ -91,7 +95,7 @@ describe('openBenchmarkRepository', () => {
       { line: 2, text: 'const second = 22' },
     ])
 
-    // the clone lives under benchmark-repos/local/<parent>/<repository> in the cache
+    // the clone lives under benchmark-repositories/local/<parent>/<repository> in the cache
     const cloneDirectory = expectedCloneDirectory()
     expect(await Bun.file(join(cloneDirectory, '.git', 'HEAD')).exists()).toBe(
       true,
@@ -100,7 +104,11 @@ describe('openBenchmarkRepository', () => {
   })
 
   test('reads files at either sha and null when the sha does not hold the file', async () => {
-    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
+    const source = await openBenchmarkRepository({
+      repositoryUrl,
+      baseSha,
+      headSha,
+    })
     expect(await source.readFileAtBase('app.ts')).toBe(baseAppText)
     expect(await source.readFileAtHead('app.ts')).toBe(headAppText)
     expect(await source.readFileAtBase('new.ts')).toBeNull()
@@ -111,7 +119,7 @@ describe('openBenchmarkRepository', () => {
   test('reuses the clone on a second open', async () => {
     // open once and leave a marker inside the clone
     const firstSource = await openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha,
     })
@@ -121,7 +129,7 @@ describe('openBenchmarkRepository', () => {
 
     // open again and expect the same clone with the marker still in it
     const secondSource = await openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha,
     })
@@ -135,7 +143,7 @@ describe('openBenchmarkRepository', () => {
   test('opens an existing clone while offline', async () => {
     // clone while online, then flip the offline flag
     const firstSource = await openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha,
     })
@@ -145,7 +153,7 @@ describe('openBenchmarkRepository', () => {
 
     // the clone is reused without touching the network
     const offlineSource = await openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha,
     })
@@ -154,7 +162,11 @@ describe('openBenchmarkRepository', () => {
   })
 
   test('checks head out into a worktree that dispose removes', async () => {
-    const source = await openBenchmarkRepository({ repoUrl, baseSha, headSha })
+    const source = await openBenchmarkRepository({
+      repositoryUrl,
+      baseSha,
+      headSha,
+    })
 
     // the worktree holds the head content
     const worktreeDirectory = await source.checkoutHead()
@@ -174,7 +186,11 @@ describe('openBenchmarkRepository', () => {
 
   test('throws OfflineCloneError before cloning when the offline flag is set', async () => {
     process.env[offlineEnvironmentVariable] = '1'
-    const openPromise = openBenchmarkRepository({ repoUrl, baseSha, headSha })
+    const openPromise = openBenchmarkRepository({
+      repositoryUrl,
+      baseSha,
+      headSha,
+    })
     await expect(openPromise).rejects.toBeInstanceOf(OfflineCloneError)
     expect(
       await Bun.file(join(expectedCloneDirectory(), '.git', 'HEAD')).exists(),
@@ -182,40 +198,44 @@ describe('openBenchmarkRepository', () => {
   })
 
   test('throws OfflineCloneError when the repository cannot be reached', async () => {
-    const unreachableRepoUrl = 'https://127.0.0.1:9/none/none.git'
+    const unreachableRepositoryUrl = 'https://127.0.0.1:9/none/none.git'
     const openPromise = openBenchmarkRepository({
-      repoUrl: unreachableRepoUrl,
+      repositoryUrl: unreachableRepositoryUrl,
       baseSha,
       headSha,
     })
     const openError = await openPromise.catch((error: unknown) => error)
     expect(openError).toBeInstanceOf(OfflineCloneError)
     if (openError instanceof OfflineCloneError) {
-      expect(openError.repoUrl).toBe(unreachableRepoUrl)
+      expect(openError.repositoryUrl).toBe(unreachableRepositoryUrl)
     }
 
     // the failed clone leaves no host or owner directory behind
-    expect(existsSync(join(cacheDirectory, 'benchmark-repos'))).toBe(false)
+    expect(existsSync(join(cacheDirectory, 'benchmark-repositories'))).toBe(
+      false,
+    )
   })
 
   test('reports a local path that is not a repository as a plain error', async () => {
     // a file url nothing is at: git fails without naming the network
-    const missingRepoUrl = `file://${join(repositoryDirectory, 'missing')}`
+    const missingRepositoryUrl = `file://${join(repositoryDirectory, 'missing')}`
     const openPromise = openBenchmarkRepository({
-      repoUrl: missingRepoUrl,
+      repositoryUrl: missingRepositoryUrl,
       baseSha,
       headSha,
     })
     const openError = await openPromise.catch((error: unknown) => error)
     expect(openError).toBeInstanceOf(Error)
     expect(openError).not.toBeInstanceOf(OfflineCloneError)
-    expect(existsSync(join(cacheDirectory, 'benchmark-repos'))).toBe(false)
+    expect(existsSync(join(cacheDirectory, 'benchmark-repositories'))).toBe(
+      false,
+    )
   })
 
   test('reports a sha the repository does not hold as a plain error', async () => {
     const missingSha = '0000000000000000000000000000000000000000'
     const openPromise = openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha: missingSha,
     })
@@ -227,14 +247,14 @@ describe('openBenchmarkRepository', () => {
 
 // run git in the temporary repository through the module's wrapper, so a hook environment cannot redirect it
 function git(gitArguments: string[]): Promise<string> {
-  return runGit({ repoPath: repositoryDirectory, gitArguments })
+  return runGit({ repositoryPath: repositoryDirectory, gitArguments })
 }
 
 // the clone directory open derives from the file url: local plus the last two path segments
 function expectedCloneDirectory(): string {
   return join(
     cacheDirectory,
-    'benchmark-repos',
+    'benchmark-repositories',
     'local',
     basename(dirname(repositoryDirectory)),
     basename(repositoryDirectory),

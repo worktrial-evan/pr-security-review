@@ -1,4 +1,4 @@
-// runs the module boundary check: cruises src under a root with the repo dependency-cruiser config and lists every violation
+// runs the module boundary check: cruises src under a root with the repository dependency-cruiser config and lists every violation
 
 import { existsSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -10,7 +10,7 @@ import type {
 import { cruise } from 'dependency-cruiser'
 import extractDepcruiseConfig from 'dependency-cruiser/config-utl/extract-depcruise-config'
 
-// the repo root is the parent of the scripts directory, and the config lives there
+// the repository root is the parent of the scripts directory, and the config lives there
 const repositoryRoot = resolve(import.meta.dir, '..')
 const boundaryConfigurationPath = join(
   repositoryRoot,
@@ -35,11 +35,11 @@ interface CheckBoundariesResult {
   violations: BoundaryViolation[]
 }
 
-/** Cruises the src tree under root with the repo config and returns every boundary violation. */
+/** Cruises the src tree under root with the repository config and returns every boundary violation. */
 export async function checkBoundaries({
   root,
 }: CheckBoundariesOptions): Promise<CheckBoundariesResult> {
-  // load the matrix from the repo config
+  // load the matrix from the repository config
   const boundaryConfiguration = await extractDepcruiseConfig(
     boundaryConfigurationPath,
   )
@@ -74,7 +74,7 @@ async function cruiseFromRoot(
   const previousWorkingDirectory = process.cwd()
   process.chdir(root)
 
-  // cruise with the repo rules and the tsconfig of the tree being checked, then move back
+  // cruise with the repository rules and the tsconfig of the tree being checked, then move back
   try {
     const cruiseOutput = await cruise(['src'], {
       ruleSet: boundaryConfiguration,
@@ -131,7 +131,7 @@ function toBarrelViolation(barrelPath: string): BoundaryViolation {
 async function runCheckBoundariesCommand(
   rootArgument: string | undefined,
 ): Promise<void> {
-  // check the root given on the command line, or the repo root
+  // check the root given on the command line, or the repository root
   const root =
     rootArgument === undefined ? repositoryRoot : resolve(rootArgument)
   const { violations } = await checkBoundaries({ root })

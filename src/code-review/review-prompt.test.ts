@@ -3,13 +3,16 @@ import { describe, expect, test } from 'bun:test'
 import { describeFence } from '@/prompts/fence-untrusted'
 import { loadPrompt } from '@/prompts/prompt-loader'
 import type { PromptTemplate } from '@/shared/llm'
-import { allowedCwes, renderCweAllowlist } from './cwe-allowlist'
 import { readFencedContent } from './fixtures/fenced-content'
 import {
   buildReviewPrompt,
   codeReviewFenceLabel,
   codeReviewPromptId,
 } from './review-prompt'
+import {
+  allowedVulnerabilityTypes,
+  renderVulnerabilityTypeAllowlist,
+} from './vulnerability-type-allowlist'
 
 // a chunk whose lines include trailing spaces, a forged close tag, a placeholder and a CRLF
 const sampleChunkText = [
@@ -62,9 +65,9 @@ describe('buildReviewPrompt', () => {
   })
 
   test('renders the whole allowlist with every allowed CWE id in the system turn', () => {
-    expect(reviewPrompt.system).toContain(renderCweAllowlist())
-    for (const allowedCwe of allowedCwes) {
-      expect(reviewPrompt.system).toContain(allowedCwe.id)
+    expect(reviewPrompt.system).toContain(renderVulnerabilityTypeAllowlist())
+    for (const allowedVulnerabilityType of allowedVulnerabilityTypes) {
+      expect(reviewPrompt.system).toContain(allowedVulnerabilityType.id)
     }
   })
 
@@ -85,7 +88,7 @@ describe('buildReviewPrompt', () => {
         chunkText: sampleChunkText,
       }),
     ).toThrow(
-      'prompt code-review-test v7 does not use the review placeholders: cwe_allowlist',
+      'prompt code-review-test v7 does not use the review placeholders: vulnerability_type_allowlist',
     )
   })
 })
@@ -96,7 +99,7 @@ describe('the shipped code review prompt', () => {
     expect(codeReviewTemplate.version).toBe('1')
     expect(codeReviewTemplate.variables).toEqual([
       'fence_description',
-      'cwe_allowlist',
+      'vulnerability_type_allowlist',
     ])
   })
 

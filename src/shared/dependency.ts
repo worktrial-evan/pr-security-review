@@ -2,7 +2,7 @@
 import { z } from 'zod'
 
 // whether a dependency ships to production or is only used in development
-export const dependencyScopes = ['prod', 'dev'] as const
+export const dependencyScopes = ['production', 'development'] as const
 export const dependencyScopeSchema = z.enum(dependencyScopes)
 export type DependencyScope = z.infer<typeof dependencyScopeSchema>
 

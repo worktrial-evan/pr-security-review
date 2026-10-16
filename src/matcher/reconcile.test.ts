@@ -86,7 +86,7 @@ describe('reconcileMatches', () => {
         severity: 'medium',
         confidence: 0.5,
         isGithubReviewed: false,
-        dependencyScope: 'prod',
+        dependencyScope: 'production',
         isVersionUnparseable: true,
         isIntroducedByPullRequest: false,
         fixedVersions: [],
@@ -455,7 +455,7 @@ interface CreateDependencyFindingOptions extends Partial<DependencyFinding> {
   advisoryId: string
 }
 
-// build a high, scored, reviewed prod finding with no aliases and no fixed versions unless overridden
+// build a high, scored, reviewed production finding with no aliases and no fixed versions unless overridden
 function createDependencyFinding({
   packageName,
   version,
@@ -472,7 +472,7 @@ function createDependencyFinding({
     confidence: 0.9,
     cvssScore: 7.5,
     isGithubReviewed: true,
-    dependencyScope: 'prod',
+    dependencyScope: 'production',
     isVersionUnparseable: false,
     isIntroducedByPullRequest: true,
     fixedVersions: [],

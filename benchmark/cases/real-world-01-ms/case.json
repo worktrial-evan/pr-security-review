@@ -6,7 +6,7 @@
   "description": "The ms package at the parent of the fix commit for GHSA-w9mr-4mfr-499f, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/vercel/ms.git",
+    "repositoryUrl": "https://github.com/vercel/ms.git",
     "baseSha": "caae2988ba2a37765d055c4eee63d383320ee662",
     "headSha": "b83b36d7266fb1bd779fd19a2f98bab17a04d999"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-w9mr-4mfr-499f",
-      "cwe": "CWE-1333",
+      "vulnerabilityType": "CWE-1333",
       "file": "index.js",
       "startLine": 49,
       "endLine": 49

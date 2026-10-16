@@ -12,7 +12,7 @@ import {
 const semverSixSample: DependencyVersion = {
   name: 'semver',
   version: '6.3.1',
-  scope: 'prod',
+  scope: 'production',
   isDirect: false,
   isWorkspace: false,
   isVersionUnparseable: false,
@@ -21,7 +21,7 @@ const semverSixSample: DependencyVersion = {
 const semverSevenSample: DependencyVersion = {
   name: 'semver',
   version: '7.8.5',
-  scope: 'prod',
+  scope: 'production',
   isDirect: true,
   isWorkspace: false,
   isVersionUnparseable: false,
@@ -32,7 +32,7 @@ const semverSevenSample: DependencyVersion = {
 const dependencyWithOlderSemverSample: DependencyVersion = {
   name: 'string-width-cjs',
   version: '4.2.3',
-  scope: 'dev',
+  scope: 'development',
   isDirect: true,
   isWorkspace: false,
   isVersionUnparseable: false,

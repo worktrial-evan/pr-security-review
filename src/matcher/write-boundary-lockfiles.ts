@@ -11,7 +11,7 @@ import {
 import { normalizePackageName } from '@/shared/package-name'
 import { isVersionUnparseable, sortUniqueVersions } from './affected-range'
 
-// the repo root is two directories above this module
+// the repository root is two directories above this module
 const repositoryRoot = resolve(import.meta.dir, '..', '..')
 
 // where the advisory subset index is read from and where the lockfiles are written

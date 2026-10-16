@@ -24,8 +24,8 @@ afterEach(async () => {
 // parse the lockfiles of the current snapshot
 async function parseSnapshotLockfiles() {
   const pullRequestSource = new SnapshotPullRequestSource({
-    baseDir: snapshotPullRequest.baseDir,
-    headDir: snapshotPullRequest.headDir,
+    baseDirectory: snapshotPullRequest.baseDirectory,
+    headDirectory: snapshotPullRequest.headDirectory,
   })
   const changedFiles = await pullRequestSource.listChangedFiles()
   return parseLockfiles({ pullRequestSource, changedFiles })
@@ -53,7 +53,7 @@ describe('parseLockfiles', () => {
   })
 
   test('diffs an added lockfile against an empty base', async () => {
-    await rm(join(snapshotPullRequest.baseDir, 'bun.lock'))
+    await rm(join(snapshotPullRequest.baseDirectory, 'bun.lock'))
     const { lockfileChanges } = await parseSnapshotLockfiles()
 
     const addedNames = lockfileChanges[0]?.dependencyDiff.added.map(
@@ -65,9 +65,9 @@ describe('parseLockfiles', () => {
   })
 
   test('skips a deleted lockfile and lists an unsupported one', async () => {
-    await rm(join(snapshotPullRequest.headDir, 'bun.lock'))
+    await rm(join(snapshotPullRequest.headDirectory, 'bun.lock'))
     await Bun.write(
-      join(snapshotPullRequest.headDir, 'web', 'yarn.lock'),
+      join(snapshotPullRequest.headDirectory, 'web', 'yarn.lock'),
       '# yarn\n',
     )
     const { lockfileChanges, unsupportedLockfilePaths } =

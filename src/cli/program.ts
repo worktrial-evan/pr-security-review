@@ -110,7 +110,7 @@ function createProgram({
 }: CreateProgramOptions): Command {
   // the root writes through the given output and reports exits instead of ending the process
   const program: Command = new Command()
-    .name('pr-review')
+    .name('pull-request-review')
     .description('Reviews a pull request for security problems')
     .configureOutput({ writeOut: output.writeOut, writeErr: output.writeErr })
     .exitOverride()
@@ -148,7 +148,7 @@ function addReviewCommand({
   program
     .command('review')
     .description('Reviews one GitHub pull request and writes the report')
-    .argument('<pull-request>', 'a pull request url or owner/repo#number')
+    .argument('<pull-request>', 'a pull request url or owner/repository#number')
     .addOption(
       new Option('--format <format>', 'the report format')
         .choices(reportFormats)

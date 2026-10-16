@@ -4,7 +4,7 @@ import type { Finding } from '@/shared/finding'
 import {
   advisoriesByIdSample,
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from './summary.samples'
 import { buildSummaryPacket } from './summary-packet'
@@ -17,9 +17,17 @@ import { validateSummary } from './validate'
 
 // one finding of each detector, plus a dependency finding with no fix and no advisory
 const templateFindings: Finding[] = [
-  scaFindingSample,
-  { ...scaFindingSample, fixedVersions: [], advisoryId: 'GHSA-xxxx-yyyy-zzzz' },
-  { ...scaFindingSample, reachability: 'direct-imported', dependencyPath: [] },
+  dependencyFindingSample,
+  {
+    ...dependencyFindingSample,
+    fixedVersions: [],
+    advisoryId: 'GHSA-xxxx-yyyy-zzzz',
+  },
+  {
+    ...dependencyFindingSample,
+    reachability: 'direct-imported',
+    dependencyPath: [],
+  },
   codeReviewFindingSample,
   { ...codeReviewFindingSample, file: undefined, startLine: undefined },
   secretFindingSample,
@@ -56,7 +64,7 @@ describe('buildTemplateSummary', () => {
   test('names the fixed version as an upgrade action', () => {
     // build the template from the packet
     const packet = buildSummaryPacket({
-      finding: scaFindingSample,
+      finding: dependencyFindingSample,
       advisoriesById: advisoriesByIdSample,
     })
     const templateSummary = buildTemplateSummary(packet)
@@ -86,7 +94,7 @@ describe('pickFixedVersion', () => {
   test('picks the lowest fixed version above the installed one', () => {
     // pick the fixed version
     const fixedVersion = pickFixedVersion({
-      ...scaFindingSample,
+      ...dependencyFindingSample,
       version: '4.17.20',
       fixedVersions: ['5.0.1', '3.10.2', '4.17.21'],
     })
@@ -96,7 +104,7 @@ describe('pickFixedVersion', () => {
   test('falls back to the first listed when none is above the installed one', () => {
     // pick the fixed version
     const fixedVersion = pickFixedVersion({
-      ...scaFindingSample,
+      ...dependencyFindingSample,
       version: '9.0.0',
       fixedVersions: ['4.17.21', '3.10.2'],
     })
@@ -106,7 +114,7 @@ describe('pickFixedVersion', () => {
   test('returns undefined when no fix is published', () => {
     // pick the fixed version
     const fixedVersion = pickFixedVersion({
-      ...scaFindingSample,
+      ...dependencyFindingSample,
       fixedVersions: [],
     })
     expect(fixedVersion).toBeUndefined()

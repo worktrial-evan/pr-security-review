@@ -36,7 +36,7 @@ describe('fixtureReviewResult', () => {
     )
     expect(valuesOf((finding) => finding.severity)).toEqual(new Set(severities))
 
-    // the sca-only and optional fields are read through a loose record
+    // the dependency-only and optional fields are read through a loose record
     const looseValuesOf = (key: string): Set<unknown> =>
       new Set(
         findings

@@ -6,7 +6,7 @@
   "description": "The head rewords the comment above the containment check in src/downloads.ts. No code changes.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-14-comment-only-change"
+    "directory": "benchmark/cases/clean-14-comment-only-change"
   },
   "expected": []
 }

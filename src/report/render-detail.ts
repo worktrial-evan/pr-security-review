@@ -1,5 +1,5 @@
 // renders the expanded detail of one finding and the advisory links shared with the table
-import type { Finding, ScaFinding } from '../shared/finding'
+import type { DependencyFinding, Finding } from '../shared/finding'
 import { escapeHtml, renderLink } from './html-escape'
 import { emptyValueText } from './report-format'
 
@@ -9,7 +9,7 @@ const advisoryUrlPrefix = 'https://osv.dev/vulnerability/'
 /**
  * Renders the advisory id and each alias as a link to its advisory page.
  */
-export function renderAdvisoryLinks(finding: ScaFinding): string {
+export function renderAdvisoryLinks(finding: DependencyFinding): string {
   const advisoryIds = [finding.advisoryId, ...finding.aliases]
   const links = advisoryIds.map((advisoryId) =>
     renderLink({ url: `${advisoryUrlPrefix}${advisoryId}`, label: advisoryId }),
@@ -63,7 +63,10 @@ function renderEvidence(finding: Finding): string {
 
 // render the chain of packages from a direct dependency to the vulnerable one
 function renderDependencyPath(finding: Finding): string {
-  if (finding.detector !== 'sca' || finding.dependencyPath.length === 0) {
+  if (
+    finding.detector !== 'dependency' ||
+    finding.dependencyPath.length === 0
+  ) {
     return emptyValueText
   }
   const packages = finding.dependencyPath.map(
@@ -74,7 +77,7 @@ function renderDependencyPath(finding: Finding): string {
 
 // render the files that import the vulnerable package
 function renderImportedBy(finding: Finding): string {
-  if (finding.detector !== 'sca' || finding.importedBy.length === 0) {
+  if (finding.detector !== 'dependency' || finding.importedBy.length === 0) {
     return emptyValueText
   }
   const files = finding.importedBy.map(
@@ -85,7 +88,7 @@ function renderImportedBy(finding: Finding): string {
 
 // render the advisory links and the versions that fix the advisory
 function renderAdvisoryReferences(finding: Finding): string {
-  if (finding.detector !== 'sca') {
+  if (finding.detector !== 'dependency') {
     return emptyValueText
   }
   if (finding.fixedVersions.length === 0) {

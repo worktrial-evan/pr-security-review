@@ -6,7 +6,7 @@
   "description": "The tar package at the parent of the fix commit for GHSA-f5x3-32g6-xq36, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/isaacs/node-tar.git",
+    "repositoryUrl": "https://github.com/isaacs/node-tar.git",
     "baseSha": "fe8cd57da5686f8695415414bda49206a545f7f7",
     "headSha": "fe7ebfdcede1f8a2e65db12e19ecc4b3a9934648"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-f5x3-32g6-xq36",
-      "cwe": "CWE-400",
+      "vulnerabilityType": "CWE-400",
       "file": "lib/unpack.js",
       "startLine": 242,
       "endLine": 260

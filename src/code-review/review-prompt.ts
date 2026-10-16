@@ -6,7 +6,7 @@ import {
 } from '@/prompts/fence-untrusted'
 import { findPlaceholderNames, renderPrompt } from '@/prompts/prompt-renderer'
 import type { PromptTemplate } from '@/shared/llm'
-import { renderCweAllowlist } from './cwe-allowlist'
+import { renderVulnerabilityTypeAllowlist } from './vulnerability-type-allowlist'
 
 // the id of the review prompt under prompts/
 export const codeReviewPromptId = 'code-review'
@@ -16,7 +16,7 @@ export const codeReviewFenceLabel = 'diff'
 
 // the two placeholders the rubric uses: the fence description and the CWE allowlist
 const fenceDescriptionPlaceholderName = 'fence_description'
-const cweAllowlistPlaceholderName = 'cwe_allowlist'
+const vulnerabilityTypeAllowlistPlaceholderName = 'vulnerability_type_allowlist'
 
 // the loaded rubric and the chunk text it reviews
 export interface BuildReviewPromptOptions {
@@ -50,7 +50,8 @@ export function buildReviewPrompt({
   // render the rubric with the fence description and the allowlist
   const system = renderPrompt(template, {
     [fenceDescriptionPlaceholderName]: describeFence(fence),
-    [cweAllowlistPlaceholderName]: renderCweAllowlist(),
+    [vulnerabilityTypeAllowlistPlaceholderName]:
+      renderVulnerabilityTypeAllowlist(),
   })
 
   return { system, user: fence.text, fence }
@@ -62,7 +63,7 @@ function checkRubricPlaceholders(template: PromptTemplate): void {
   const placeholderNames = findPlaceholderNames(template.text)
   const missingPlaceholderNames = [
     fenceDescriptionPlaceholderName,
-    cweAllowlistPlaceholderName,
+    vulnerabilityTypeAllowlistPlaceholderName,
   ].filter((placeholderName) => !placeholderNames.includes(placeholderName))
 
   // reject the rubric when any is missing

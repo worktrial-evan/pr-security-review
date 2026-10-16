@@ -6,8 +6,8 @@ import {
 } from '@/lockfile/lockfile-registry'
 import type {
   CodeReviewFinding,
+  DependencyFinding,
   Finding,
-  ScaFinding,
   SecretFinding,
 } from '@/shared/finding'
 
@@ -33,7 +33,7 @@ export interface DedupedFindings {
 }
 
 // the hardcoded credential weaknesses a secrets finding already covers
-export const hardcodedCredentialCwes = [
+export const hardcodedCredentialVulnerabilityTypes = [
   'CWE-798',
   'CWE-259',
   'CWE-321',
@@ -51,14 +51,17 @@ const dependencyFileNames = new Set<string>([
  */
 export function dedupeFindings(findings: Finding[]): DedupedFindings {
   // index what the dependency and secrets detectors already report
-  const scaFindings = findings.filter(
-    (finding): finding is ScaFinding => finding.detector === 'sca',
+  const dependencyFindings = findings.filter(
+    (finding): finding is DependencyFinding =>
+      finding.detector === 'dependency',
   )
   const secretFindings = findings.filter(
     (finding): finding is SecretFinding => finding.detector === 'secrets',
   )
   const dependencyPackageNames = new Set(
-    scaFindings.map((scaFinding) => scaFinding.packageName),
+    dependencyFindings.map(
+      (dependencyFinding) => dependencyFinding.packageName,
+    ),
   )
 
   // keep each finding unless a rule drops it
@@ -80,7 +83,7 @@ export function dedupeFindings(findings: Finding[]): DedupedFindings {
       droppedFindings.push({ finding, reason })
     }
     seenFindingIds.add(finding.id)
-    if (finding.detector === 'sca') {
+    if (finding.detector === 'dependency') {
       seenDependencyKeys.add(toDependencyKey(finding))
     }
   }
@@ -111,7 +114,7 @@ function findDedupeReason({
   }
 
   // the same vulnerable version in a second lockfile is the same problem
-  if (finding.detector === 'sca') {
+  if (finding.detector === 'dependency') {
     return seenDependencyKeys.has(toDependencyKey(finding))
       ? 'same-dependency-in-another-lockfile'
       : undefined
@@ -133,11 +136,11 @@ function findDedupeReason({
 }
 
 // the package and version and advisory that make two dependency findings the same problem
-function toDependencyKey(scaFinding: ScaFinding): string {
+function toDependencyKey(dependencyFinding: DependencyFinding): string {
   return [
-    scaFinding.packageName,
-    scaFinding.version,
-    scaFinding.advisoryId,
+    dependencyFinding.packageName,
+    dependencyFinding.version,
+    dependencyFinding.advisoryId,
   ].join('\n')
 }
 
@@ -197,10 +200,10 @@ function isCoveredBySecretFinding({
   secretFindings,
 }: IsCoveredBySecretFindingOptions): boolean {
   // only a hardcoded credential weakness is a secret in other words
-  const isCredentialCwe = (
-    hardcodedCredentialCwes as readonly string[]
-  ).includes(finding.cwe.toUpperCase())
-  if (!isCredentialCwe || finding.file === undefined) {
+  const isCredentialVulnerabilityType = (
+    hardcodedCredentialVulnerabilityTypes as readonly string[]
+  ).includes(finding.vulnerabilityType.toUpperCase())
+  if (!isCredentialVulnerabilityType || finding.file === undefined) {
     return false
   }
 

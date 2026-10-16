@@ -8,7 +8,7 @@ Decides whether a vulnerable dependency is directly imported, direct but unused,
 
 ### collect-imports.ts
 
-- `collectImports({ rootDir, auditSink, runId, maxFileCount? })`: scans the source files under `rootDir` once and returns an `ImportCollection`
+- `collectImports({ rootDirectory, auditSink, runId, maxFileCount? })`: scans the source files under `rootDirectory` once and returns an `ImportCollection`
 - `ImportCollection`: `imports`, `fileCount`, `parseDurationMs` and `warnings`
 - `ImportsByPackage`: a `Map` from package name to the sorted root-relative paths of the files importing it, in package name order
 - `CollectImportsOptions`: the options of `collectImports`
@@ -18,7 +18,7 @@ Decides whether a vulnerable dependency is directly imported, direct but unused,
 ### classify-reachability.ts
 
 - `classifyReachability({ packageName, dependencySet, dependencyGraph, imports })`: returns a `ReachabilityClassification`
-- `ReachabilityClassification`: `reachability`, `importedBy` and `dependencyPath`, picked from `ScaFinding` so the result spreads into an SCA finding
+- `ReachabilityClassification`: `reachability`, `importedBy` and `dependencyPath`, picked from `DependencyFinding` so the result spreads into a dependency finding
 - `ClassifyReachabilityOptions`: the options of `classifyReachability`
 
 ### package-specifier.ts
@@ -27,13 +27,13 @@ Decides whether a vulnerable dependency is directly imported, direct but unused,
 
 ### source-files.ts
 
-- `listSourceFiles({ rootDir, maxFileCount })`: returns a `SourceFileListing` with the resolved root, the absolute paths of the source files, whether the cap stopped the walk, and warnings for unreadable directories
+- `listSourceFiles({ rootDirectory, maxFileCount })`: returns a `SourceFileListing` with the resolved root, the absolute paths of the source files, whether the cap stopped the walk, and warnings for unreadable directories
 - `excludedDirectoryNames`: `node_modules`, `dist`, `build`, `coverage`, `cache` and `runs`
 - `ListSourceFilesOptions`, `SourceFileListing`: the options and result of `listSourceFiles`
 
 ## Inputs and outputs
 
-`collectImports` reads the head checkout directory from `PullRequestSource.checkoutHead` and writes one `note` event to the `AuditSink` from `src/shared/audit.ts`, with `fileCount`, `parseDurationMs`, `maxFileCount`, `isFileCapReached` and `warnings` in its payload and the parse time as `durationMs`. `classifyReachability` reads the head `DependencySet` and `DependencyGraph` from `src/shared/dependency.ts`, which the lockfile module builds, and returns the `reachability`, `importedBy` and `dependencyPath` fields of `ScaFinding` from `src/shared/finding.ts`.
+`collectImports` reads the head checkout directory from `PullRequestSource.checkoutHead` and writes one `note` event to the `AuditSink` from `src/shared/audit.ts`, with `fileCount`, `parseDurationMs`, `maxFileCount`, `isFileCapReached` and `warnings` in its payload and the parse time as `durationMs`. `classifyReachability` reads the head `DependencySet` and `DependencyGraph` from `src/shared/dependency.ts`, which the lockfile module builds, and returns the `reachability`, `importedBy` and `dependencyPath` fields of `DependencyFinding` from `src/shared/finding.ts`.
 
 ## Allowed imports
 
@@ -50,7 +50,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `package-specifier.ts`: `toPackageName`, the specifier to package name rule
 - `package-specifier.test.ts`: bare, subpath and scoped names kept, Node and Bun builtins, relative, absolute, alias, protocol and malformed specifiers dropped
 - `source-files.ts`: `listSourceFiles`, the breadth-first walk that skips symbolic links and excluded directories and stops at the cap
-- `fixtures/sample-repo/`: a small repository with every import form in ts, tsx, mts, cts, js, jsx, mjs and cjs files. It is excluded from the module's TypeScript project because it imports packages that are not installed
+- `fixtures/sample-repository/`: a small repository with every import form in ts, tsx, mts, cts, js, jsx, mjs and cjs files. It is excluded from the module's TypeScript project because it imports packages that are not installed
 - `fixtures/sample-dependencies.ts`: the dependency set of the sample repository, with an unused direct dependency and a transitive dependency reached by two routes, and a breadth-first graph over it
 - `tsconfig.json`: the module's composite TypeScript project. It references `shared` and excludes the sample repository
 - `AGENTS.md`: this file
@@ -58,7 +58,7 @@ Bun and Node built-ins and npm packages are always allowed.
 ## Invariants
 
 - One scan serves a whole run. `collectImports` runs once per head checkout and `classifyReachability` is a pure lookup over its `imports`, so classifying many findings never parses a file twice.
-- The scan never follows a symbolic link, never enters an excluded directory at any depth, and never reads a file whose real path is outside the real path of `rootDir`.
+- The scan never follows a symbolic link, never enters an excluded directory at any depth, and never reads a file whose real path is outside the real path of `rootDirectory`.
 - The scan reads syntax only. The ts-morph project uses an in-memory file system, reads no tsconfig, loads no lib files and resolves no import.
 - The scan stops before reading more than `maxFileCount` files and reports a warning only when a file beyond the cap exists.
 - Only runtime imports count: import declarations, export-from declarations, import-equals requires, and `import()` and `require()` with a string literal or a template literal without substitutions. Type-only imports and exports do not count.

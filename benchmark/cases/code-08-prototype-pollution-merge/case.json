@@ -6,12 +6,12 @@
   "description": "The head adds a per-user preferences store with a POST /users/:id/preferences route that merges the JSON body into it through a recursive mergeDeep that copies every key, __proto__ included.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-08-prototype-pollution-merge"
+    "directory": "benchmark/cases/code-08-prototype-pollution-merge"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-1321",
+      "vulnerabilityType": "CWE-1321",
       "file": "src/server.ts",
       "startLine": 19,
       "endLine": 35

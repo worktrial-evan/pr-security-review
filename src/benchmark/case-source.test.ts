@@ -31,7 +31,7 @@ afterEach(async () => {
 })
 
 // a git case over the given url
-function makeGitCase(repoUrl: string): BenchmarkCase {
+function makeGitCase(repositoryUrl: string): BenchmarkCase {
   return {
     id: 'real-world-01-case',
     split: 'dev',
@@ -40,11 +40,11 @@ function makeGitCase(repoUrl: string): BenchmarkCase {
     description: 'a git case',
     source: {
       kind: 'git',
-      repoUrl,
+      repositoryUrl,
       baseSha: '0123456789abcdef0123456789abcdef01234567',
       headSha: 'fedcba9876543210fedcba9876543210fedcba98',
     },
-    expected: [{ detector: 'code-review', cwe: 'CWE-79' }],
+    expected: [{ detector: 'code-review', vulnerabilityType: 'CWE-79' }],
   }
 }
 
@@ -60,8 +60,8 @@ describe('openPullRequestSource', () => {
       category: 'code',
       isClean: false,
       description: 'a snapshot case',
-      source: { kind: 'snapshot', dir: 'benchmark/cases/code-01-case' },
-      expected: [{ detector: 'code-review', cwe: 'CWE-89' }],
+      source: { kind: 'snapshot', directory: 'benchmark/cases/code-01-case' },
+      expected: [{ detector: 'code-review', vulnerabilityType: 'CWE-89' }],
     }
 
     // the source checks head out as the head directory
@@ -82,7 +82,9 @@ describe('openPullRequestSource', () => {
     process.env[offlineEnvironmentVariable] = '1'
     const sourceOpen = await openPullRequestSource({
       loadedCase: {
-        benchmarkCase: makeGitCase('https://example.invalid/owner/repo.git'),
+        benchmarkCase: makeGitCase(
+          'https://example.invalid/owner/repository.git',
+        ),
         caseDirectory: join(rootDirectory, 'real-world-01-case'),
       },
       cacheDirectory: join(rootDirectory, 'cache'),

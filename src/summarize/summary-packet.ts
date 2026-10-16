@@ -5,7 +5,7 @@ import {
   type UntrustedFence,
 } from '@/prompts/fence-untrusted'
 import type { Advisory } from '@/shared/advisory'
-import type { Finding, ScaFinding } from '@/shared/finding'
+import type { DependencyFinding, Finding } from '@/shared/finding'
 import { normalizePackageName } from '@/shared/package-name'
 import {
   extractAdvisoryIds,
@@ -41,7 +41,7 @@ export function buildSummaryPacket({
 }: BuildSummaryPacketOptions): SummaryPacket {
   // look up the advisory of a dependency finding
   const advisory =
-    finding.detector === 'sca'
+    finding.detector === 'dependency'
       ? advisoriesById.get(finding.advisoryId)
       : undefined
 
@@ -115,12 +115,12 @@ function renderFieldLines({
   ]
 
   // the fields of each detector
-  if (finding.detector === 'sca') {
-    fieldEntries.push(...renderScaFieldEntries({ finding, advisory }))
+  if (finding.detector === 'dependency') {
+    fieldEntries.push(...renderDependencyFieldEntries({ finding, advisory }))
   }
   if (finding.detector === 'code-review') {
     fieldEntries.push(
-      ['cwe', finding.cwe],
+      ['vulnerabilityType', finding.vulnerabilityType],
       ['source to sink', finding.sourceToSink],
     )
   }
@@ -138,16 +138,16 @@ function renderFieldLines({
 }
 
 // the dependency finding and its advisory
-interface ScaPacketSourceOptions {
-  finding: ScaFinding
+interface DependencyPacketSourceOptions {
+  finding: DependencyFinding
   advisory: Advisory | undefined
 }
 
 // the field entries of a dependency finding, with the advisory reference urls
-function renderScaFieldEntries({
+function renderDependencyFieldEntries({
   finding,
   advisory,
-}: ScaPacketSourceOptions): [string, string | number | undefined][] {
+}: DependencyPacketSourceOptions): [string, string | number | undefined][] {
   const referenceUrls =
     advisory?.references.map((reference) => reference.url) ?? []
   return [
@@ -209,7 +209,7 @@ function buildGrounding({
 
   // allow the package and the names on its dependency path
   const packageNames = new Set<string>()
-  if (finding.detector === 'sca') {
+  if (finding.detector === 'dependency') {
     for (const listedVersion of [finding.version, ...finding.fixedVersions]) {
       versions.add(listedVersion)
     }

@@ -63,7 +63,7 @@ export async function fetchPullRequestShas({
   token,
 }: FetchPullRequestShasOptions): Promise<PullRequestShas> {
   // request the pull request
-  const pullRequestUrl = `${githubApiUrl}/repos/${reference.owner}/${reference.repo}/pulls/${reference.number}`
+  const pullRequestUrl = `${githubApiUrl}/repos/${reference.owner}/${reference.repository}/pulls/${reference.number}`
   const response = await fetch(pullRequestUrl, {
     headers: buildRequestHeaders(token),
   })
@@ -89,7 +89,7 @@ export async function fetchPullRequestShas({
 function buildRequestHeaders(token: string | undefined): Headers {
   const headers = new Headers({
     Accept: 'application/vnd.github+json',
-    'User-Agent': 'pr-review',
+    'User-Agent': 'pull-request-review',
     'X-GitHub-Api-Version': '2022-11-28',
   })
   if (token !== undefined && token !== '') {

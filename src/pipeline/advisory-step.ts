@@ -12,12 +12,12 @@ export type AdvisoryLoad =
   | { kind: 'loaded'; advisoryStore: AdvisoryStore; isRefreshed: boolean }
 
 // refreshes the advisory cache under a directory
-export type RefreshAdvisoryCache = (cacheDir: string) => Promise<void>
+export type RefreshAdvisoryCache = (cacheDirectory: string) => Promise<void>
 
 // whether the store is needed and where it lives. also how old it may be and whether the network may be used
 export interface LoadAdvisoriesOptions {
   isNeeded: boolean
-  advisoryCacheDir: string
+  advisoryCacheDirectory: string
   advisoryStaleHours: number
   isOffline: boolean
   refreshAdvisoryCache?: RefreshAdvisoryCache
@@ -28,7 +28,7 @@ export interface LoadAdvisoriesOptions {
  */
 export async function loadAdvisories({
   isNeeded,
-  advisoryCacheDir,
+  advisoryCacheDirectory,
   advisoryStaleHours,
   isOffline,
   refreshAdvisoryCache = refreshNpmAdvisoryCache,
@@ -39,11 +39,11 @@ export async function loadAdvisories({
   }
 
   // load what is cached. offline a missing cache is an error and a stale one is used as it is
-  const cachedAdvisoryStore = await tryLoadAdvisoryStore(advisoryCacheDir)
+  const cachedAdvisoryStore = await tryLoadAdvisoryStore(advisoryCacheDirectory)
   if (isOffline) {
     if (cachedAdvisoryStore === undefined) {
       throw new Error(
-        `no advisory cache under ${advisoryCacheDir} and the run is offline`,
+        `no advisory cache under ${advisoryCacheDirectory} and the run is offline`,
       )
     }
     return {
@@ -66,23 +66,23 @@ export async function loadAdvisories({
   }
 
   // refresh a missing or stale cache and load the new one
-  await refreshAdvisoryCache(advisoryCacheDir)
-  const advisoryStore = await loadAdvisoryStore(advisoryCacheDir)
+  await refreshAdvisoryCache(advisoryCacheDirectory)
+  const advisoryStore = await loadAdvisoryStore(advisoryCacheDirectory)
   return { kind: 'loaded', advisoryStore, isRefreshed: true }
 }
 
 // load the store. return undefined when the cache has never been built
 async function tryLoadAdvisoryStore(
-  advisoryCacheDir: string,
+  advisoryCacheDirectory: string,
 ): Promise<AdvisoryStore | undefined> {
   try {
-    return await loadAdvisoryStore(advisoryCacheDir)
+    return await loadAdvisoryStore(advisoryCacheDirectory)
   } catch {
     return undefined
   }
 }
 
 // download the npm advisories from OSV into the cache
-async function refreshNpmAdvisoryCache(cacheDir: string): Promise<void> {
-  await refreshAdvisories({ ecosystem: 'npm', cacheDir })
+async function refreshNpmAdvisoryCache(cacheDirectory: string): Promise<void> {
+  await refreshAdvisories({ ecosystem: 'npm', cacheDirectory })
 }

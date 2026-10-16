@@ -31,7 +31,7 @@ const noPackageSourcesText = 'No package sources found'
 // the advisories to write and the directory osv-scanner is pointed at
 export interface WriteOracleDatabaseOptions {
   advisories: Advisory[]
-  databaseDir: string
+  databaseDirectory: string
 }
 
 // where the archive landed and how many distinct advisories it holds
@@ -43,7 +43,7 @@ export interface WriteOracleDatabaseResult {
 // the lockfile to scan and the directory holding the database archive
 export interface RunOracleOptions {
   lockfilePath: string
-  databaseDir: string
+  databaseDirectory: string
 }
 
 // the packages osv-scanner saw and one match per vulnerability group, each listed once across every result
@@ -148,14 +148,14 @@ export function isOracleAvailable(): boolean {
  */
 export function buildOracleArguments({
   lockfilePath,
-  databaseDir,
+  databaseDirectory,
 }: RunOracleOptions): string[] {
   return [
     'scan',
     'source',
     '--offline',
     '--local-db-path',
-    databaseDir,
+    databaseDirectory,
     '--format',
     'json',
     '--all-packages',
@@ -169,7 +169,7 @@ export function buildOracleArguments({
  */
 export async function writeOracleDatabase({
   advisories,
-  databaseDir,
+  databaseDirectory,
 }: WriteOracleDatabaseOptions): Promise<WriteOracleDatabaseResult> {
   // keep the first advisory of every id
   const osvEntriesById = new Map<string, OsvEntry>()
@@ -190,7 +190,7 @@ export async function writeOracleDatabase({
   }
 
   // write the archive where osv-scanner looks for the npm database
-  const archivePath = join(databaseDir, oracleDatabaseArchivePath)
+  const archivePath = join(databaseDirectory, oracleDatabaseArchivePath)
   await mkdir(dirname(archivePath), { recursive: true })
   await Bun.write(archivePath, zipSync(archiveFiles))
   return { archivePath, advisoryCount: osvEntriesById.size }
@@ -221,7 +221,7 @@ export function toOsvEntry(advisory: Advisory): OsvEntry {
  */
 export async function runOracle({
   lockfilePath,
-  databaseDir,
+  databaseDirectory,
 }: RunOracleOptions): Promise<OracleResult> {
   // give up without the binary
   const oracleBinaryPath = findOracleBinaryPath()
@@ -236,7 +236,7 @@ export async function runOracle({
   const spawnOracleResult = await spawnOracle({
     oracleBinaryPath,
     lockfilePath,
-    databaseDir,
+    databaseDirectory,
   })
   if (spawnOracleResult.status === 'failed') {
     return { status: 'unavailable', reason: spawnOracleResult.reason }
@@ -251,7 +251,7 @@ export async function runOracle({
   if (databaseLoadFailureLine !== undefined) {
     return {
       status: 'unavailable',
-      reason: `${oracleBinaryName} could not load the database under ${databaseDir}: ${databaseLoadFailureLine}`,
+      reason: `${oracleBinaryName} could not load the database under ${databaseDirectory}: ${databaseLoadFailureLine}`,
     }
   }
 
@@ -361,11 +361,11 @@ function findOracleBinaryPath(): string | null {
 async function spawnOracle({
   oracleBinaryPath,
   lockfilePath,
-  databaseDir,
+  databaseDirectory,
 }: SpawnOracleOptions): Promise<SpawnOracleResult> {
   const oracleCommand = [
     oracleBinaryPath,
-    ...buildOracleArguments({ lockfilePath, databaseDir }),
+    ...buildOracleArguments({ lockfilePath, databaseDirectory }),
   ]
   try {
     // read both streams to the end alongside the exit

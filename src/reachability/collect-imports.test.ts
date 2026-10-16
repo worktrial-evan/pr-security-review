@@ -17,7 +17,11 @@ import {
 import { excludedDirectoryNames } from './source-files'
 
 // the fixture repository copied into each temporary root
-const sampleRepositoryDir = join(import.meta.dir, 'fixtures', 'sample-repo')
+const sampleRepositoryDirectory = join(
+  import.meta.dir,
+  'fixtures',
+  'sample-repository',
+)
 
 // the packages the sample repository imports and the files importing each
 const expectedImports = new Map([
@@ -41,26 +45,26 @@ const expectedImports = new Map([
 // the number of source files in the sample repository
 const sampleSourceFileCount = 9
 
-let temporaryDir = ''
-let rootDir = ''
+let temporaryDirectory = ''
+let rootDirectory = ''
 let auditEvents: AuditEvent[] = []
 let importCollection: ImportCollection
 
 // copy the fixture, add the files the scan must skip and scan it once
 beforeAll(async () => {
-  temporaryDir = await mkdtemp(join(tmpdir(), 'reachability-'))
-  rootDir = join(temporaryDir, 'repo')
-  await cp(sampleRepositoryDir, rootDir, { recursive: true })
+  temporaryDirectory = await mkdtemp(join(tmpdir(), 'reachability-'))
+  rootDirectory = join(temporaryDirectory, 'repository')
+  await cp(sampleRepositoryDirectory, rootDirectory, { recursive: true })
   await addSkippedFiles()
   importCollection = await collectImports({
-    rootDir,
+    rootDirectory,
     auditSink: createRecordingAuditSink(),
     runId: 'run-1',
   })
 })
 
 afterAll(async () => {
-  await rm(temporaryDir, { recursive: true, force: true })
+  await rm(temporaryDirectory, { recursive: true, force: true })
 })
 
 describe('collectImports', () => {
@@ -114,7 +118,7 @@ describe('collectImports', () => {
 
   test('stops at the file cap with a warning', async () => {
     const cappedImportCollection = await collectImports({
-      rootDir,
+      rootDirectory,
       auditSink: createRecordingAuditSink(),
       runId: 'run-2',
       maxFileCount: 3,
@@ -128,7 +132,7 @@ describe('collectImports', () => {
 
   test('raises no warning when the cap equals the file count', async () => {
     const exactImportCollection = await collectImports({
-      rootDir,
+      rootDirectory,
       auditSink: createRecordingAuditSink(),
       runId: 'run-3',
       maxFileCount: sampleSourceFileCount,
@@ -143,24 +147,30 @@ async function addSkippedFiles(): Promise<void> {
   // write one importing file inside each excluded directory, at the root and nested
   for (const directoryName of excludedDirectoryNames) {
     const importLine = `import 'from-${directoryName}'\n`
-    await Bun.write(join(rootDir, directoryName, 'index.js'), importLine)
-    await Bun.write(join(rootDir, 'src', directoryName, 'index.ts'), importLine)
+    await Bun.write(join(rootDirectory, directoryName, 'index.js'), importLine)
+    await Bun.write(
+      join(rootDirectory, 'src', directoryName, 'index.ts'),
+      importLine,
+    )
   }
 
   // link a directory and a file that live outside the root
-  const outsideDir = join(temporaryDir, 'outside')
+  const outsideDirectory = join(temporaryDirectory, 'outside')
   await Bun.write(
-    join(outsideDir, 'linked.ts'),
+    join(outsideDirectory, 'linked.ts'),
     "import 'from-linked-directory'\n",
   )
   await Bun.write(
-    join(temporaryDir, 'linked-file.ts'),
+    join(temporaryDirectory, 'linked-file.ts'),
     "import 'from-linked-file'\n",
   )
-  await symlink(outsideDir, join(rootDir, 'src', 'linked-directory'))
   await symlink(
-    join(temporaryDir, 'linked-file.ts'),
-    join(rootDir, 'src', 'linked-file.ts'),
+    outsideDirectory,
+    join(rootDirectory, 'src', 'linked-directory'),
+  )
+  await symlink(
+    join(temporaryDirectory, 'linked-file.ts'),
+    join(rootDirectory, 'src', 'linked-file.ts'),
   )
 }
 

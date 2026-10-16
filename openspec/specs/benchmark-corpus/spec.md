@@ -6,7 +6,7 @@ Holds the labeled pull request cases the reviewer is measured against: synthetic
 ## Requirements
 
 ### Requirement: One directory per case
-Every case SHALL live at `benchmark/cases/<id>/` with a `case.json` that parses against the shared benchmark case contract, where `<id>` equals the case's `id` field. A snapshot case SHALL hold full `base/` and `head/` directories there and its source `dir` SHALL name that case directory. A git case SHALL record its clone url and both shas and hold no snapshot directories.
+Every case SHALL live at `benchmark/cases/<id>/` with a `case.json` that parses against the shared benchmark case contract, where `<id>` equals the case's `id` field. A snapshot case SHALL hold full `base/` and `head/` directories there and its source `directory` SHALL name that case directory. A git case SHALL record its clone url and both shas and hold no snapshot directories.
 
 #### Scenario: Case parses
 - **WHEN** every `case.json` under `benchmark/cases` is read
@@ -32,15 +32,15 @@ Every snapshot case's `base/` SHALL be the fixture app under `benchmark/fixtures
 - **THEN** the advisory fixture holds at least one advisory affecting that package name, or the package is listed in the fixture's known-clean list
 
 ### Requirement: Category coverage
-The corpus SHALL hold exactly 12 dependency cases (category `sca`), 15 code cases, 4 secrets cases, 15 clean cases and 8 real-world cases, each covering the situation its description names, and the corpus SHALL be validated against those counts.
+The corpus SHALL hold exactly 12 dependency cases (category `dependency`), 15 code cases, 4 secrets cases, 15 clean cases and 8 real-world cases, each covering the situation its description names, and the corpus SHALL be validated against those counts.
 
 #### Scenario: Counts by category
 - **WHEN** the corpus is validated
-- **THEN** it reports 12 sca, 15 code, 4 secrets, 15 clean and 8 real-world cases
+- **THEN** it reports 12 dependency, 15 code, 4 secrets, 15 clean and 8 real-world cases
 
 #### Scenario: Dependency cases cover the matcher edges
-- **WHEN** the sca cases are listed
-- **THEN** one each covers a direct prod bump, a dev bump, a transitive-only change, a last-affected-only range, a versions-only listing, a withdrawn advisory, an advisory GitHub did not review, a vulnerable package never imported, a package imported through a subpath, a change to `bun.lock` only, a change to `package-lock.json` only, and a bump to a fixed version
+- **WHEN** the dependency cases are listed
+- **THEN** one each covers a direct production bump, a development bump, a transitive-only change, a last-affected-only range, a versions-only listing, a withdrawn advisory, an advisory GitHub did not review, a vulnerable package never imported, a package imported through a subpath, a change to `bun.lock` only, a change to `package-lock.json` only, and a bump to a fixed version
 
 #### Scenario: Code cases label one weakness each
 - **WHEN** a code case is read
@@ -54,7 +54,7 @@ The corpus SHALL hold exactly 12 dependency cases (category `sca`), 15 code case
 An expected finding SHALL name its detector and only the fields the matching rules use: package name and advisory id for a dependency finding, CWE with file and line range for a code finding, file and line for a secret finding, and advisory id with CWE, file and line range for a real-world finding.
 
 #### Scenario: Dependency label
-- **WHEN** an sca expected finding is read
+- **WHEN** a dependency expected finding is read
 - **THEN** it has a package name and an advisory id
 
 #### Scenario: Secret label

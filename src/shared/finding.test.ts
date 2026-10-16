@@ -3,13 +3,15 @@ import { describe, expect, test } from 'bun:test'
 import { createFindingId, type FindingId, findingSchema } from './finding'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from './finding.samples'
 
 describe('findingSchema', () => {
-  test('an sca finding round-trips', () => {
-    expect(findingSchema.parse(scaFindingSample)).toEqual(scaFindingSample)
+  test('a dependency finding round-trips', () => {
+    expect(findingSchema.parse(dependencyFindingSample)).toEqual(
+      dependencyFindingSample,
+    )
   })
 
   test('a code-review finding round-trips', () => {
@@ -26,7 +28,7 @@ describe('findingSchema', () => {
 
   test('a confidence of 1.5 is rejected', () => {
     // push the confidence past its upper bound
-    const outOfRangeFinding = { ...scaFindingSample, confidence: 1.5 }
+    const outOfRangeFinding = { ...dependencyFindingSample, confidence: 1.5 }
     expect(() => findingSchema.parse(outOfRangeFinding)).toThrow(/confidence/)
   })
 
@@ -49,9 +51,9 @@ describe('findingSchema', () => {
     const plainStringAsFindingId: FindingId = '0123456789abcdef'
 
     // read the id back from a parsed finding as a branded id
-    const parsedFinding = findingSchema.parse(scaFindingSample)
+    const parsedFinding = findingSchema.parse(dependencyFindingSample)
     const parsedFindingId: FindingId = parsedFinding.id
-    expect(parsedFindingId).toBe(scaFindingSample.id)
+    expect(parsedFindingId).toBe(dependencyFindingSample.id)
     expect(plainStringAsFindingId.length).toBe(16)
   })
 })
@@ -60,11 +62,11 @@ describe('createFindingId', () => {
   test('the same detector and stable key give the same id', () => {
     // derive the id twice from the same input
     const firstFindingId = createFindingId({
-      detector: 'sca',
+      detector: 'dependency',
       stableKey: 'lodash@4.17.20:GHSA-1',
     })
     const secondFindingId = createFindingId({
-      detector: 'sca',
+      detector: 'dependency',
       stableKey: 'lodash@4.17.20:GHSA-1',
     })
     expect(firstFindingId).toBe(secondFindingId)
@@ -72,15 +74,15 @@ describe('createFindingId', () => {
 
   test('a different detector gives a different id', () => {
     // derive the id under two detectors from the same stable key
-    const scaFindingId = createFindingId({
-      detector: 'sca',
+    const dependencyFindingId = createFindingId({
+      detector: 'dependency',
       stableKey: 'same-key',
     })
     const secretsFindingId = createFindingId({
       detector: 'secrets',
       stableKey: 'same-key',
     })
-    expect(scaFindingId).not.toBe(secretsFindingId)
+    expect(dependencyFindingId).not.toBe(secretsFindingId)
   })
 
   test('an id is 16 lowercase hex characters', () => {

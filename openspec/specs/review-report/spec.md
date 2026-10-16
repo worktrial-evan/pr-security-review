@@ -63,8 +63,8 @@ Activating a row SHALL expand it to show the summary, remediation, evidence line
 The report SHALL offer multiselect filters for detector, severity, dependency scope, GitHub reviewed, reachability, matcher agreement and introduced by pull request, combine them with AND, treat an empty selection as no filter, and show the rows shown against the total rows.
 
 #### Scenario: Filters combine
-- **WHEN** the detector filter selects sca and the severity filter selects high
-- **THEN** only sca findings of high severity are shown and the count reads shown of total
+- **WHEN** the detector filter selects dependency and the severity filter selects high
+- **THEN** only dependency findings of high severity are shown and the count reads shown of total
 
 #### Scenario: Several values in one filter
 - **WHEN** the severity filter selects high and critical

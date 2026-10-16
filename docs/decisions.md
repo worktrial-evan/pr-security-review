@@ -19,9 +19,9 @@ The experiment from design D7 of `add-foundation` was run and passed, so the rep
 
 ### The experiment
 
-Layout tried first: a `tsconfig.json` in every `src/<module>/` with `composite: true`, a full copy of the root compiler options, `emitDeclarationOnly: true` with an `outDir` outside the repository, `include: ["./**/*.ts"]` and `references` to the modules the matrix grants, plus a root `tsconfig.json` with `files: []` and references to all nineteen modules. `noEmit` had to go from the module configs because a referenced composite project may not disable emit (see below), and `allowImportingTsExtensions` is allowed next to `emitDeclarationOnly`, so it stayed.
+Layout tried first: a `tsconfig.json` in every `src/<module>/` with `composite: true`, a full copy of the root compiler options, `emitDeclarationOnly: true` with an `outDirectory` outside the repository, `include: ["./**/*.ts"]` and `references` to the modules the matrix grants, plus a root `tsconfig.json` with `files: []` and references to all nineteen modules. `noEmit` had to go from the module configs because a referenced composite project may not disable emit (see below), and `allowImportingTsExtensions` is allowed next to `emitDeclarationOnly`, so it stayed.
 
-Clean tree (`<repo>` stands for the absolute repository path in every output below):
+Clean tree (`<repository>` stands for the absolute repository path in every output below):
 
 ```
 $ bun check
@@ -34,8 +34,8 @@ Violating tree, with `src/llm/probe-target.ts` exporting a constant and `src/aud
 
 ```
 $ bun check
-src/audit/probe.ts(3,34): error TS6059: File '<repo>/src/llm/probe-target.ts' is not under 'rootDir' '<repo>/src/audit'. 'rootDir' is expected to contain all source files.
-src/audit/probe.ts(3,34): error TS6307: File '<repo>/src/llm/probe-target.ts' is not listed within the file list of project '<repo>/src/audit/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+src/audit/probe.ts(3,34): error TS6059: File '<repository>/src/llm/probe-target.ts' is not under 'rootDir' '<repository>/src/audit'. 'rootDir' is expected to contain all source files.
+src/audit/probe.ts(3,34): error TS6307: File '<repository>/src/llm/probe-target.ts' is not listed within the file list of project '<repository>/src/audit/tsconfig.json'. Projects must list all files or use an 'include' pattern.
 note: tsconfig.json has no files of its own. Checked the projects it references, like tsc -b.
 Found 2 errors in 1 file, checked 28 files across 4 projects [61.19ms]
 exit 1
@@ -47,7 +47,7 @@ exit 1
 
 1. **The root keeps its compiler options.** A root `tsconfig.json` holding only `files: []` and `references` has no `paths`, and `.dependency-cruiser.cjs` reads the `@/` alias from that file. On the violating tree the boundary check then reported `0 violations` because the alias import came back as `couldNotResolve: true`, which dependency-cruiser counts as valid. The root therefore keeps every compiler option of the former single project, and each module project uses `"extends": "../../tsconfig.json"` so there is one copy of the options, the alias and the `test/fixtures` exclude.
 2. **A twentieth project for the files outside `src`.** With `files: []` in the root, `index.ts`, `index.test.ts` and `scripts/*.ts` were no longer checked (25 files instead of 31). A root that lists those files itself does not help: with its own files present, plain `bun check` checks only the root project and ignores the references (`✓ No type errors in 6 files`). So `tsconfig.root-files.json` is a composite project for those files and the root references it as well.
-3. **`noEmit` is off and declarations go to a gitignored cache.** A module config that inherits `noEmit: true` fails in both checkers: `error TS6310: Referenced project '<repo>/src/shared' may not disable emit.` Each project sets `noEmit: false`, `emitDeclarationOnly: true` and `outDir: node_modules/.cache/typescript/<name>`. `bun check` never writes anything; `bunx tsc -b` writes `.d.ts` and `.tsbuildinfo` files into that cache and nowhere else.
+3. **`noEmit` is off and declarations go to a gitignored cache.** A module config that inherits `noEmit: true` fails in both checkers: `error TS6310: Referenced project '<repository>/src/shared' may not disable emit.` Each project sets `noEmit: false`, `emitDeclarationOnly: true` and `outDirectory: node_modules/.cache/typescript/<name>`. `bun check` never writes anything; `bunx tsc -b` writes `.d.ts` and `.tsbuildinfo` files into that cache and nowhere else.
 
 ### Observed behavior of the kept layout
 
@@ -90,7 +90,7 @@ Next to it, `.worktreeinclude` at the repository root lists `.env` and `.env.loc
 
 Every name spells out pull request: `PullRequest` in types, `pullRequest` in values, `pull-request` in file and module names, and "pull request" in prose. The source module, its interface and reference types, the introduced-by flag on a finding and the first run stage all carried the two-letter abbreviation and now read `src/pull-request-source`, `PullRequestSource`, `PullRequestReference`, `isIntroducedByPullRequest` and `resolving-pull-request`, with the matrix, the module docs, the README diagrams and the `add-foundation` artifacts renamed to match.
 
-The code-style skill already bans abbreviations in variable names, and this was the one abbreviation the brief had introduced. Spelling it out once, before any module fills in, means no later change has to decide between the two spellings and no grep for the concept splits. The product name `pr-review` (package name, CLI name, README title) and the repository name `pr-security-review` are the two exceptions and are never renamed. The rule is stated in the `openspec/config.yaml` context and the root `AGENTS.md`, and the CVSS vector component `PR:H` in a sample advisory stays because there `PR` means Privileges Required.
+The code-style skill already bans abbreviations in variable names, and this was the one abbreviation the brief had introduced. Spelling it out once, before any module fills in, means no later change has to decide between the two spellings and no grep for the concept splits. The repository name `pr-security-review` is the one exception and is never renamed. The rule is stated in the `openspec/config.yaml` context and the root `AGENTS.md`, and the CVSS vector component `PR:H` in a sample advisory stays because there `PR` means Privileges Required.
 
 ## 2026-10-15: The CLI moves into `src/cli` and `index.ts` only runs it
 
@@ -104,9 +104,9 @@ The pipeline has eleven steps and the run-state contract has ten stages. Loading
 
 When describing the pull request or collecting its files fails, `runReview` moves the run to failed and returns a `ReviewResult` with one fatal `StepError` and no findings. The contract already has `isFatal`, the report and the JSON can show what happened, and the audit log ends with a `run aborted` note. The CLI exits 2 on it. The benchmark's per-case pipeline throws on it instead, so the runner records the case as failed.
 
-## 2026-10-15: `advisoryCacheDir` is the cache root
+## 2026-10-15: `advisoryCacheDirectory` is the cache root
 
-`ReviewOptions.advisoryCacheDir` names the directory that holds `advisories/npm/`, the directory `loadAdvisoryStore` takes, and the CLI sets it to `resolveCacheDirectory()`. The benchmark runner's default pointed at `benchmark/fixtures/advisories`, one level too deep for the store, so it now points at `benchmark/fixtures` and reads its snapshot date from `advisories/npm/snapshot.json`.
+`ReviewOptions.advisoryCacheDirectory` names the directory that holds `advisories/npm/`, the directory `loadAdvisoryStore` takes, and the CLI sets it to `resolveCacheDirectory()`. The benchmark runner's default pointed at `benchmark/fixtures/advisories`, one level too deep for the store, so it now points at `benchmark/fixtures` and reads its snapshot date from `advisories/npm/snapshot.json`.
 
 ## 2026-10-15: The benchmark matches against the corpus advisories, built into a cache per run
 
@@ -114,7 +114,7 @@ The corpus labels are checked against `benchmark/fixtures/advisories/advisories.
 
 ## 2026-10-15: A dependency finding is introduced only when its advisory did not already affect the base
 
-The matcher marks a finding introduced when the pull request adds or changes the version. `docs/benchmark.md` defines an introduced dependency finding as one whose head version is in the advisory's range while the base version is not, decided at the alias level. The pipeline's matching step also matches the base lockfile and sets a head finding to pre-existing when the base had the same advisory id or one of its aliases for the same installed package. That leaves the merged matcher unchanged. Without it, `sca-09-imported-through-subpath` reported two advisories that already affected lodash at base as introduced.
+The matcher marks a finding introduced when the pull request adds or changes the version. `docs/benchmark.md` defines an introduced dependency finding as one whose head version is in the advisory's range while the base version is not, decided at the alias level. The pipeline's matching step also matches the base lockfile and sets a head finding to pre-existing when the base had the same advisory id or one of its aliases for the same installed package. That leaves the merged matcher unchanged. Without it, `dependency-09-imported-through-subpath` reported two advisories that already affected lodash at base as introduced.
 
 ## 2026-10-15: Anthropic requests send no temperature
 

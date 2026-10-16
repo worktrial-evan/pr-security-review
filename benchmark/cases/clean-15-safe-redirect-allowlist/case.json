@@ -6,7 +6,7 @@
   "description": "The head replaces the relative-path check in src/redirects.ts with a map of named pages, so the /redirect route in src/server.ts only sends the client to a path from that allowlist.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-15-safe-redirect-allowlist"
+    "directory": "benchmark/cases/clean-15-safe-redirect-allowlist"
   },
   "expected": []
 }

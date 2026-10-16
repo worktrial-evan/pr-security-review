@@ -1,5 +1,5 @@
 {
-  "name": "pr-review",
+  "name": "pull-request-review",
   "module": "index.ts",
   "type": "module",
   "private": true,

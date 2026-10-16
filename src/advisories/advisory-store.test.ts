@@ -15,7 +15,7 @@ const realOsvFixtureNames = osvFixtureNames.filter(
 )
 
 // a cache refreshed from the real fixtures through a local server
-let cacheDir = ''
+let cacheDirectory = ''
 let advisoryStore: AdvisoryStore
 beforeAll(async () => {
   // zip every real fixture under a unique name
@@ -34,17 +34,17 @@ beforeAll(async () => {
     port: 0,
     fetch: () => new Response(archive),
   })
-  cacheDir = await mkdtemp(join(tmpdir(), 'advisory-store-'))
+  cacheDirectory = await mkdtemp(join(tmpdir(), 'advisory-store-'))
   await refreshAdvisories({
     ecosystem: 'npm',
-    cacheDir,
+    cacheDirectory,
     sourceUrl: archiveServer.url.href,
   })
   archiveServer.stop(true)
-  advisoryStore = await loadAdvisoryStore(cacheDir)
+  advisoryStore = await loadAdvisoryStore(cacheDirectory)
 })
 afterAll(async () => {
-  await rm(cacheDir, { recursive: true, force: true })
+  await rm(cacheDirectory, { recursive: true, force: true })
 })
 
 describe('loadAdvisoryStore', () => {

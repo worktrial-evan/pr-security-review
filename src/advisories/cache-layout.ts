@@ -14,7 +14,7 @@ export interface AdvisoryCachePaths {
 
 // the cache directory and the ecosystem whose files to locate
 export interface ResolveAdvisoryCachePathsOptions {
-  cacheDir: string
+  cacheDirectory: string
   ecosystem: AdvisoryEcosystem
 }
 
@@ -22,10 +22,10 @@ export interface ResolveAdvisoryCachePathsOptions {
  * Returns the index and snapshot paths of an ecosystem under advisories in the cache directory.
  */
 export function resolveAdvisoryCachePaths({
-  cacheDir,
+  cacheDirectory,
   ecosystem,
 }: ResolveAdvisoryCachePathsOptions): AdvisoryCachePaths {
-  const ecosystemDirectory = join(cacheDir, 'advisories', ecosystem)
+  const ecosystemDirectory = join(cacheDirectory, 'advisories', ecosystem)
   return {
     ecosystemDirectory,
     indexPath: join(ecosystemDirectory, 'index.json'),

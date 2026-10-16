@@ -19,6 +19,8 @@ import {
   cleanCaseId,
   codeCase,
   codeCaseId,
+  dependencyCase,
+  dependencyCaseId,
   fakeAppFiles,
   fakeGitSha,
   gitCase,
@@ -27,9 +29,7 @@ import {
   makeStubPipeline,
   runStartedAt,
   type StubPipeline,
-  scaCase,
-  scaCaseId,
-  unreachableRepoUrl,
+  unreachableRepositoryUrl,
 } from './stub-pipeline'
 import {
   type RestoreEnvironmentVariables,
@@ -71,7 +71,7 @@ beforeEach(async () => {
   )
   await writeSnapshotCase(codeCase)
   await writeSnapshotCase(cleanCase)
-  await writeSnapshotCase(scaCase)
+  await writeSnapshotCase(dependencyCase)
   await Bun.write(
     join(advisoryCacheDirectory, 'advisories', 'npm', 'snapshot.json'),
     JSON.stringify({ fetchedAt: advisorySnapshotDate }),
@@ -102,13 +102,15 @@ describe('runBenchmark', () => {
 
     // the cases ran in id order, every call offline against the advisory fixture
     expect(stubPipeline.calls.map((call) => call.caseId)).toEqual([
-      scaCaseId,
+      dependencyCaseId,
       codeCaseId,
       cleanCaseId,
     ])
     for (const call of stubPipeline.calls) {
       expect(call.reviewOptions.isOffline).toBe(true)
-      expect(call.reviewOptions.advisoryCacheDir).toBe(advisoryCacheDirectory)
+      expect(call.reviewOptions.advisoryCacheDirectory).toBe(
+        advisoryCacheDirectory,
+      )
       expect(call.reviewOptions.contextLines).toBe(30)
     }
   })
@@ -130,7 +132,7 @@ describe('runBenchmark', () => {
 
     // every call read the fixture directory and the run is dated by the fixture snapshot
     for (const call of stubPipeline.calls) {
-      expect(call.reviewOptions.advisoryCacheDir).toBe(
+      expect(call.reviewOptions.advisoryCacheDirectory).toBe(
         benchmarkAdvisoryCacheDirectory,
       )
     }
@@ -154,7 +156,7 @@ describe('runBenchmark', () => {
     expect(results.score.falsePositivesOnClean).toBe(0)
     expect(results.score.caseResults).toEqual([
       {
-        caseId: scaCaseId,
+        caseId: dependencyCaseId,
         truePositives: 1,
         falsePositives: 0,
         falseNegatives: 0,
@@ -256,7 +258,7 @@ describe('runBenchmark', () => {
     ).text()
 
     // one row per case, carrying the attributes the filters read
-    for (const caseId of [scaCaseId, codeCaseId, cleanCaseId]) {
+    for (const caseId of [dependencyCaseId, codeCaseId, cleanCaseId]) {
       expect(pageHtml).toContain(`data-case="${caseId}"`)
     }
     expect(pageHtml.match(/<tr data-case=/g)).toHaveLength(3)
@@ -308,7 +310,7 @@ describe('runBenchmark', () => {
 
     // the git case never reached the pipeline and is recorded as skipped with a warning
     expect(stubPipeline.calls.map((call) => call.caseId)).toEqual([
-      scaCaseId,
+      dependencyCaseId,
       codeCaseId,
       cleanCaseId,
     ])
@@ -319,7 +321,7 @@ describe('runBenchmark', () => {
     expect(skippedCaseDetail?.falseNegatives).toBe(0)
     expect(results.warnings).toHaveLength(1)
     expect(results.warnings[0]).toContain(gitCaseId)
-    expect(results.warnings[0]).toContain(unreachableRepoUrl)
+    expect(results.warnings[0]).toContain(unreachableRepositoryUrl)
     expect(results.warnings[0]).toContain(offlineEnvironmentVariable)
 
     // the score is the same as without the git case
@@ -340,7 +342,7 @@ describe('runBenchmark', () => {
     )
     expect(skippedCaseDetail?.status).toBe('skipped')
     expect(results.warnings).toHaveLength(1)
-    expect(results.warnings[0]).toContain(unreachableRepoUrl)
+    expect(results.warnings[0]).toContain(unreachableRepositoryUrl)
     expect(results.warnings[0]).not.toContain(offlineEnvironmentVariable)
     expect(stubPipeline.calls).toHaveLength(3)
   })
@@ -367,7 +369,7 @@ async function runStubBenchmark({
       casesDirectory,
       resultsDirectory,
       reviewOptions: {
-        advisoryCacheDir: advisoryCacheDirectory,
+        advisoryCacheDirectory: advisoryCacheDirectory,
         ...reviewOptions,
       },
       now: makeClock(),

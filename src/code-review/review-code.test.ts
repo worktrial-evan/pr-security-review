@@ -194,7 +194,7 @@ describe('reviewCode finding shape', () => {
       endLine: 15,
       isIntroducedByPullRequest: true,
       remediation: sqlInjectionModelFinding.remediation,
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
       evidence: [readAddedLineText(sqlInjectionChangedFile, 1)],
       sourceToSink: sqlInjectionModelFinding.sourceToSink,
       promptVersion: '1',
@@ -244,13 +244,13 @@ describe('reviewCode finding shape', () => {
     )
   })
 
-  test('gives a different id when only the cwe differs', async () => {
+  test('gives a different id when only the vulnerabilityType differs', async () => {
     const inputValidationFinding = {
       ...sqlInjectionModelFinding,
-      cwe: 'CWE-20',
+      vulnerabilityType: 'CWE-20',
     }
 
-    // review the same file once with each cwe
+    // review the same file once with each vulnerabilityType
     const sqlInjectionReviewRun = await runReview({
       changedFiles: [sqlInjectionChangedFile],
       replies: [buildOutputReply({ findings: [sqlInjectionModelFinding] })],

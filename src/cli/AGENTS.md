@@ -25,7 +25,7 @@ The command-line interface: parses `review`, `benchmark run`, `benchmark show`, 
 ### benchmark-command.ts
 
 - `runBenchmarkCommand({ commandOptions, environment, output })`: writes the corpus advisory cache into a temporary directory, runs the dev split, the test split or both under one label against it and prints one metrics line per split
-- `writeCorpusAdvisoryCache(cacheDir)`: indexes `benchmark/fixtures/advisories/advisories.json`, the 35 advisories the corpus labels are checked against, into the advisory store layout with the fixture's snapshot
+- `writeCorpusAdvisoryCache(cacheDirectory)`: indexes `benchmark/fixtures/advisories/advisories.json`, the 35 advisories the corpus labels are checked against, into the advisory store layout with the fixture's snapshot
 - `createBenchmarkPipeline({ runSettings, runsDirectory })`: the per-case pipeline, `runReview` with its own audit log under `runs/` that throws on an aborted run so the runner records a failed case
 - `runBenchmarkShowCommand({ output, resultsDirectory })`: prints the metrics line of `latest-dev.json` and `latest-test.json`, says when a split has none, and returns 1 when one does not parse
 - `formatMetricsLine(results)`: split, label, f1, precision, recall, clean false positives, cost, case count and finish time
@@ -68,7 +68,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `review-command.ts`: the review command
 - `review-command.test.ts`: over a snapshot pull request with the llm off: the html report and a redacted audit log on disk with the link and summary printed, a json report with fail-on met, a missing key failing before the pull request is opened, and an unparseable reference
 - `benchmark-command.ts`: the benchmark run and show commands and the per-case pipeline
-- `benchmark-command.test.ts`: show with results, with none and with a broken file, the per-case pipeline writing its audit log and throwing on an aborted run, the sca-01 case reviewed against the corpus advisory cache with one introduced `ms` finding across both lockfiles, and agreement with osv-scanner when it is installed
+- `benchmark-command.test.ts`: show with results, with none and with a broken file, the per-case pipeline writing its audit log and throwing on an aborted run, the dependency-01 case reviewed against the corpus advisory cache with one introduced `ms` finding across both lockfiles, and agreement with osv-scanner when it is installed
 - `validate-matcher-command.ts`: the validate-matcher command
 - `validate-matcher-command.test.ts`: a stand-in script's two streams and exit status passed through
 - `review-outcome.ts`: the exit status, the fail-on check and the summary line

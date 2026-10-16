@@ -86,7 +86,7 @@ function createLeftPadVersion(version: string): DependencyVersion {
   return {
     name: 'left-pad',
     version,
-    scope: 'prod',
+    scope: 'production',
     isDirect: false,
     isWorkspace: false,
     isVersionUnparseable: false,

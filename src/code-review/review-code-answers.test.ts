@@ -32,7 +32,7 @@ const chunkTwoFirstHeadLine = 551
 // a finding on the first route of the large route file, with its range and confidence replaced per chunk
 const routeFinding: ModelFinding = {
   ...sqlInjectionModelFinding,
-  cwe: 'CWE-862',
+  vulnerabilityType: 'CWE-862',
   title: 'Item routes registered without an authorization check',
   severity: 'medium',
   confidence: 0.6,
@@ -53,9 +53,9 @@ const groundingRejectionCases: [string, Partial<ModelFinding>, string][] = [
     'range-not-added',
   ],
   [
-    'a cwe outside the allowlist as cwe-not-allowed',
-    { cwe: 'CWE-9999' },
-    'cwe-not-allowed',
+    'a vulnerabilityType outside the allowlist as vulnerability-type-not-allowed',
+    { vulnerabilityType: 'CWE-9999' },
+    'vulnerability-type-not-allowed',
   ],
   [
     'another file as file-mismatch',
@@ -129,7 +129,7 @@ describe('reviewCode grounding', () => {
         message: 'finding rejected by grounding',
         reason: 'evidence-not-added',
         file: 'src/users/find-user.ts',
-        cwe: 'CWE-89',
+        vulnerabilityType: 'CWE-89',
         title: fabricatedFinding.title,
         startLine: 15,
         endLine: 15,
@@ -165,7 +165,7 @@ describe('reviewCode grounding', () => {
       expect(groundingNotes[0]).toMatchObject({
         reason,
         file: rejectedFinding.file,
-        cwe: rejectedFinding.cwe,
+        vulnerabilityType: rejectedFinding.vulnerabilityType,
         startLine: rejectedFinding.startLine,
         endLine: rejectedFinding.endLine,
         chunkFile: sqlInjectionChangedFile.path,
@@ -174,7 +174,7 @@ describe('reviewCode grounding', () => {
     },
   )
 
-  test('keeps a finding whose evidence and range are added lines and whose cwe is allowed', async () => {
+  test('keeps a finding whose evidence and range are added lines and whose vulnerabilityType is allowed', async () => {
     const { codeReviewResult, auditSink } = await runReview({
       changedFiles: [sqlInjectionChangedFile],
       replies: [buildOutputReply({ findings: [sqlInjectionModelFinding] })],
@@ -189,7 +189,7 @@ describe('reviewCode grounding', () => {
 })
 
 describe('reviewCode dedupe', () => {
-  test('collapses the same cwe on overlapping ranges reported by two chunks into the higher confidence', async () => {
+  test('collapses the same vulnerabilityType on overlapping ranges reported by two chunks into the higher confidence', async () => {
     // the packet splits at the gap: chunk 1 ends on head line 540 and chunk 2 starts on head line 551
     const packet = assemblePacket({ changedFiles: [largeChangedFile] })
     expect(packet.chunks).toHaveLength(2)
@@ -229,17 +229,17 @@ describe('reviewCode dedupe', () => {
     expect(codeReviewResult.findings).toHaveLength(1)
     expect(codeReviewResult.findings[0]).toMatchObject({
       file: 'src/api/routes.ts',
-      cwe: 'CWE-862',
+      vulnerabilityType: 'CWE-862',
       confidence: 0.9,
       startLine: chunkTwoFirstHeadLine,
       endLine: chunkTwoFirstHeadLine + 1,
     })
   })
 
-  test('keeps two findings on the same range that differ in cwe, ordered by cwe', async () => {
+  test('keeps two findings on the same range that differ in vulnerabilityType, ordered by vulnerabilityType', async () => {
     const inputValidationFinding: ModelFinding = {
       ...sqlInjectionModelFinding,
-      cwe: 'CWE-20',
+      vulnerabilityType: 'CWE-20',
       title: 'Unvalidated id query parameter',
     }
 
@@ -252,10 +252,9 @@ describe('reviewCode dedupe', () => {
       ],
     })
 
-    expect(codeReviewResult.findings.map((finding) => finding.cwe)).toEqual([
-      'CWE-20',
-      'CWE-89',
-    ])
+    expect(
+      codeReviewResult.findings.map((finding) => finding.vulnerabilityType),
+    ).toEqual(['CWE-20', 'CWE-89'])
   })
 })
 
@@ -279,7 +278,7 @@ describe('reviewCode output validation failure', () => {
     expect(codeReviewResult.findings).toHaveLength(1)
     expect(codeReviewResult.findings[0]).toMatchObject({
       file: 'src/users/find-user.ts',
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
     })
 
     // one note names the skipped chunk and the error

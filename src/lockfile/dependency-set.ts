@@ -22,7 +22,7 @@ export interface BuildDependencySetOptions {
 interface InstallLocationFacts {
   nodesByLocation: Map<string, LockfileNode>
   productionLocations: Set<string>
-  devLocations: Set<string>
+  developmentLocations: Set<string>
   directLocations: Set<string>
 }
 
@@ -58,7 +58,7 @@ export function toDependencyKey(
   return `${dependencyVersion.name}@${dependencyVersion.version}`
 }
 
-// index the nodes and find what the production and dev roots reach
+// index the nodes and find what the production and development roots reach
 function findInstallLocationFacts(
   parsedLockfile: ParsedLockfile,
 ): InstallLocationFacts {
@@ -74,8 +74,8 @@ function findInstallLocationFacts(
       rootLocations: parsedLockfile.productionRootLocations,
       nodesByLocation,
     }),
-    devLocations: findReachableLocations({
-      rootLocations: parsedLockfile.devRootLocations,
+    developmentLocations: findReachableLocations({
+      rootLocations: parsedLockfile.developmentRootLocations,
       nodesByLocation,
     }),
     directLocations: new Set(parsedLockfile.directLocations),
@@ -149,11 +149,13 @@ function toDependencyVersion({
   lockfileNode,
   installLocationFacts,
 }: ToDependencyVersionOptions): DependencyVersion {
-  // a node is dev only when the dev roots reach it and no production root does
-  const isDevOnly =
-    installLocationFacts.devLocations.has(lockfileNode.location) &&
+  // a node is development only when the development roots reach it and no production root does
+  const isDevelopmentOnly =
+    installLocationFacts.developmentLocations.has(lockfileNode.location) &&
     !installLocationFacts.productionLocations.has(lockfileNode.location)
-  const scope: DependencyScope = isDevOnly ? 'dev' : 'prod'
+  const scope: DependencyScope = isDevelopmentOnly
+    ? 'development'
+    : 'production'
 
   // point at each dependency by its name@version key
   const dependencyKeys = lockfileNode.dependencyLocations.flatMap(
@@ -186,17 +188,17 @@ interface MergeDependencyVersionsOptions {
   dependencyVersion: DependencyVersion
 }
 
-// merge two installed copies of one name@version. prod and direct win, and the dependency keys are joined
+// merge two installed copies of one name@version. production and direct win, and the dependency keys are joined
 function mergeDependencyVersions({
   knownDependencyVersion,
   dependencyVersion,
 }: MergeDependencyVersionsOptions): DependencyVersion {
   const isEitherProduction =
-    knownDependencyVersion.scope === 'prod' ||
-    dependencyVersion.scope === 'prod'
+    knownDependencyVersion.scope === 'production' ||
+    dependencyVersion.scope === 'production'
   return {
     ...knownDependencyVersion,
-    scope: isEitherProduction ? 'prod' : 'dev',
+    scope: isEitherProduction ? 'production' : 'development',
     isDirect: knownDependencyVersion.isDirect || dependencyVersion.isDirect,
     dependencyKeys: toSortedUniqueKeys([
       ...knownDependencyVersion.dependencyKeys,

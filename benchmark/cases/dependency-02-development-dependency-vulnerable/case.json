@@ -1,0 +1,18 @@
+{
+  "id": "dependency-02-development-dependency-vulnerable",
+  "split": "dev",
+  "category": "dependency",
+  "isClean": false,
+  "description": "The head downgrades the development dependency semver from 7.6.3 to 7.5.1 in package.json and both lockfiles, a version GHSA-c2qf-rxjj-qqgw affects, and pulls in lru-cache 6.0.0 and yallist 4.0.0 with it. jsonwebtoken keeps a nested semver 7.6.3.",
+  "source": {
+    "kind": "snapshot",
+    "directory": "benchmark/cases/dependency-02-development-dependency-vulnerable"
+  },
+  "expected": [
+    {
+      "detector": "dependency",
+      "packageName": "semver",
+      "advisoryId": "GHSA-c2qf-rxjj-qqgw"
+    }
+  ]
+}

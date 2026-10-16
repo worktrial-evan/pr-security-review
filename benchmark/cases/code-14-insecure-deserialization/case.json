@@ -6,12 +6,12 @@
   "description": "The head adds a POST /import route that parses the request body with a JSON reviver that compiles and runs any string value prefixed with function:.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-14-insecure-deserialization"
+    "directory": "benchmark/cases/code-14-insecure-deserialization"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-502",
+      "vulnerabilityType": "CWE-502",
       "file": "src/server.ts",
       "startLine": 104,
       "endLine": 107

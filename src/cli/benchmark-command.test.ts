@@ -148,13 +148,13 @@ describe('createBenchmarkPipeline', () => {
 })
 
 // the committed benchmark case that downgrades ms to a version an advisory covers
-const scaCaseDirectory = join(
+const dependencyCaseDirectory = join(
   import.meta.dir,
   '..',
   '..',
   'benchmark',
   'cases',
-  'sca-01-direct-prod-vulnerable',
+  'dependency-01-direct-production-vulnerable',
 )
 
 // an oracle that could not run
@@ -164,20 +164,20 @@ const runUnavailableOracle: RunOracle = async () => ({
 })
 
 describe('the pipeline over the corpus advisory cache', () => {
-  // review the sca case with the llm off against the corpus advisories and the given oracle
-  async function reviewScaCase(runOracle: RunOracle | undefined) {
-    const advisoryCacheDir = join(temporaryDirectory, 'advisories')
-    await writeCorpusAdvisoryCache(advisoryCacheDir)
+  // review the dependency case with the llm off against the corpus advisories and the given oracle
+  async function reviewDependencyCase(runOracle: RunOracle | undefined) {
+    const advisoryCacheDirectory = join(temporaryDirectory, 'advisories')
+    await writeCorpusAdvisoryCache(advisoryCacheDirectory)
     const auditSink = createMemoryAuditSink()
     const reviewResult = await runReview({
       pullRequestSource: new SnapshotPullRequestSource({
-        baseDir: join(scaCaseDirectory, 'base'),
-        headDir: join(scaCaseDirectory, 'head'),
+        baseDirectory: join(dependencyCaseDirectory, 'base'),
+        headDirectory: join(dependencyCaseDirectory, 'head'),
       }),
       reviewOptions: {
         ...testReviewOptions,
         isLlmEnabled: false,
-        advisoryCacheDir,
+        advisoryCacheDirectory,
       },
       auditSink,
       runSettings: testRunSettings,
@@ -188,15 +188,15 @@ describe('the pipeline over the corpus advisory cache', () => {
 
   test('reports the downgraded package once across both lockfiles', async () => {
     const { reviewResult, auditSink } =
-      await reviewScaCase(runUnavailableOracle)
+      await reviewDependencyCase(runUnavailableOracle)
 
     // one introduced finding for ms. the second lockfile's copy is dropped
-    const introducedScaFindings = reviewResult.findings.filter(
+    const introducedDependencyFindings = reviewResult.findings.filter(
       (finding) =>
-        finding.detector === 'sca' && finding.isIntroducedByPullRequest,
+        finding.detector === 'dependency' && finding.isIntroducedByPullRequest,
     )
-    expect(introducedScaFindings).toHaveLength(1)
-    expect(introducedScaFindings[0]).toMatchObject({
+    expect(introducedDependencyFindings).toHaveLength(1)
+    expect(introducedDependencyFindings[0]).toMatchObject({
       packageName: 'ms',
       version: '1.0.0',
       advisoryId: 'GHSA-w9mr-4mfr-499f',
@@ -219,11 +219,11 @@ describe('the pipeline over the corpus advisory cache', () => {
   test.skipIf(!isOracleAvailable())(
     'agrees with osv-scanner when it is installed',
     async () => {
-      const { reviewResult } = await reviewScaCase(undefined)
+      const { reviewResult } = await reviewDependencyCase(undefined)
 
       const msFinding = reviewResult.findings.find(
         (finding) =>
-          finding.detector === 'sca' &&
+          finding.detector === 'dependency' &&
           finding.packageName === 'ms' &&
           finding.version === '1.0.0',
       )

@@ -8,17 +8,17 @@ import { refreshAdvisories } from './refresh-advisories'
  */
 export async function runRefreshAdvisoriesCommand(): Promise<void> {
   // refresh the cache
-  const cacheDir = resolveCacheDirectory()
+  const cacheDirectory = resolveCacheDirectory()
   const refreshStartedAt = performance.now()
   const refreshAdvisoriesResult = await refreshAdvisories({
     ecosystem: 'npm',
-    cacheDir,
+    cacheDirectory,
   })
   const refreshMilliseconds = performance.now() - refreshStartedAt
 
   // load the new index once to measure the load time
   const loadStartedAt = performance.now()
-  await loadAdvisoryStore(cacheDir)
+  await loadAdvisoryStore(cacheDirectory)
   const loadMilliseconds = performance.now() - loadStartedAt
 
   // report the result

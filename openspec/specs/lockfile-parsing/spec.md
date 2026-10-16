@@ -31,11 +31,11 @@ The system SHALL reject a `package-lock.json` whose version is 1 or above 3, and
 - **THEN** a typed lockfile error with reason unsupported-version is thrown
 
 ### Requirement: Direct dependencies and scope
-A version SHALL be direct when the root package.json lists its name under dependencies, devDependencies, optionalDependencies or peerDependencies and the root resolves that name to it. A version SHALL have scope dev only when it is reachable from the root's devDependencies and not from any production root.
+A version SHALL be direct when the root package.json lists its name under dependencies, devDependencies, optionalDependencies or peerDependencies and the root resolves that name to it. A version SHALL have scope development only when it is reachable from the root's devDependencies and not from any production root.
 
 #### Scenario: Dev-only and shared dependencies
-- **WHEN** a dev dependency and a production dependency both depend on one package, and the dev dependency also depends on a second package
-- **THEN** the shared package is prod, the second package is dev, and optional and peer dependencies of the root are direct and prod
+- **WHEN** a development dependency and a production dependency both depend on one package, and the development dependency also depends on a second package
+- **THEN** the shared package is production, the second package is development, and optional and peer dependencies of the root are direct and production
 
 ### Requirement: Specifiers that are not registry versions
 An npm alias SHALL keep the alias as its name and the aliased package as its real package name. A workspace package SHALL be marked as a workspace. A git, file, link or tarball dependency SHALL keep its specifier as the version. Every version that is not valid semver SHALL be marked unparseable.
@@ -62,7 +62,7 @@ The system SHALL diff a base and a head dependency set into added, removed and c
 The system SHALL find the shortest chain of name@version keys from a direct dependency to a named package by breadth-first search, matching the package by name or real package name, and SHALL return an empty list when nothing reaches it.
 
 #### Scenario: Transitive dependency
-- **WHEN** a direct dev dependency depends on a package that depends on the target
+- **WHEN** a direct development dependency depends on a package that depends on the target
 - **THEN** the path lists the direct dependency, the middle package and the target, in that order
 
 ### Requirement: Package names stay exact

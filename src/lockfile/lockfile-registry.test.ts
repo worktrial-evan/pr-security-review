@@ -75,32 +75,32 @@ describe.each(lockfileKinds)(
       expect(toSortedDependencyVersions(dependencySet)).toMatchSnapshot()
     })
 
-    test('marks dev only, shared, optional and peer dependencies', async () => {
+    test('marks development only, shared, optional and peer dependencies', async () => {
       const dependencySet = await readFixtureDependencySet({
         lockfileKind,
         fixtureCase: 'scopes',
       })
 
-      // what the dev dependency alone reaches is dev, what production also reaches is prod
+      // what the development dependency alone reaches is development, what production also reaches is production
       expect(
         findDependencyVersion(dependencySet, 'test-runner@2.1.0').scope,
-      ).toBe('dev')
+      ).toBe('development')
       expect(
         findDependencyVersion(dependencySet, 'assert-kit@1.4.0').scope,
-      ).toBe('dev')
+      ).toBe('development')
       expect(
         findDependencyVersion(dependencySet, 'deep-equal-kit@1.0.0').scope,
-      ).toBe('dev')
+      ).toBe('development')
       expect(
         findDependencyVersion(dependencySet, 'shared-util@1.0.2').scope,
-      ).toBe('prod')
+      ).toBe('production')
 
-      // optional and peer dependencies of the root are direct and prod, a missing optional peer is skipped
+      // optional and peer dependencies of the root are direct and production, a missing optional peer is skipped
       for (const dependencyKey of ['native-watch@1.0.1', 'view-kit@18.2.0']) {
         expect(
           findDependencyVersion(dependencySet, dependencyKey),
         ).toMatchObject({
-          scope: 'prod',
+          scope: 'production',
           isDirect: true,
         })
       }
@@ -155,10 +155,10 @@ describe.each(lockfileKinds)(
           .dependencyKeys,
       ).toEqual(['@acme/utils@workspace:packages/utils'])
 
-      // a workspace dev dependency is dev, and only the root decides what is direct
+      // a workspace development dependency is development, and only the root decides what is direct
       expect(
         findDependencyVersion(dependencySet, 'test-runner@2.1.0').scope,
-      ).toBe('dev')
+      ).toBe('development')
       expect([...dependencySet.directDependencyNames]).toEqual(['left-pad'])
       expect(toSortedDependencyVersions(dependencySet)).toMatchSnapshot()
     })

@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import { type CodeReviewFinding, createFindingId } from '@/shared/finding'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from '@/shared/finding.samples'
 import { dedupeFindings } from './dedupe-step'
@@ -25,11 +25,11 @@ function createCodeReviewFinding(
 describe('dedupeFindings', () => {
   test('drops a second finding with the same id', () => {
     const { keptFindings, droppedFindings } = dedupeFindings([
-      scaFindingSample,
-      scaFindingSample,
+      dependencyFindingSample,
+      dependencyFindingSample,
     ])
 
-    expect(keptFindings).toEqual([scaFindingSample])
+    expect(keptFindings).toEqual([dependencyFindingSample])
     expect(droppedFindings.map(({ reason }) => reason)).toEqual([
       'duplicate-id',
     ])
@@ -37,16 +37,19 @@ describe('dedupeFindings', () => {
 
   test('drops a vulnerable version a second lockfile repeats', () => {
     const otherLockfileFinding = {
-      ...scaFindingSample,
-      id: createFindingId({ detector: 'sca', stableKey: 'package-lock.json' }),
+      ...dependencyFindingSample,
+      id: createFindingId({
+        detector: 'dependency',
+        stableKey: 'package-lock.json',
+      }),
       file: 'package-lock.json',
     }
     const { keptFindings, droppedFindings } = dedupeFindings([
-      scaFindingSample,
+      dependencyFindingSample,
       otherLockfileFinding,
     ])
 
-    expect(keptFindings).toEqual([scaFindingSample])
+    expect(keptFindings).toEqual([dependencyFindingSample])
     expect(droppedFindings.map(({ reason }) => reason)).toEqual([
       'same-dependency-in-another-lockfile',
     ])
@@ -55,16 +58,16 @@ describe('dedupeFindings', () => {
   test('drops a code-review finding on a bump the dependency detector reports', () => {
     const bumpFinding = createCodeReviewFinding({
       file: 'package.json',
-      title: `Vulnerable ${scaFindingSample.packageName} version added`,
+      title: `Vulnerable ${dependencyFindingSample.packageName} version added`,
       startLine: 3,
       endLine: 3,
     })
     const { keptFindings, droppedFindings } = dedupeFindings([
-      scaFindingSample,
+      dependencyFindingSample,
       bumpFinding,
     ])
 
-    expect(keptFindings).toEqual([scaFindingSample])
+    expect(keptFindings).toEqual([dependencyFindingSample])
     expect(droppedFindings).toEqual([
       { finding: bumpFinding, reason: 'covered-by-dependency-finding' },
     ])
@@ -73,23 +76,24 @@ describe('dedupeFindings', () => {
   test('keeps a code-review finding in a dependency file about another package', () => {
     const otherPackageFinding = createCodeReviewFinding({
       file: 'package.json',
-      title: `Install script runs ${scaFindingSample.packageName}-cli from a url`,
+      title: `Install script runs ${dependencyFindingSample.packageName}-cli from a url`,
     })
 
     expect(
-      dedupeFindings([scaFindingSample, otherPackageFinding]).keptFindings,
+      dedupeFindings([dependencyFindingSample, otherPackageFinding])
+        .keptFindings,
     ).toHaveLength(2)
   })
 
   test('drops a hardcoded credential on a line the secrets detector reports', () => {
     const credentialFinding = createCodeReviewFinding({
-      cwe: 'CWE-798',
+      vulnerabilityType: 'CWE-798',
       file: secretFindingSample.file,
       startLine: secretFindingSample.startLine,
       endLine: secretFindingSample.endLine,
     })
     const otherLineFinding = createCodeReviewFinding({
-      cwe: 'CWE-798',
+      vulnerabilityType: 'CWE-798',
       file: secretFindingSample.file,
       startLine: (secretFindingSample.startLine ?? 1) + 10,
       endLine: (secretFindingSample.startLine ?? 1) + 10,
@@ -110,7 +114,7 @@ describe('dedupeFindings', () => {
     const findings = [
       codeReviewFindingSample,
       secretFindingSample,
-      scaFindingSample,
+      dependencyFindingSample,
     ]
 
     expect(dedupeFindings(findings).keptFindings).toEqual(findings)

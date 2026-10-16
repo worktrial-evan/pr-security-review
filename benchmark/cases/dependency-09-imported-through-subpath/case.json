@@ -1,16 +1,16 @@
 {
-  "id": "sca-09-imported-through-subpath",
+  "id": "dependency-09-imported-through-subpath",
   "split": "test",
-  "category": "sca",
+  "category": "dependency",
   "isClean": false,
   "description": "The head downgrades lodash from 4.17.21 to 4.17.20 in package.json and both lockfiles, a version GHSA-29mw-wpgm-hmr9 affects, and src/config.ts imports lodash only through the lodash/merge subpath. GHSA-35jh-r3h4-6jhm also covers 4.17.20 but is an alias of GHSA-r5fr-rjxr-66jc, which already affects the base version, so it is not labeled.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/sca-09-imported-through-subpath"
+    "directory": "benchmark/cases/dependency-09-imported-through-subpath"
   },
   "expected": [
     {
-      "detector": "sca",
+      "detector": "dependency",
       "packageName": "lodash",
       "advisoryId": "GHSA-29mw-wpgm-hmr9"
     }

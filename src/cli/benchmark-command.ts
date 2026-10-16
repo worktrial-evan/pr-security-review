@@ -66,11 +66,11 @@ export async function runBenchmarkCommand({
   }
 
   // build an advisory cache from the corpus fixture the labels were checked against
-  const advisoryCacheDir = await mkdtemp(
+  const advisoryCacheDirectory = await mkdtemp(
     join(tmpdir(), 'pull-request-review-corpus-advisories-'),
   )
   try {
-    await writeCorpusAdvisoryCache(advisoryCacheDir)
+    await writeCorpusAdvisoryCache(advisoryCacheDirectory)
 
     // run each split. the runner keeps its own offline flag
     const splits: BenchmarkSplit[] =
@@ -86,7 +86,7 @@ export async function runBenchmarkCommand({
           reviewOptions: {
             isLlmEnabled: reviewOptions.isLlmEnabled,
             isCacheEnabled: reviewOptions.isCacheEnabled,
-            advisoryCacheDir,
+            advisoryCacheDirectory,
             reviewModelId: reviewOptions.reviewModelId,
             summarizeModelId: reviewOptions.summarizeModelId,
             contextLines: reviewOptions.contextLines,
@@ -96,7 +96,7 @@ export async function runBenchmarkCommand({
       output.writeOut(`${formatMetricsLine(benchmarkRunResults)}\n`)
     }
   } finally {
-    await rm(advisoryCacheDir, { recursive: true, force: true })
+    await rm(advisoryCacheDirectory, { recursive: true, force: true })
   }
   return 0
 }
@@ -105,7 +105,7 @@ export async function runBenchmarkCommand({
  * Writes the benchmark's advisory fixture into the advisory cache layout under the given directory.
  */
 export async function writeCorpusAdvisoryCache(
-  cacheDir: string,
+  cacheDirectory: string,
 ): Promise<void> {
   // read the advisories and the snapshot the corpus labels were checked against
   const advisoryFixtureRead = await readAdvisoryFixture(
@@ -123,7 +123,7 @@ export async function writeCorpusAdvisoryCache(
   // index them and write them where the advisory store loads from
   await writeAdvisoryCache({
     ecosystem: 'npm',
-    cacheDir,
+    cacheDirectory,
     advisoriesByPackage: indexAdvisoriesByPackage(
       advisoryFixtureRead.advisories,
     ),

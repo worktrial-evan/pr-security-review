@@ -40,7 +40,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `html-escape.ts`: `escapeHtml` and `renderLink`
 - `render-json.ts`: the JSON report
 - `tag-balance.ts`: a tag-balance check used by the tests as a well-formedness check
-- `fixtures/sca-findings.ts`, `fixtures/code-review-findings.ts`, `fixtures/secret-findings.ts`: the fixture findings of each detector
+- `fixtures/dependency-findings.ts`, `fixtures/code-review-findings.ts`, `fixtures/secret-findings.ts`: the fixture findings of each detector
 - `fixtures/review-result.ts`: the fixture review result built from them
 - `fixtures/write-fixture-report.ts`: the script that writes the fixture reports
 - `*.test.ts`: one test file beside each source file above, and `fixtures/review-result.test.ts`
@@ -65,7 +65,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - SARIF output is not implemented. A later change adds it to this module.
 - The server is not implemented. This module only returns strings.
-- The pull request reference has no title, so the header links `owner/repo#number`. The contract has no advisory reference urls, so the detail row links the advisory id and aliases to osv.dev and lists the fixed versions.
+- The pull request reference has no title, so the header links `owner/repository#number`. The contract has no advisory reference urls, so the detail row links the advisory id and aliases to osv.dev and lists the fixed versions.
 - Step errors and degraded steps in the result are not shown in the HTML report. They are in the JSON report.
 - The page wiring for filters, sorting and expansion has no automated DOM test. It was checked by hand in a browser against the fixture report. The logic it calls is unit tested.
 - Filter and sort choices are not kept across a reload.

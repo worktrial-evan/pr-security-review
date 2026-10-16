@@ -14,7 +14,11 @@ import {
 } from './fixtures/sample-dependencies'
 
 // the fixture repository scanned once for every case
-const sampleRepositoryDir = join(import.meta.dir, 'fixtures', 'sample-repo')
+const sampleRepositoryDirectory = join(
+  import.meta.dir,
+  'fixtures',
+  'sample-repository',
+)
 
 // the head dependency set and graph every case shares
 const dependencySet = buildSampleDependencySet()
@@ -26,7 +30,7 @@ let imports: ImportsByPackage = new Map()
 // scan the sample repository once
 beforeAll(async () => {
   const importCollection = await collectImports({
-    rootDir: sampleRepositoryDir,
+    rootDirectory: sampleRepositoryDirectory,
     auditSink: {
       write: async (event: AuditEvent): Promise<void> => {
         auditEvents.push(event)

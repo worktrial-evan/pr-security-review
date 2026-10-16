@@ -22,27 +22,37 @@ const appHeadText = `${appBaseText.replace('app line 5\n', 'app line 5 calls the
 
 // the temporary trees and the repository built from them
 let treesDirectory = ''
-let repository: TwoCommitRepository = { repoPath: '', baseSha: '', headSha: '' }
+let repository: TwoCommitRepository = {
+  repositoryPath: '',
+  baseSha: '',
+  headSha: '',
+}
 
 beforeAll(async () => {
   // write a base tree and a head tree that add, edit, delete and rename one file each
   treesDirectory = await mkdtemp(join(tmpdir(), 'git-source-trees-'))
-  const baseDir = join(treesDirectory, 'base')
-  const headDir = join(treesDirectory, 'head')
-  await Bun.write(join(baseDir, 'app.txt'), appBaseText)
-  await Bun.write(join(baseDir, 'gone.txt'), 'this file is deleted\n')
-  await Bun.write(join(baseDir, 'docs', 'old.txt'), 'this file is renamed\n')
-  await Bun.write(join(headDir, 'app.txt'), appHeadText)
-  await Bun.write(join(headDir, 'docs', 'new.txt'), 'this file is renamed\n')
-  await Bun.write(join(headDir, 'fresh file.txt'), 'this file is added\n')
+  const baseDirectory = join(treesDirectory, 'base')
+  const headDirectory = join(treesDirectory, 'head')
+  await Bun.write(join(baseDirectory, 'app.txt'), appBaseText)
+  await Bun.write(join(baseDirectory, 'gone.txt'), 'this file is deleted\n')
+  await Bun.write(
+    join(baseDirectory, 'docs', 'old.txt'),
+    'this file is renamed\n',
+  )
+  await Bun.write(join(headDirectory, 'app.txt'), appHeadText)
+  await Bun.write(
+    join(headDirectory, 'docs', 'new.txt'),
+    'this file is renamed\n',
+  )
+  await Bun.write(join(headDirectory, 'fresh file.txt'), 'this file is added\n')
 
   // commit both trees
-  repository = await createTwoCommitRepository({ baseDir, headDir })
+  repository = await createTwoCommitRepository({ baseDirectory, headDirectory })
 })
 
 afterAll(async () => {
   await rm(treesDirectory, { recursive: true, force: true })
-  await rm(repository.repoPath, { recursive: true, force: true })
+  await rm(repository.repositoryPath, { recursive: true, force: true })
 })
 
 // a source over the test repository
@@ -90,7 +100,7 @@ describe('GitPullRequestSource.listChangedFiles', () => {
     ]
     for (const [configKey = '', configValue = ''] of configSettings) {
       await runGit({
-        repoPath: repository.repoPath,
+        repositoryPath: repository.repositoryPath,
         gitArguments: ['config', configKey, configValue],
       })
     }
@@ -99,7 +109,7 @@ describe('GitPullRequestSource.listChangedFiles', () => {
     const configuredChangedFiles = await createSource().listChangedFiles()
     for (const [configKey = ''] of configSettings) {
       await runGit({
-        repoPath: repository.repoPath,
+        repositoryPath: repository.repositoryPath,
         gitArguments: ['config', '--unset', configKey],
       })
     }
@@ -139,7 +149,7 @@ describe('GitPullRequestSource file access', () => {
     await gitSource.dispose()
     expect(existsSync(worktreePath)).toBe(false)
     const worktreeList = await runGit({
-      repoPath: repository.repoPath,
+      repositoryPath: repository.repositoryPath,
       gitArguments: ['worktree', 'list'],
     })
     expect(worktreeList).not.toContain(worktreePath)

@@ -11,6 +11,6 @@
   },
   "include": ["./**/*.ts"],
   // The sample repository imports packages that are not installed, so it stays out of bun check
-  "exclude": ["./fixtures/sample-repo"],
+  "exclude": ["./fixtures/sample-repository"],
   "references": [{ "path": "../shared" }]
 }

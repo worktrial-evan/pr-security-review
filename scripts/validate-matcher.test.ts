@@ -34,7 +34,7 @@ interface CreateFindingOptions {
 // the paths of the throwaway tree, relative to its root
 const throwawayTreeOptions: Omit<ValidateMatcherOptions, 'root'> = {
   lockfileRoots: ['cases'],
-  advisoryCacheDir: 'advisory-cache',
+  advisoryCacheDirectory: 'advisory-cache',
   disagreementsDocumentPath: 'accepted-disagreements.md',
 }
 
@@ -94,7 +94,7 @@ function createFinding({
     severity: 'high',
     confidence: 0.9,
     isGithubReviewed: true,
-    dependencyScope: 'prod',
+    dependencyScope: 'production',
     isVersionUnparseable: false,
     isIntroducedByPullRequest: false,
     fixedVersions: [],
@@ -128,7 +128,7 @@ async function writeThrowawayTree(advisories: Advisory[]): Promise<string> {
 
   // the advisory cache holding the fixture advisories
   const { indexPath, snapshotPath } = resolveAdvisoryCachePaths({
-    cacheDir: join(root, 'advisory-cache'),
+    cacheDirectory: join(root, 'advisory-cache'),
     ecosystem: 'npm',
   })
   await Bun.write(indexPath, JSON.stringify(createAdvisoryIndex(advisories)))

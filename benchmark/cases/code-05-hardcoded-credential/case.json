@@ -6,12 +6,12 @@
   "description": "The head adds an /admin/metrics route guarded by comparing the x-api-key header against an api key literal written into the source.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-05-hardcoded-credential"
+    "directory": "benchmark/cases/code-05-hardcoded-credential"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-798",
+      "vulnerabilityType": "CWE-798",
       "file": "src/server.ts",
       "startLine": 72,
       "endLine": 73

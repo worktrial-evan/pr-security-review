@@ -35,7 +35,7 @@ Bun and Node built-ins and npm packages are always allowed. Only the tests impor
 - `validate.ts`: `validateSummary` and the url, version, advisory id and package name extractors
 - `validate.test.ts`: one test per rule for versions, CVE ids, GHSA ids, packages and urls, a grounded summary, a version inside an allowed url, a missing summary, an empty remediation, and a package on a code finding
 - `summary-template.ts`: the template summary and remediation per detector, the pre-existing one-liner and `pickFixedVersion`
-- `summary-template.test.ts`: every template passes `validateSummary` for its packet, the exact sca text, the pre-existing one-liner, and the fixed version picked
+- `summary-template.test.ts`: every template passes `validateSummary` for its packet, the exact dependency text, the pre-existing one-liner, and the fixed version picked
 - `summary.samples.ts`: one sample finding per detector and the lodash advisory, for the tests in this module
 - `tsconfig.json`: the module's composite TypeScript project. It references shared, llm and prompts
 - `AGENTS.md`: this file

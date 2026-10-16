@@ -6,11 +6,11 @@ Reads a pull request from GitHub, a local git repository or two directory snapsh
 ## Requirements
 
 ### Requirement: Pull request reference parsing
-The module SHALL parse a GitHub pull request URL of the form `https://github.com/owner/repo/pull/123` and the short form `owner/repo#123` into a reference with owner, repo, number and the canonical pull request URL. Any other text SHALL be rejected with a typed error.
+The module SHALL parse a GitHub pull request URL of the form `https://github.com/owner/repository/pull/123` and the short form `owner/repository#123` into a reference with owner, repository, number and the canonical pull request URL. Any other text SHALL be rejected with a typed error.
 
 #### Scenario: Full URL
 - **WHEN** `https://github.com/acme/widgets/pull/42` is parsed
-- **THEN** the reference has owner `acme`, repo `widgets`, number 42 and url `https://github.com/acme/widgets/pull/42`
+- **THEN** the reference has owner `acme`, repository `widgets`, number 42 and url `https://github.com/acme/widgets/pull/42`
 
 #### Scenario: Short form
 - **WHEN** `acme/widgets#42` is parsed

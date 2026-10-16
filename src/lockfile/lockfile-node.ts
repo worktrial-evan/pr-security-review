@@ -15,7 +15,7 @@ export interface LockfileNode {
 export interface ParsedLockfile {
   nodes: LockfileNode[]
   productionRootLocations: string[]
-  devRootLocations: string[]
+  developmentRootLocations: string[]
   directLocations: string[]
 }
 
@@ -50,8 +50,8 @@ export function toParsedLockfile({
     productionRootLocations: allManifestLocations.flatMap(
       (manifestLocations) => manifestLocations.productionLocations,
     ),
-    devRootLocations: allManifestLocations.flatMap(
-      (manifestLocations) => manifestLocations.devLocations,
+    developmentRootLocations: allManifestLocations.flatMap(
+      (manifestLocations) => manifestLocations.developmentLocations,
     ),
     directLocations: rootManifestLocations.directLocations,
   }

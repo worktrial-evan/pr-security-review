@@ -1,16 +1,16 @@
-// builds the sca fixture findings: twelve vulnerable dependencies that cover every sca enum value
-import { createFindingId, type ScaFinding } from '@/shared/finding'
+// builds the dependency fixture findings: twelve vulnerable dependencies that cover every dependency enum value
+import { createFindingId, type DependencyFinding } from '@/shared/finding'
 
-// the fields that differ between sca fixture findings. every other field has a default
-type ScaFixtureOptions = Pick<
-  ScaFinding,
+// the fields that differ between dependency fixture findings. every other field has a default
+type DependencyFixtureOptions = Pick<
+  DependencyFinding,
   'packageName' | 'version' | 'advisoryId' | 'severity'
 > &
-  Partial<ScaFinding>
+  Partial<DependencyFinding>
 
 // the fields most fixture findings share
-type ScaFixtureDefaults = Omit<
-  ScaFinding,
+type DependencyFixtureDefaults = Omit<
+  DependencyFinding,
   | 'id'
   | 'title'
   | 'dependencyPath'
@@ -20,15 +20,15 @@ type ScaFixtureDefaults = Omit<
   | 'severity'
 >
 
-// the defaults most sca fixture findings keep
-const scaFixtureDefaults: ScaFixtureDefaults = {
-  detector: 'sca',
+// the defaults most dependency fixture findings keep
+const dependencyFixtureDefaults: DependencyFixtureDefaults = {
+  detector: 'dependency',
   confidence: 0.95,
   file: 'package.json',
   isIntroducedByPullRequest: true,
   aliases: [],
   isGithubReviewed: true,
-  dependencyScope: 'prod',
+  dependencyScope: 'production',
   reachability: 'direct-imported',
   importedBy: [],
   fixedVersions: [],
@@ -36,12 +36,14 @@ const scaFixtureDefaults: ScaFixtureDefaults = {
   matcherAgreement: 'both',
 }
 
-// build one sca fixture finding with its id derived from the package and advisory
-function createScaFixture(options: ScaFixtureOptions): ScaFinding {
+// build one dependency fixture finding with its id derived from the package and advisory
+function createDependencyFixture(
+  options: DependencyFixtureOptions,
+): DependencyFinding {
   // derive the id and the default title and dependency path
   const { packageName, version, advisoryId } = options
   const findingId = createFindingId({
-    detector: 'sca',
+    detector: 'dependency',
     stableKey: `${packageName}@${version}:${advisoryId}`,
   })
   const defaultTitle = `${packageName} ${version} is affected by ${advisoryId}`
@@ -49,7 +51,7 @@ function createScaFixture(options: ScaFixtureOptions): ScaFinding {
 
   // let the options override every default
   return {
-    ...scaFixtureDefaults,
+    ...dependencyFixtureDefaults,
     id: findingId,
     title: defaultTitle,
     dependencyPath: defaultDependencyPath,
@@ -57,9 +59,9 @@ function createScaFixture(options: ScaFixtureOptions): ScaFinding {
   }
 }
 
-// the sca findings in the fixture review result
-export const scaFixtureFindings: ScaFinding[] = [
-  createScaFixture({
+// the dependency findings in the fixture review result
+export const dependencyFixtureFindings: DependencyFinding[] = [
+  createDependencyFixture({
     packageName: 'lodash',
     version: '4.17.20',
     advisoryId: 'GHSA-35jh-r3h4-6jhm',
@@ -75,7 +77,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade lodash to 4.17.21.',
     summarySource: 'template',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'minimist',
     version: '1.2.5',
     advisoryId: 'GHSA-xvch-5gv4-984h',
@@ -91,7 +93,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade mkdirp so it resolves minimist 1.2.6 or later.',
     summarySource: 'model',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'semver',
     version: '7.3.5',
     advisoryId: 'GHSA-c2qf-rxjj-qqgw',
@@ -107,7 +109,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade semver to 7.5.2 or later.',
     summarySource: 'model',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'node-fetch',
     version: '2.6.0',
     advisoryId: 'GHSA-r683-j2x4-v87g',
@@ -125,7 +127,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade cross-fetch so it resolves node-fetch 2.6.7.',
     summarySource: 'template',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'glob-parent',
     version: '5.1.1',
     advisoryId: 'GHSA-ww39-953v-wcq6',
@@ -133,7 +135,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     startLine: 58,
     endLine: 58,
     aliases: ['CVE-2020-28469'],
-    dependencyScope: 'dev',
+    dependencyScope: 'development',
     reachability: 'transitive',
     matcherAgreement: 'oracle-unavailable',
     dependencyPath: ['chokidar@3.4.0', 'glob-parent@5.1.1'],
@@ -143,7 +145,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade chokidar so it resolves glob-parent 5.1.2.',
     summarySource: 'template',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'braces',
     version: '3.0.2',
     advisoryId: 'GHSA-grv7-fg5c-xmjg',
@@ -152,7 +154,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     endLine: 63,
     aliases: ['CVE-2024-4068'],
     isIntroducedByPullRequest: false,
-    dependencyScope: 'dev',
+    dependencyScope: 'development',
     reachability: 'transitive',
     dependencyPath: ['micromatch@4.0.5', 'braces@3.0.2'],
     fixedVersions: ['3.0.3'],
@@ -161,7 +163,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade micromatch so it resolves braces 3.0.3.',
     summarySource: 'template',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'tar',
     version: '4.4.13',
     advisoryId: 'GHSA-r628-mhmh-qjhw',
@@ -178,7 +180,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade node-gyp so it resolves tar 4.4.16 or later.',
     summarySource: 'model',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'word-wrap',
     version: '1.2.3',
     advisoryId: 'GHSA-j8xg-fqg3-53r7',
@@ -186,7 +188,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     startLine: 75,
     endLine: 75,
     aliases: ['CVE-2023-26115'],
-    dependencyScope: 'dev',
+    dependencyScope: 'development',
     reachability: 'direct-unused',
     fixedVersions: ['1.2.4'],
     cvssScore: 3.7,
@@ -194,7 +196,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade word-wrap to 1.2.4.',
     summarySource: 'template',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'ejs',
     version: '3.1.6',
     advisoryId: 'GHSA-phwq-j96m-2c2q',
@@ -210,7 +212,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Upgrade ejs to 3.1.7 or later.',
     summarySource: 'model',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'ua-parser-js',
     version: '0.7.29',
     advisoryId: 'GHSA-pjwm-rvh2-c87w',
@@ -226,7 +228,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     fixedVersions: ['0.7.33'],
     cvssScore: 0,
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'acme-internal-utils',
     version: '1.0.0-custom',
     advisoryId: 'GHSA-aaaa-bbbb-cccc',
@@ -234,7 +236,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     startLine: 93,
     endLine: 93,
     isGithubReviewed: false,
-    dependencyScope: 'dev',
+    dependencyScope: 'development',
     reachability: 'direct-unused',
     matcherAgreement: 'oracle-unavailable',
     isVersionUnparseable: true,
@@ -242,7 +244,7 @@ export const scaFixtureFindings: ScaFinding[] = [
     remediation: 'Replace the custom build with a published release.',
     summarySource: 'model',
   }),
-  createScaFixture({
+  createDependencyFixture({
     packageName: 'express',
     version: '4.17.1',
     advisoryId: 'GHSA-qw6h-vgh9-j6wx',

@@ -4,7 +4,7 @@ import { z } from 'zod'
 // the pull request a review runs against
 export const pullRequestReferenceSchema = z.object({
   owner: z.string(),
-  repo: z.string(),
+  repository: z.string(),
   number: z.number().int().positive(),
   url: z.url(),
 })

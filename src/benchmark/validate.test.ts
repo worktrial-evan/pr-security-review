@@ -72,7 +72,7 @@ describe('runValidateCommand', () => {
       const exitStatus = await runValidateCommand()
       expect(exitStatus).toBe(0)
       expect(errorLines).toEqual([])
-      expect(printedLines).toContain('sca: 12 (dev 8, test 4)')
+      expect(printedLines).toContain('dependency: 12 (dev 8, test 4)')
       expect(printedLines).toContain('total: 54')
     },
   )

@@ -38,7 +38,7 @@ async function makeCorpus(): Promise<TemporaryCorpus> {
 // the label makeSnapshotCase puts on the changed line
 const codeLabel: ExpectedFinding = {
   detector: 'code-review',
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   file: 'src/server.ts',
   startLine: 2,
   endLine: 2,
@@ -63,14 +63,14 @@ async function writeSnapshotCase({
   })
 }
 
-// an sca case with one well-formed label on the temporary fixture advisory
-function makeScaCase(id: string): BenchmarkCase {
+// a dependency case with one well-formed label on the temporary fixture advisory
+function makeDependencyCase(id: string): BenchmarkCase {
   return {
     ...makeSnapshotCase({ id, split: 'dev' }),
-    category: 'sca',
+    category: 'dependency',
     expected: [
       {
-        detector: 'sca',
+        detector: 'dependency',
         packageName: 'lodash',
         advisoryId: temporaryAdvisoryId,
       },
@@ -183,18 +183,18 @@ describe('validateBenchmarkCorpus', () => {
     })
   })
 
-  test('names an sca label with no advisory id and one with the wrong detector', async () => {
-    // one sca case missing the advisory id, one expecting a code-review finding
+  test('names a dependency label with no advisory id and one with the wrong detector', async () => {
+    // one dependency case missing the advisory id, one expecting a code-review finding
     const corpus = await makeCorpus()
-    const missingIdCase = makeScaCase('sca-01-missing')
+    const missingIdCase = makeDependencyCase('dependency-01-missing')
     await writeSnapshotCase({
       corpus,
       benchmarkCase: {
         ...missingIdCase,
-        expected: [{ detector: 'sca', packageName: 'lodash' }],
+        expected: [{ detector: 'dependency', packageName: 'lodash' }],
       },
     })
-    const wrongDetectorCase = makeScaCase('sca-02-detector')
+    const wrongDetectorCase = makeDependencyCase('dependency-02-detector')
     await writeSnapshotCase({
       corpus,
       benchmarkCase: {
@@ -211,40 +211,41 @@ describe('validateBenchmarkCorpus', () => {
 
     const corpusValidation = await validateBenchmarkCorpus(corpus)
     expect(corpusValidation.problems).toContainEqual({
-      caseId: 'sca-01-missing',
+      caseId: 'dependency-01-missing',
       message: 'expected finding 0 has no advisoryId',
     })
     expect(corpusValidation.problems).toContainEqual({
-      caseId: 'sca-02-detector',
-      message: 'sca case expects a code-review finding but must expect sca',
+      caseId: 'dependency-02-detector',
+      message:
+        'dependency case expects a code-review finding but must expect dependency',
     })
   })
 
-  test('names an sca label whose advisory id is not in the fixture and accepts an alias', async () => {
+  test('names a dependency label whose advisory id is not in the fixture and accepts an alias', async () => {
     // one label on an unknown id, one on the alias of the fixture advisory
     const corpus = await makeCorpus()
-    const unknownIdCase = makeScaCase('sca-01-unknown')
+    const unknownIdCase = makeDependencyCase('dependency-01-unknown')
     await writeSnapshotCase({
       corpus,
       benchmarkCase: {
         ...unknownIdCase,
         expected: [
           {
-            detector: 'sca',
+            detector: 'dependency',
             packageName: 'lodash',
             advisoryId: 'ghsa-not-here',
           },
         ],
       },
     })
-    const aliasCase = makeScaCase('sca-02-alias')
+    const aliasCase = makeDependencyCase('dependency-02-alias')
     await writeSnapshotCase({
       corpus,
       benchmarkCase: {
         ...aliasCase,
         expected: [
           {
-            detector: 'sca',
+            detector: 'dependency',
             packageName: 'lodash',
             advisoryId: 'CVE-2000-0001',
           },
@@ -254,11 +255,11 @@ describe('validateBenchmarkCorpus', () => {
 
     const corpusValidation = await validateBenchmarkCorpus(corpus)
     expect(corpusValidation.problems).toContainEqual({
-      caseId: 'sca-01-unknown',
+      caseId: 'dependency-01-unknown',
       message: 'advisory ghsa-not-here is not in the advisory fixture',
     })
     const aliasProblems = corpusValidation.problems.filter(
-      (problem) => problem.caseId === 'sca-02-alias',
+      (problem) => problem.caseId === 'dependency-02-alias',
     )
     expect(aliasProblems).toEqual([])
   })
@@ -283,7 +284,7 @@ describe('validateBenchmarkCorpus', () => {
   })
 
   test('names a real-world label without a file and line range', async () => {
-    // a real-world case whose label carries only the advisory id and cwe
+    // a real-world case whose label carries only the advisory id and vulnerabilityType
     const corpus = await makeCorpus()
     const gitCase = makeGitCase({ id: 'real-world-01-bare', split: 'dev' })
     await writeCase({
@@ -295,7 +296,7 @@ describe('validateBenchmarkCorpus', () => {
           {
             detector: 'code-review',
             advisoryId: temporaryAdvisoryId,
-            cwe: 'CWE-1321',
+            vulnerabilityType: 'CWE-1321',
           },
         ],
       },
@@ -338,7 +339,7 @@ describe('validateBenchmarkCorpus', () => {
         ...makeGitCase({ id: 'real-world-01-sha', split: 'dev' }),
         source: {
           kind: 'git',
-          repoUrl: 'https://example.invalid/lodash/lodash.git',
+          repositoryUrl: 'https://example.invalid/lodash/lodash.git',
           baseSha: otherSha,
           headSha: 'fedcba9876543210fedcba9876543210fedcba98',
         },
@@ -359,7 +360,10 @@ describe('validateBenchmarkCorpus', () => {
       corpus,
       benchmarkCase: makeSnapshotCase({ id: 'code-01-first', split: 'dev' }),
     })
-    await writeSnapshotCase({ corpus, benchmarkCase: makeScaCase('sca-01-ok') })
+    await writeSnapshotCase({
+      corpus,
+      benchmarkCase: makeDependencyCase('dependency-01-ok'),
+    })
     await writeSnapshotCase({
       corpus,
       benchmarkCase: {
@@ -384,10 +388,10 @@ describe('validateBenchmarkCorpus', () => {
     expect(caseProblems).toEqual([])
     expect(corpusValidation.problems).toContainEqual({
       caseId: 'corpus',
-      message: 'expected 12 sca cases but found 1',
+      message: 'expected 12 dependency cases but found 1',
     })
     expect(corpusValidation.countsByCategory).toEqual({
-      sca: 1,
+      dependency: 1,
       code: 1,
       secrets: 1,
       clean: 0,

@@ -53,7 +53,7 @@ export function parsePackageManifest({
 // where the dependencies of one package.json or workspace entry resolve to
 export interface ManifestLocations {
   productionLocations: string[]
-  devLocations: string[]
+  developmentLocations: string[]
   directLocations: string[]
 }
 
@@ -63,7 +63,7 @@ export interface ResolveManifestLocationsOptions {
   resolveNames: (dependencyNames: string[]) => string[]
 }
 
-/** Resolves the production, dev and direct names of a manifest to install locations. */
+/** Resolves the production, development and direct names of a manifest to install locations. */
 export function resolveManifestLocations({
   packageManifest,
   resolveNames,
@@ -72,7 +72,7 @@ export function resolveManifestLocations({
     productionLocations: resolveNames(
       listProductionDependencyNames(packageManifest),
     ),
-    devLocations: resolveNames(listDevDependencyNames(packageManifest)),
+    developmentLocations: resolveNames(listDevDependencyNames(packageManifest)),
     directLocations: resolveNames(listDirectDependencyNames(packageManifest)),
   }
 }

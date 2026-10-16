@@ -3,29 +3,32 @@ import { describe, expect, test } from 'bun:test'
 import {
   advisoriesByIdSample,
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
 } from './summary.samples'
 import { buildSummaryPacket } from './summary-packet'
 import { validateSummary } from './validate'
 
 // the grounding of the sample dependency finding
-const scaGrounding = buildSummaryPacket({
-  finding: scaFindingSample,
+const dependencyGrounding = buildSummaryPacket({
+  finding: dependencyFindingSample,
   advisoriesById: advisoriesByIdSample,
 }).grounding
 
 // validate one summary and remediation against the dependency grounding
-function validateScaText(summary: string, remediation: string): string[] {
+function validateDependencyText(
+  summary: string,
+  remediation: string,
+): string[] {
   return validateSummary({
     modelSummary: { summary, remediation },
-    grounding: scaGrounding,
+    grounding: dependencyGrounding,
   })
 }
 
 describe('validateSummary', () => {
   test('accepts a summary that names only identifiers from the packet', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash 4.17.20 has a command injection, tracked as GHSA-35jh-r3h4-6jhm and CVE-2021-23337. It arrives through @acme/render.',
       'Upgrade lodash to v4.17.21. See https://github.com/advisories/GHSA-35jh-r3h4-6jhm.',
     )
@@ -34,7 +37,7 @@ describe('validateSummary', () => {
 
   test('rejects a version the packet does not hold', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash has a command injection.',
       'Upgrade lodash to 4.18.0.',
     )
@@ -43,7 +46,7 @@ describe('validateSummary', () => {
 
   test('rejects a CVE id the packet does not hold', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash is affected by CVE-2020-8203.',
       'Upgrade lodash.',
     )
@@ -54,7 +57,7 @@ describe('validateSummary', () => {
 
   test('rejects a GHSA id the packet does not hold', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash is affected by GHSA-p6mc-m468-83gw.',
       'Upgrade lodash.',
     )
@@ -65,7 +68,7 @@ describe('validateSummary', () => {
 
   test('rejects a package that is not on the dependency path', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash has a command injection.',
       'Replace it with @evil/lodash-fork or lodash-es@4.17.21.',
     )
@@ -77,7 +80,7 @@ describe('validateSummary', () => {
 
   test('rejects a url that is not an advisory reference', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash has a command injection.',
       'Follow https://example.com/fix-lodash to upgrade.',
     )
@@ -88,7 +91,7 @@ describe('validateSummary', () => {
 
   test('checks a version inside an allowed url only as part of the url', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText(
+    const violations = validateDependencyText(
       'lodash has a command injection.',
       'Read https://nvd.nist.gov/vuln/detail/CVE-2021-23337 before you upgrade.',
     )
@@ -99,14 +102,17 @@ describe('validateSummary', () => {
     // validate the summary against its packet
     const violations = validateSummary({
       modelSummary: undefined,
-      grounding: scaGrounding,
+      grounding: dependencyGrounding,
     })
     expect(violations).toEqual(['no summary was returned for this finding'])
   })
 
   test('rejects an empty remediation', () => {
     // validate the text against the dependency packet
-    const violations = validateScaText('lodash has a command injection.', ' ')
+    const violations = validateDependencyText(
+      'lodash has a command injection.',
+      ' ',
+    )
     expect(violations).toEqual(['the summary or the remediation is empty'])
   })
 

@@ -1,16 +1,16 @@
 {
-  "id": "sca-05-versions-only-listing",
+  "id": "dependency-05-versions-only-listing",
   "split": "dev",
-  "category": "sca",
+  "category": "dependency",
   "isClean": false,
   "description": "The head bumps lodash from 4.17.21 to 4.18.0 in package.json and both lockfiles, the one version the synthetic advisory PRR-TEST-0002 lists in its versions array with no range at all.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/sca-05-versions-only-listing"
+    "directory": "benchmark/cases/dependency-05-versions-only-listing"
   },
   "expected": [
     {
-      "detector": "sca",
+      "detector": "dependency",
       "packageName": "lodash",
       "advisoryId": "PRR-TEST-0002"
     }

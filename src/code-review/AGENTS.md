@@ -36,7 +36,7 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 
 ### review-prompt.ts
 
-- `buildReviewPrompt({ template, chunkText })`: returns a `ReviewPrompt` with the rubric rendered as the system turn and the fenced chunk as the user turn. Throws when the template text does not use both the `fence_description` and the `cwe_allowlist` placeholder
+- `buildReviewPrompt({ template, chunkText })`: returns a `ReviewPrompt` with the rubric rendered as the system turn and the fenced chunk as the user turn. Throws when the template text does not use both the `fence_description` and the `vulnerability_type_allowlist` placeholder
 - `BuildReviewPromptOptions`, `ReviewPrompt`: the options and the `{ system, user, fence }` result
 - `codeReviewPromptId`: `code-review`, the prompt id under `prompts/`
 - `codeReviewFenceLabel`: `diff`, the label of the fence around a chunk
@@ -44,21 +44,21 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 ### model-output.ts
 
 - `codeReviewOutputSchema`, `CodeReviewOutput`: one model answer, `findings` and `injectionAttempts`
-- `modelFindingSchema`, `ModelFinding`: cwe, title, severity, confidence in 0..1, file, startLine, endLine, evidence with at least one line, sourceToSink, remediation. cwe is a plain string so an unknown id reaches the grounding filter instead of failing the schema
+- `modelFindingSchema`, `ModelFinding`: vulnerabilityType, title, severity, confidence in 0..1, file, startLine, endLine, evidence with at least one line, sourceToSink, remediation. vulnerabilityType is a plain string so an unknown id reaches the grounding filter instead of failing the schema
 - `injectionAttemptSchema`, `InjectionAttempt`: file and line
 
-### cwe-allowlist.ts
+### vulnerability-type-allowlist.ts
 
-- `allowedCwes`: the const tuple of `{ id, name }` the reviewer may report, 22 entries from CWE-20 to CWE-1333, each a class where the model can name an input or a caller
-- `isAllowedCwe(cwe)`: whether an id is on the list, by exact string
-- `renderCweAllowlist()`: one `CWE-NNN: Name` line per entry, rendered into the prompt
+- `allowedVulnerabilityTypes`: the const tuple of `{ id, name }` the reviewer may report, 22 entries from CWE-20 to CWE-1333, each a class where the model can name an input or a caller
+- `isAllowedVulnerabilityType(vulnerabilityType)`: whether an id is on the list, by exact string
+- `renderVulnerabilityTypeAllowlist()`: one `CWE-NNN: Name` line per entry, rendered into the prompt
 
 ### grounding.ts
 
 - `groundFinding({ finding, file, addedLines })`: returns a `GroundingVerdict`
 - `GroundFindingOptions`: the options it takes
 - `GroundingVerdict`: `{ kind: 'grounded' }` or `{ kind: 'rejected', reason }`
-- `groundingRejectionReasons`, `GroundingRejectionReason`: file-mismatch, cwe-not-allowed, evidence-not-added, range-not-added, in check order
+- `groundingRejectionReasons`, `GroundingRejectionReason`: file-mismatch, vulnerability-type-not-allowed, evidence-not-added, range-not-added, in check order
 
 ### dedupe-findings.ts
 
@@ -88,7 +88,7 @@ It writes these audit events under the step `code-review`, every one a `note` un
 - `{ message: 'code review skipped because the llm is disabled' }` when `isLlmEnabled` is false, and then nothing else
 - `{ message: 'review packet assembled', packetHash, chunkCount, skippedFiles }` once per review
 - `{ message: 'injection attempt', file, line }` once per attempt the model reports
-- `{ message: 'finding rejected by grounding', reason, file, cwe, title, startLine, endLine, chunkFile, chunkNumber }` once per drop
+- `{ message: 'finding rejected by grounding', reason, file, vulnerabilityType, title, startLine, endLine, chunkFile, chunkNumber }` once per drop
 - `{ message: 'chunk skipped after output validation failure', file, chunkNumber, error }` once per chunk whose answer failed the schema twice
 - a `finding` event with `{ finding }` once per returned finding
 
@@ -119,8 +119,8 @@ Bun and Node built-ins and npm packages are always allowed.
 - `prompt-examples.test.ts`: the three worked examples titled true positive, tricky negative and pre-existing issue, each present in the loaded rubric, parsed back into a changed file and re-rendered through the packet byte for byte, its answer passing the output schema, every finding in it grounded, one finding for the true positive and none for the two negatives. The parser accepts exactly the packet format: a removed line shows 0 and every other line a positive head line, a new hunk starts at each `@@` line and a `renamed from:` header needs the status renamed
 - `model-output.ts`: the model answer schema with a description on every field
 - `model-output.test.ts`: a round trip, an empty answer, the sample finding accepted, and rejections of empty evidence, an unknown severity, line 0 and confidence 1.5
-- `cwe-allowlist.ts`: `allowedCwes`, `isAllowedCwe` and `renderCweAllowlist`
-- `cwe-allowlist.test.ts`: unique well-formed ids, membership, the input-less weaknesses absent, and one rendered line per entry
+- `vulnerability-type-allowlist.ts`: `allowedVulnerabilityTypes`, `isAllowedVulnerabilityType` and `renderVulnerabilityTypeAllowlist`
+- `vulnerability-type-allowlist.test.ts`: unique well-formed ids, membership, the input-less weaknesses absent, and one rendered line per entry
 - `grounding.ts`: `groundFinding` and its four checks
 - `grounding.test.ts`: a grounded finding, a fabricated and a trimmed evidence line, a range on context lines only, a reversed range, a range touching one added line, a CWE outside the list and near-miss ids such as `cwe-89`, another file, and the order of the reasons
 - `dedupe-findings.ts`: `dedupeFindings`, the position and confidence comparators and the pairwise beat check
@@ -150,14 +150,14 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ### Prompt
 
-- The prompt file renders into the system turn with `fence_description` from `describeFence` and `cwe_allowlist` from `renderCweAllowlist`. The user turn is the chunk text fenced with the label `diff` and nothing else, so instructions and data never share a turn. A template whose text does not use both placeholders is rejected before any call.
-- The CWE allowlist lives in `cwe-allowlist.ts` only and holds only classes where the model can name an input or a caller, because the rubric demands a named input. Missing or incorrect authentication and authorization stay in, because the unauthenticated request is the input. The prompt sees what the grounding filter checks.
+- The prompt file renders into the system turn with `fence_description` from `describeFence` and `vulnerability_type_allowlist` from `renderVulnerabilityTypeAllowlist`. The user turn is the chunk text fenced with the label `diff` and nothing else, so instructions and data never share a turn. A template whose text does not use both placeholders is rejected before any call.
+- The CWE allowlist lives in `vulnerability-type-allowlist.ts` only and holds only classes where the model can name an input or a caller, because the rubric demands a named input. Missing or incorrect authentication and authorization stay in, because the unauthenticated request is the input. The prompt sees what the grounding filter checks.
 - The three worked examples in the prompt render through `assembleReviewPacket` byte for byte and their answers pass the output schema and the grounding filter. A test enforces it, so the examples cannot drift from the renderer and a renderer change fails that test. The prose of the packet format section is not checked and is updated by hand.
 - Chunks are reviewed one after another, so canned replies in a test land in packet order.
 
 ### Grounding rules
 
-- A finding is checked against the chunk's file, never the file the model names. The checks run in order and the first failure is the recorded reason: the finding's `file` must equal the chunk's file, its `cwe` must be on the allowlist by exact string, every `evidence` line must equal the text of an added line of that file exactly with no trimming, and some added line number must satisfy `startLine <= line <= endLine`.
+- A finding is checked against the chunk's file, never the file the model names. The checks run in order and the first failure is the recorded reason: the finding's `file` must equal the chunk's file, its `vulnerabilityType` must be on the allowlist by exact string, every `evidence` line must equal the text of an added line of that file exactly with no trimming, and some added line number must satisfy `startLine <= line <= endLine`.
 - Every drop writes a note with its reason, the chunk's file and chunk number, and is counted in `groundingRejectionCount`. A grounded finding is kept as the model gave it.
 - Dedupe is pairwise: a finding is dropped when any finding with the same file and CWE overlaps its range, end lines included, with a higher confidence, kept or not, or when a kept finding overlaps it with an equal confidence, which means the kept one came earlier in file, start line, end line, CWE order. No two overlapping findings with the same file and CWE remain, a weak finding under a broad finding is dropped even when a narrower finding beats the broad one, and both ends of a chain of equal confidence are kept. The result is ordered by file and CWE as code unit strings and by start line and end line numerically. Two findings equal in every ordering field and in confidence keep the one reported first.
 - The finding id is `createFindingId` over the detector and the file, start line, end line and CWE joined by newlines, so the same weakness at the same place has the same id across runs, prompts and models.

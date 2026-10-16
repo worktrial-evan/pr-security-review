@@ -1,4 +1,4 @@
-// tests the grounding filter: a grounded finding, each rejection reason, exact evidence matching, near-miss cwe ids and the order of the reasons
+// tests the grounding filter: a grounded finding, each rejection reason, exact evidence matching, near-miss vulnerabilityType ids and the order of the reasons
 import { describe, expect, test } from 'bun:test'
 import { sqlInjectionChangedFile } from './fixtures/changed-files'
 import { sqlInjectionModelFinding } from './fixtures/model-findings'
@@ -9,8 +9,13 @@ import type { ModelFinding } from './model-output'
 const reviewedFile = sqlInjectionChangedFile.path
 const addedLines = sqlInjectionChangedFile.addedLines
 
-// the cwe ids that almost spell the allowed CWE-89. one is lowercase, one has a trailing space, one has a leading zero and one has the name appended
-const nearMissCweIds = ['cwe-89', 'CWE-89 ', 'CWE-089', 'CWE-89: SQL Injection']
+// the vulnerabilityType ids that almost spell the allowed CWE-89. one is lowercase, one has a trailing space, one has a leading zero and one has the name appended
+const nearMissVulnerabilityTypeIds = [
+  'cwe-89',
+  'CWE-89 ',
+  'CWE-089',
+  'CWE-89: SQL Injection',
+]
 
 // ground a finding built from the sample finding with some fields replaced
 function groundVariant(overrides: Partial<ModelFinding>): GroundingVerdict {
@@ -22,7 +27,7 @@ function groundVariant(overrides: Partial<ModelFinding>): GroundingVerdict {
 }
 
 describe('groundFinding', () => {
-  test('grounds a finding whose evidence and range are added lines and whose cwe is allowed', () => {
+  test('grounds a finding whose evidence and range are added lines and whose vulnerabilityType is allowed', () => {
     expect(groundVariant({})).toEqual({ kind: 'grounded' })
   })
 
@@ -69,19 +74,21 @@ describe('groundFinding', () => {
     })
   })
 
-  test('rejects a cwe outside the allowlist', () => {
-    expect(groundVariant({ cwe: 'CWE-9999' })).toEqual({
+  test('rejects a vulnerabilityType outside the allowlist', () => {
+    expect(groundVariant({ vulnerabilityType: 'CWE-9999' })).toEqual({
       kind: 'rejected',
-      reason: 'cwe-not-allowed',
+      reason: 'vulnerability-type-not-allowed',
     })
   })
 
-  test.each(nearMissCweIds)(
-    'rejects the near-miss cwe id %j',
-    (nearMissCweId) => {
-      expect(groundVariant({ cwe: nearMissCweId })).toEqual({
+  test.each(nearMissVulnerabilityTypeIds)(
+    'rejects the near-miss vulnerabilityType id %j',
+    (nearMissVulnerabilityTypeId) => {
+      expect(
+        groundVariant({ vulnerabilityType: nearMissVulnerabilityTypeId }),
+      ).toEqual({
         kind: 'rejected',
-        reason: 'cwe-not-allowed',
+        reason: 'vulnerability-type-not-allowed',
       })
     },
   )
@@ -95,17 +102,22 @@ describe('groundFinding', () => {
 })
 
 describe('groundFinding reason order', () => {
-  test('reports file-mismatch before cwe-not-allowed', () => {
-    expect(groundVariant({ file: 'src/other.ts', cwe: 'CWE-9999' })).toEqual({
+  test('reports file-mismatch before vulnerability-type-not-allowed', () => {
+    expect(
+      groundVariant({ file: 'src/other.ts', vulnerabilityType: 'CWE-9999' }),
+    ).toEqual({
       kind: 'rejected',
       reason: 'file-mismatch',
     })
   })
 
-  test('reports cwe-not-allowed before evidence-not-added', () => {
+  test('reports vulnerability-type-not-allowed before evidence-not-added', () => {
     expect(
-      groundVariant({ cwe: 'CWE-9999', evidence: ['not an added line'] }),
-    ).toEqual({ kind: 'rejected', reason: 'cwe-not-allowed' })
+      groundVariant({
+        vulnerabilityType: 'CWE-9999',
+        evidence: ['not an added line'],
+      }),
+    ).toEqual({ kind: 'rejected', reason: 'vulnerability-type-not-allowed' })
   })
 
   test('reports evidence-not-added before range-not-added', () => {

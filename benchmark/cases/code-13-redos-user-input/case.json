@@ -6,12 +6,12 @@
   "description": "The head adds a /users/match route that builds a regular expression with nested quantifiers around the pattern query parameter and runs it against every user name.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-13-redos-user-input"
+    "directory": "benchmark/cases/code-13-redos-user-input"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-1333",
+      "vulnerabilityType": "CWE-1333",
       "file": "src/server.ts",
       "startLine": 30,
       "endLine": 35

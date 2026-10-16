@@ -6,7 +6,7 @@
   "description": "The base differs from the fixture app: src/users.ts holds findUsersByNamePrefix, which builds its SELECT by string concatenation. The head moves that function unchanged into the new src/user-search.ts, so the weakness is pre-existing and the pull request introduces nothing.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-05-refactor-moves-vulnerable-code"
+    "directory": "benchmark/cases/clean-05-refactor-moves-vulnerable-code"
   },
   "expected": []
 }

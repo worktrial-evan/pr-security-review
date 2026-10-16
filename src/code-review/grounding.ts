@@ -1,12 +1,12 @@
 // the grounding filter: checks a model finding against the chunk's file, the CWE allowlist and the file's added lines, and names the first reason to drop it
 import type { AddedLine } from '@/shared/pull-request-source'
-import { isAllowedCwe } from './cwe-allowlist'
 import type { ModelFinding } from './model-output'
+import { isAllowedVulnerabilityType } from './vulnerability-type-allowlist'
 
 // why a finding is dropped, in the order the checks run
 export const groundingRejectionReasons = [
   'file-mismatch',
-  'cwe-not-allowed',
+  'vulnerability-type-not-allowed',
   'evidence-not-added',
   'range-not-added',
 ] as const
@@ -39,8 +39,8 @@ export function groundFinding({
   }
 
   // reject a CWE outside the allowlist
-  if (!isAllowedCwe(finding.cwe)) {
-    return { kind: 'rejected', reason: 'cwe-not-allowed' }
+  if (!isAllowedVulnerabilityType(finding.vulnerabilityType)) {
+    return { kind: 'rejected', reason: 'vulnerability-type-not-allowed' }
   }
 
   // reject an evidence line that is not exactly an added line

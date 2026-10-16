@@ -6,17 +6,17 @@ Builds a local cache of the OSV npm advisories from the bulk export and serves i
 
 ## Public API
 
-- `refreshAdvisories({ ecosystem, cacheDir, sourceUrl?, now? })` in `refresh-advisories.ts`: downloads the OSV export, parses every entry, and writes the index and snapshot. Returns the snapshot, both paths and the package count. `sourceUrl` replaces the OSV URL in tests.
+- `refreshAdvisories({ ecosystem, cacheDirectory, sourceUrl?, now? })` in `refresh-advisories.ts`: downloads the OSV export, parses every entry, and writes the index and snapshot. Returns the snapshot, both paths and the package count. `sourceUrl` replaces the OSV URL in tests.
 - `AdvisoryParseError` in `refresh-advisories.ts`: thrown when any entry does not parse. Its `failures` list each entry name and message.
-- `writeAdvisoryCache({ ecosystem, cacheDir, advisoriesByPackage, snapshot })`, `WriteAdvisoryCacheOptions` and `WriteAdvisoryCacheResult` in `refresh-advisories.ts`: write an indexed advisory list and its snapshot into the cache layout `loadAdvisoryStore` reads, replacing each file in one move. A refresh writes through it, and the CLI writes the benchmark corpus fixture through it.
+- `writeAdvisoryCache({ ecosystem, cacheDirectory, advisoriesByPackage, snapshot })`, `WriteAdvisoryCacheOptions` and `WriteAdvisoryCacheResult` in `refresh-advisories.ts`: write an indexed advisory list and its snapshot into the cache layout `loadAdvisoryStore` reads, replacing each file in one move. A refresh writes through it, and the CLI writes the benchmark corpus fixture through it.
 - `indexAdvisoriesByPackage(advisories)` in `refresh-advisories.ts`: groups advisories under every npm package they affect, sorted by package name and then by advisory id.
-- `loadAdvisoryStore(cacheDir)` in `advisory-store.ts`: loads the npm index and snapshot into memory and returns an `AdvisoryStore`.
+- `loadAdvisoryStore(cacheDirectory)` in `advisory-store.ts`: loads the npm index and snapshot into memory and returns an `AdvisoryStore`.
 - `isSnapshotOlderThan(snapshot, hours)` in `advisory-store.ts`: says whether a snapshot was fetched more than that many hours ago.
 - `parseOsvEntry(entry)` and `ParseOsvEntryResult` in `parse-osv.ts`: map one OSV entry onto `Advisory`, or report which fields do not fit.
 - `listAffectedNpmPackageNames(advisory)` and `npmEcosystem` in `package-name.ts`: the normalized names of the npm packages an advisory affects.
 - `computeCvss3BaseScore(vector)` in `cvss.ts`: the CVSS 3.x base score of a vector, or undefined for anything else.
-- `advisoryEcosystems`, `AdvisoryEcosystem`, `resolveAdvisoryCachePaths({ cacheDir, ecosystem })` and `resolveOsvArchiveUrl(ecosystem)` in `cache-layout.ts`: where the files live and where the export comes from.
-- `writeAdvisorySubset({ sourceCacheDir, targetCacheDir, packageNames })`, `benchmarkAdvisoryPackageNames` and `benchmarkAdvisoryCacheDir` in `write-advisory-subset.ts`: regenerate the committed benchmark subset.
+- `advisoryEcosystems`, `AdvisoryEcosystem`, `resolveAdvisoryCachePaths({ cacheDirectory, ecosystem })` and `resolveOsvArchiveUrl(ecosystem)` in `cache-layout.ts`: where the files live and where the export comes from.
+- `writeAdvisorySubset({ sourceCacheDirectory, targetCacheDirectory, packageNames })`, `benchmarkAdvisoryPackageNames` and `benchmarkAdvisoryCacheDirectory` in `write-advisory-subset.ts`: regenerate the committed benchmark subset.
 - `runRefreshAdvisoriesCommand()` in `refresh-advisories-command.ts`: the body of `bun run refresh-advisories`.
 
 ## Inputs and outputs
@@ -87,5 +87,5 @@ Bun and Node built-ins and npm packages are always allowed.
 - CVSS v4 vectors have no computed score.
 - No npm entry in the export carries `github_reviewed: false`. Malicious-package and GSD entries omit the field, which parses to false. The subset uses `faker.js` for that case.
 - Lowercasing merges names that differ only in case, such as `jquery` and `jQuery`.
-- OSV GIT ranges lose their `repo` field because the contract has none.
+- OSV GIT ranges lose their `repository` field because the contract has none.
 - Only npm is supported.

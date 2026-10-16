@@ -43,7 +43,7 @@ function compareFindingsByPositionThenConfidence({
   return second.confidence - first.confidence
 }
 
-// order two findings by file, then start line, then end line, then cwe. strings compare by code unit
+// order two findings by file, then start line, then end line, then vulnerabilityType. strings compare by code unit
 function compareFindingsByPosition({
   first,
   second,
@@ -54,14 +54,17 @@ function compareFindingsByPosition({
     return fileOrder
   }
 
-  // then by start line, end line and cwe
+  // then by start line, end line and vulnerabilityType
   if (first.startLine !== second.startLine) {
     return first.startLine - second.startLine
   }
   if (first.endLine !== second.endLine) {
     return first.endLine - second.endLine
   }
-  return compareStrings({ first: first.cwe, second: second.cwe })
+  return compareStrings({
+    first: first.vulnerabilityType,
+    second: second.vulnerabilityType,
+  })
 }
 
 // the finding to judge, every finding in sorted order and the findings kept so far
@@ -71,7 +74,7 @@ interface IsBeatenOptions {
   keptFindings: ModelFinding[]
 }
 
-// tell whether a finding loses: a finding with the same file and cwe overlaps it with a higher confidence, or a kept one overlaps it with an equal confidence
+// tell whether a finding loses: a finding with the same file and vulnerabilityType overlaps it with a higher confidence, or a kept one overlaps it with an equal confidence
 function isBeaten({
   finding,
   sortedFindings,
@@ -95,12 +98,15 @@ function isBeaten({
   )
 }
 
-// tell whether two findings share a file and cwe and their line ranges overlap. ranges that share an end line overlap
+// tell whether two findings share a file and vulnerabilityType and their line ranges overlap. ranges that share an end line overlap
 function isOverlappingDuplicate({
   first,
   second,
 }: CompareFindingsOptions): boolean {
-  if (first.file !== second.file || first.cwe !== second.cwe) {
+  if (
+    first.file !== second.file ||
+    first.vulnerabilityType !== second.vulnerabilityType
+  ) {
     return false
   }
   return first.startLine <= second.endLine && second.startLine <= first.endLine

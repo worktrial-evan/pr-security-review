@@ -740,13 +740,13 @@ describe('matchDependencies severity and confidence', () => {
 })
 
 describe('matchDependencies finding fields', () => {
-  test('dev dependency of a reviewed advisory: lodash 4.17.20 with scope dev', async () => {
+  test('development dependency of a reviewed advisory: lodash 4.17.20 with scope development', async () => {
     const { findings } = await matchFixtureDependencies([
       createDependencyVersion({
         name: 'lodash-legacy',
         version: '4.17.20',
         realPackageName: 'lodash',
-        scope: 'dev',
+        scope: 'development',
       }),
     ])
     expect(findings).toEqual([
@@ -760,7 +760,7 @@ describe('matchDependencies finding fields', () => {
         confidence: 0.9,
         cvssScore: 7.5,
         isGithubReviewed: true,
-        dependencyScope: 'dev',
+        dependencyScope: 'development',
         isVersionUnparseable: false,
         isIntroducedByPullRequest: false,
         fixedVersions: ['4.17.21'],

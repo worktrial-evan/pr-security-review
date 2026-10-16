@@ -53,7 +53,7 @@ const defaultReviewOptions: ReviewOptions = {
   isLlmEnabled: true,
   isCacheEnabled: true,
   isOffline: true,
-  advisoryCacheDir: benchmarkAdvisoryCacheDirectory,
+  advisoryCacheDirectory: benchmarkAdvisoryCacheDirectory,
   reviewModelId: '',
   summarizeModelId: '',
   contextLines: 30,
@@ -119,7 +119,7 @@ export async function runBenchmark({
   // gather the provenance, score the run and write the results beside the page
   const provenance = await collectRunProvenance({
     caseRuns,
-    advisoryCacheDirectory: reviewOptions.advisoryCacheDir,
+    advisoryCacheDirectory: reviewOptions.advisoryCacheDirectory,
     gitSha: options.gitSha,
   })
   const results = buildRunResults({
@@ -332,7 +332,7 @@ async function readRepositoryGitSha(): Promise<string> {
   // ask git for the head commit of the repository. an empty sha stands for a tree git cannot describe
   try {
     const revParseOutput = await runGit({
-      repoPath: resolveRepositoryRoot(),
+      repositoryPath: resolveRepositoryRoot(),
       gitArguments: ['rev-parse', 'HEAD'],
     })
     return revParseOutput.trim()

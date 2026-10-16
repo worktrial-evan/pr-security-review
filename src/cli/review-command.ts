@@ -114,7 +114,7 @@ async function clonePullRequestFromGitHub({
 }: OpenPullRequestSourceOptions): Promise<PullRequestSource> {
   return clonePullRequest({
     reference: pullRequestReference,
-    cacheDir: join(resolveCacheDirectory(), 'pull-request-repositories'),
+    cacheDirectory: join(resolveCacheDirectory(), 'pull-request-repositories'),
     token,
     contextLines,
   })

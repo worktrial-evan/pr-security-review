@@ -28,7 +28,7 @@ Where a contract has variants, the shared module SHALL model each variant as its
 
 #### Scenario: Finding variants
 - **WHEN** a finding is parsed
-- **THEN** its `detector` field selects exactly one of the SCA, code-review or secret variants, and the variant's own fields are required on that member only
+- **THEN** its `detector` field selects exactly one of the dependency, code-review or secret variants, and the variant's own fields are required on that member only
 
 ### Requirement: Ids are branded
 Ids such as the finding id SHALL be branded string types applied by the schema at the validation boundary, so two ids of different kinds are not interchangeable in code.
@@ -49,15 +49,15 @@ A finding id SHALL be the first 16 hexadecimal characters of the SHA-256 digest 
 - **THEN** the two ids differ
 
 ### Requirement: Finding contract
-The finding contract SHALL define Severity (critical, high, medium, low, info), DetectorKind (sca, code-review, secrets) and a FindingBase with: id, detector, severity, confidence in 0..1, title, optional file, startLine, endLine, isIntroducedByPullRequest, optional summary, remediation and summarySource (model or template). Each detector variant SHALL add the fields in the scenarios below.
+The finding contract SHALL define Severity (critical, high, medium, low, info), DetectorKind (dependency, code-review, secrets) and a FindingBase with: id, detector, severity, confidence in 0..1, title, optional file, startLine, endLine, isIntroducedByPullRequest, optional summary, remediation and summarySource (model or template). Each detector variant SHALL add the fields in the scenarios below.
 
-#### Scenario: SCA finding fields
-- **WHEN** an SCA finding is parsed
-- **THEN** it requires packageName, version, advisoryId, aliases, isGithubReviewed, dependencyScope (prod or dev), reachability (direct-imported, direct-unused or transitive), importedBy, dependencyPath, fixedVersions, isVersionUnparseable and matcherAgreement (both, handwritten-only, oracle-only or oracle-unavailable), and accepts an optional cvssScore
+#### Scenario: Dependency finding fields
+- **WHEN** a dependency finding is parsed
+- **THEN** it requires packageName, version, advisoryId, aliases, isGithubReviewed, dependencyScope (production or development), reachability (direct-imported, direct-unused or transitive), importedBy, dependencyPath, fixedVersions, isVersionUnparseable and matcherAgreement (both, handwritten-only, oracle-only or oracle-unavailable), and accepts an optional cvssScore
 
 #### Scenario: Code-review finding fields
 - **WHEN** a code-review finding is parsed
-- **THEN** it requires cwe, evidence, sourceToSink, promptVersion and model
+- **THEN** it requires vulnerabilityType, evidence, sourceToSink, promptVersion and model
 
 #### Scenario: Secret finding fields
 - **WHEN** a secret finding is parsed
@@ -72,7 +72,7 @@ The pull-request-source contract SHALL define PullRequestReference, Hunk, Change
 
 #### Scenario: Data fields
 - **WHEN** the pull-request-source contract is used
-- **THEN** PullRequestReference has owner, repo, number, url; Hunk has oldStart, oldLines, newStart, newLines and lines each with a kind of added, removed or context and a head line number; ChangedFile has path, status of added, modified, deleted or renamed, optional previousPath, hunks, addedLines of line number and text, and isBinary
+- **THEN** PullRequestReference has owner, repository, number, url; Hunk has oldStart, oldLines, newStart, newLines and lines each with a kind of added, removed or context and a head line number; ChangedFile has path, status of added, modified, deleted or renamed, optional previousPath, hunks, addedLines of line number and text, and isBinary
 
 #### Scenario: PullRequestSource members
 - **WHEN** a PullRequestSource implementation is typed against the interface
@@ -91,7 +91,7 @@ The dependency contract SHALL define DependencyVersion, DependencySet, Dependenc
 
 #### Scenario: Data fields
 - **WHEN** the dependency contract is used
-- **THEN** DependencyVersion has name, version, scope of prod or dev, isDirect, isWorkspace, isVersionUnparseable, optional realPackageName for npm aliases, and dependencyKeys as name@version; DependencySet has lockfileKind of bun or npm, lockfilePath, versionsByDependency mapping a name to its versions, and directDependencyNames; DependencyDiff has added, removed, changed with name, fromVersion and toVersion, and an unchanged count
+- **THEN** DependencyVersion has name, version, scope of production or development, isDirect, isWorkspace, isVersionUnparseable, optional realPackageName for npm aliases, and dependencyKeys as name@version; DependencySet has lockfileKind of bun or npm, lockfilePath, versionsByDependency mapping a name to its versions, and directDependencyNames; DependencyDiff has added, removed, changed with name, fromVersion and toVersion, and an unchanged count
 
 #### Scenario: DependencyGraph members
 - **WHEN** a DependencyGraph implementation is typed against the interface
@@ -135,7 +135,7 @@ The review contract SHALL define ReviewOptions, ReviewMetadata, StepError, Revie
 
 #### Scenario: Data fields
 - **WHEN** the review contract is used
-- **THEN** ReviewOptions has isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDir, reviewModelId, summarizeModelId, contextLines and optional failOnSeverity; ReviewMetadata has runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions record, modelIds record, groundingRejectionCount, suspectedPromptInjectionCount and degradedSteps; StepError has step, message, isFatal; ReviewResult has metadata, findings, errors
+- **THEN** ReviewOptions has isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDirectory, reviewModelId, summarizeModelId, contextLines and optional failOnSeverity; ReviewMetadata has runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions record, modelIds record, groundingRejectionCount, suspectedPromptInjectionCount and degradedSteps; StepError has step, message, isFatal; ReviewResult has metadata, findings, errors
 
 #### Scenario: ReviewPipeline shape
 - **WHEN** a pipeline is typed as a ReviewPipeline
@@ -157,7 +157,7 @@ The benchmark contract SHALL define BenchmarkCase, ExpectedFinding and Benchmark
 
 #### Scenario: Data fields
 - **WHEN** the benchmark contract is used
-- **THEN** BenchmarkCase has id, split of dev or test, category of sca, code, secrets, clean or real-world, isClean, description, a source that is either kind snapshot with dir or kind git with repoUrl, baseSha and headSha, and expected findings; ExpectedFinding has detector and optional packageName, advisoryId, cwe, file, startLine, endLine, severity; BenchmarkScore has precision, recall, f1, byDetector, byCategory, falsePositivesOnClean, totalCostUsd, totalDurationMs and caseResults each with true positives, false positives and false negatives
+- **THEN** BenchmarkCase has id, split of dev or test, category of dependency, code, secrets, clean or real-world, isClean, description, a source that is either kind snapshot with directory or kind git with repositoryUrl, baseSha and headSha, and expected findings; ExpectedFinding has detector and optional packageName, advisoryId, vulnerabilityType, file, startLine, endLine, severity; BenchmarkScore has precision, recall, f1, byDetector, byCategory, falsePositivesOnClean, totalCostUsd, totalDurationMs and caseResults each with true positives, false positives and false negatives
 
 #### Scenario: Snapshot and git sources
 - **WHEN** a case with a snapshot source and a case with a git source are parsed

@@ -21,27 +21,27 @@ describe('toReportRows', () => {
     expect(rowIds).toEqual(findingIds)
   })
 
-  test('fills the sca columns of an sca finding', () => {
-    expect(findFirstRow('sca')?.cells).toEqual({
+  test('fills the dependency columns of a dependency finding', () => {
+    expect(findFirstRow('dependency')?.cells).toEqual({
       severity: 'high',
-      detector: 'sca',
+      detector: 'dependency',
       title: 'lodash 4.17.20 is affected by GHSA-35jh-r3h4-6jhm',
       location: 'package.json:12',
       package: 'lodash@4.17.20',
       advisory: 'GHSA-35jh-r3h4-6jhm',
       githubReviewed: 'yes',
-      dependencyScope: 'prod',
+      dependencyScope: 'production',
       reachability: 'direct-imported',
       matcherAgreement: 'both',
-      cwe: null,
+      vulnerabilityType: null,
       confidence: 0.95,
       introduced: 'yes',
     })
   })
 
-  test('fills only the cwe column of a code review finding', () => {
+  test('fills only the vulnerabilityType column of a code review finding', () => {
     const cells = findFirstRow('code-review')?.cells
-    expect(cells?.cwe).toBe('CWE-89')
+    expect(cells?.vulnerabilityType).toBe('CWE-89')
     expect(cells?.location).toBe('src/db/search.ts:41-47')
     expect(cells?.package).toBeNull()
     expect(cells?.reachability).toBeNull()
@@ -54,12 +54,12 @@ describe('toReportRows', () => {
     expect(cells?.githubReviewed).toBeNull()
     expect(cells?.dependencyScope).toBeNull()
     expect(cells?.matcherAgreement).toBeNull()
-    expect(cells?.cwe).toBeNull()
+    expect(cells?.vulnerabilityType).toBeNull()
   })
 
   test('uses a null location for a finding without a file', () => {
     const rowWithoutFile = fixtureRows.find(
-      (row) => row.cells.cwe === 'CWE-307',
+      (row) => row.cells.vulnerabilityType === 'CWE-307',
     )
     expect(rowWithoutFile?.cells.location).toBeNull()
   })

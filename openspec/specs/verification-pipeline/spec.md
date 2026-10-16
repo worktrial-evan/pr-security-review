@@ -1,7 +1,7 @@
 # verification-pipeline Specification
 
 ## Purpose
-Gives the repo one verification command that the pre-commit hook and CI both run, so a change that passes locally passes in CI and a commit that would break the tree is rejected before it lands.
+Gives the repository one verification command that the pre-commit hook and CI both run, so a change that passes locally passes in CI and a commit that would break the tree is rejected before it lands.
 
 ## Requirements
 

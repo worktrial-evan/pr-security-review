@@ -6,7 +6,7 @@
   "description": "The head adds public/greeting.html, whose client script reads a name from the query string and assigns it with textContent.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-02-textcontent-not-innerhtml"
+    "directory": "benchmark/cases/clean-02-textcontent-not-innerhtml"
   },
   "expected": []
 }

@@ -12,40 +12,44 @@ const githubExtraHeaderKey = 'http.https://github.com/.extraheader'
 
 export interface ClonePullRequestOptions {
   reference: PullRequestReference
-  cacheDir: string
+  cacheDirectory: string
   token?: string
   contextLines?: number
   remoteUrl?: string
 }
 
 /**
- * Clones or reuses the pull request's repository under cacheDir, fetches its base and head, and returns a git source for them.
+ * Clones or reuses the pull request's repository under cacheDirectory, fetches its base and head, and returns a git source for them.
  */
 export async function clonePullRequest({
   reference,
-  cacheDir,
+  cacheDirectory,
   token,
   contextLines,
-  remoteUrl = `https://github.com/${reference.owner}/${reference.repo}.git`,
+  remoteUrl = `https://github.com/${reference.owner}/${reference.repository}.git`,
 }: ClonePullRequestOptions): Promise<GitPullRequestSource> {
   // read the base and head shas from GitHub
   const { baseSha, headSha } = await fetchPullRequestShas({ reference, token })
   const environment = buildGitAuthEnvironment(token)
 
   // shallow-clone the repository as a bare cache entry when it is not there yet
-  const repoPath = join(cacheDir, reference.owner, reference.repo)
-  const isCloned = existsSync(join(repoPath, 'HEAD'))
+  const repositoryPath = join(
+    cacheDirectory,
+    reference.owner,
+    reference.repository,
+  )
+  const isCloned = existsSync(join(repositoryPath, 'HEAD'))
   if (!isCloned) {
-    await mkdir(dirname(repoPath), { recursive: true })
+    await mkdir(dirname(repositoryPath), { recursive: true })
     await runGit({
-      repoPath: dirname(repoPath),
+      repositoryPath: dirname(repositoryPath),
       gitArguments: [
         'clone',
         '--bare',
         '--depth=1',
         '--quiet',
         remoteUrl,
-        repoPath,
+        repositoryPath,
       ],
       environment,
     })
@@ -54,7 +58,7 @@ export async function clonePullRequest({
   // fetch the base commit and the pull request head
   const pullRequestHeadRef = `+refs/pull/${reference.number}/head:refs/pull-request/${reference.number}`
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: [
       'fetch',
       '--quiet',
@@ -67,10 +71,10 @@ export async function clonePullRequest({
   })
 
   // fail when the head moved on since GitHub reported it
-  await requireCommit({ repoPath, sha: headSha })
+  await requireCommit({ repositoryPath, sha: headSha })
 
   return new GitPullRequestSource({
-    repoPath,
+    repositoryPath,
     baseSha,
     headSha,
     contextLines,
@@ -96,18 +100,18 @@ function buildGitAuthEnvironment(
 }
 
 interface RequireCommitOptions {
-  repoPath: string
+  repositoryPath: string
   sha: string
 }
 
 // throw a clear error when a commit is missing from the repository
 async function requireCommit({
-  repoPath,
+  repositoryPath,
   sha,
 }: RequireCommitOptions): Promise<void> {
   try {
     await runGit({
-      repoPath,
+      repositoryPath,
       gitArguments: ['cat-file', '-e', `${sha}^{commit}`],
     })
   } catch (error) {

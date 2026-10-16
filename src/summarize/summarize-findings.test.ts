@@ -17,7 +17,7 @@ import { summarizeFindings } from './summarize-findings'
 import {
   advisoriesByIdSample,
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from './summary.samples'
 import { buildSummaryPacket } from './summary-packet'
@@ -33,11 +33,11 @@ const testUsage = { inputTokens: 1000, outputTokens: 200 }
 const costPerCallUsd = 0.002
 
 // grounded and ungrounded text for the dependency and code findings
-const groundedScaText = {
+const groundedDependencyText = {
   summary: 'lodash 4.17.20 has a command injection in its template function.',
   remediation: 'Upgrade lodash to 4.17.21.',
 }
-const ungroundedScaText = {
+const ungroundedDependencyText = {
   summary: 'lodash 4.17.20 has a command injection.',
   remediation: 'Upgrade lodash to 9.9.9.',
 }
@@ -88,23 +88,26 @@ function summariesReply(
 }
 
 // a copy of the sample dependency finding with its own id
-function createScaFinding(index: number): Finding {
-  const id = createFindingId({ detector: 'sca', stableKey: `lodash-${index}` })
-  return { ...scaFindingSample, id }
+function createDependencyFinding(index: number): Finding {
+  const id = createFindingId({
+    detector: 'dependency',
+    stableKey: `lodash-${index}`,
+  })
+  return { ...dependencyFindingSample, id }
 }
 
 describe('summarizeFindings', () => {
   test('gives pre-existing findings a template one-liner without a model call', async () => {
     // build a client with no replies and a pre-existing dependency finding
     const { fakeLlmProvider, client } = createTestClient([])
-    const preExistingScaFinding = {
-      ...scaFindingSample,
+    const preExistingDependencyFinding = {
+      ...dependencyFindingSample,
       isIntroducedByPullRequest: false,
     }
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [secretFindingSample, preExistingScaFinding],
+      findings: [secretFindingSample, preExistingDependencyFinding],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -123,12 +126,12 @@ describe('summarizeFindings', () => {
   test('keeps input order and sends only introduced findings to the model', async () => {
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
-      summariesReply({ [scaFindingSample.id]: groundedScaText }),
+      summariesReply({ [dependencyFindingSample.id]: groundedDependencyText }),
     ])
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [secretFindingSample, scaFindingSample],
+      findings: [secretFindingSample, dependencyFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -140,9 +143,9 @@ describe('summarizeFindings', () => {
     )
     expect(
       summarizeFindingsResult.findings.map((finding) => finding.id),
-    ).toEqual([secretFindingSample.id, scaFindingSample.id])
+    ).toEqual([secretFindingSample.id, dependencyFindingSample.id])
     expect(summarizeFindingsResult.findings[1]).toMatchObject({
-      ...groundedScaText,
+      ...groundedDependencyText,
       summarySource: 'model',
     })
     expect(summarizeFindingsResult.promptId).toBe('summarize')
@@ -152,13 +155,15 @@ describe('summarizeFindings', () => {
   test('retries a rejected summary once with its violations and keeps the grounded retry', async () => {
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
-      summariesReply({ [scaFindingSample.id]: ungroundedScaText }),
-      summariesReply({ [scaFindingSample.id]: groundedScaText }),
+      summariesReply({
+        [dependencyFindingSample.id]: ungroundedDependencyText,
+      }),
+      summariesReply({ [dependencyFindingSample.id]: groundedDependencyText }),
     ])
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [scaFindingSample],
+      findings: [dependencyFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -169,7 +174,7 @@ describe('summarizeFindings', () => {
       '- version 9.9.9 is not in the input',
     )
     expect(summarizeFindingsResult.findings[0]).toMatchObject({
-      ...groundedScaText,
+      ...groundedDependencyText,
       summarySource: 'model',
     })
     expect(summarizeFindingsResult.groundingRejectionCount).toBe(1)
@@ -178,12 +183,14 @@ describe('summarizeFindings', () => {
   test('falls back to the template after a second rejection with no third call', async () => {
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
-      summariesReply({ [scaFindingSample.id]: ungroundedScaText }),
+      summariesReply({
+        [dependencyFindingSample.id]: ungroundedDependencyText,
+      }),
     ])
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [scaFindingSample],
+      findings: [dependencyFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -203,7 +210,7 @@ describe('summarizeFindings', () => {
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
       summariesReply({
-        [scaFindingSample.id]: groundedScaText,
+        [dependencyFindingSample.id]: groundedDependencyText,
         [codeReviewFindingSample.id]: ungroundedCodeText,
       }),
       summariesReply({ [codeReviewFindingSample.id]: groundedCodeText }),
@@ -211,7 +218,7 @@ describe('summarizeFindings', () => {
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [scaFindingSample, codeReviewFindingSample],
+      findings: [dependencyFindingSample, codeReviewFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -219,10 +226,12 @@ describe('summarizeFindings', () => {
     // the retry names only the code finding
     const retryUser = fakeLlmProvider.requests[1]?.user ?? ''
     expect(retryUser).toContain(`## Finding ${codeReviewFindingSample.id}`)
-    expect(retryUser).not.toContain(`## Finding ${scaFindingSample.id}`)
+    expect(retryUser).not.toContain(`## Finding ${dependencyFindingSample.id}`)
 
     // both findings keep model text
-    expect(summarizeFindingsResult.findings[0]).toMatchObject(groundedScaText)
+    expect(summarizeFindingsResult.findings[0]).toMatchObject(
+      groundedDependencyText,
+    )
     expect(summarizeFindingsResult.findings[1]).toMatchObject({
       ...groundedCodeText,
       summarySource: 'model',
@@ -233,20 +242,23 @@ describe('summarizeFindings', () => {
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
       summariesReply({
-        [scaFindingSample.id]: groundedScaText,
+        [dependencyFindingSample.id]: groundedDependencyText,
         [codeReviewFindingSample.id]: groundedCodeText,
       }),
     ])
 
     // summarize the findings
     await summarizeFindings({
-      findings: [scaFindingSample, codeReviewFindingSample],
+      findings: [dependencyFindingSample, codeReviewFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
 
     // build the same fences the summarizer builds
-    const expectedFences = [scaFindingSample, codeReviewFindingSample].flatMap(
+    const expectedFences = [
+      dependencyFindingSample,
+      codeReviewFindingSample,
+    ].flatMap(
       (finding) =>
         buildSummaryPacket({ finding, advisoriesById: advisoriesByIdSample })
           .fences,
@@ -273,7 +285,7 @@ describe('summarizeFindings', () => {
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: [scaFindingSample, codeReviewFindingSample],
+      findings: [dependencyFindingSample, codeReviewFindingSample],
       advisoriesById: advisoriesByIdSample,
       client,
     })
@@ -287,11 +299,11 @@ describe('summarizeFindings', () => {
 
   test('holds 7 findings at a cap of 5 to 2 calls and sums their cost', async () => {
     // one reply that grounds all 7 findings, repeated for each call
-    const scaFindings = Array.from({ length: 7 }, (_, index) =>
-      createScaFinding(index),
+    const dependencyFindings = Array.from({ length: 7 }, (_, index) =>
+      createDependencyFinding(index),
     )
     const textsByFindingId = Object.fromEntries(
-      scaFindings.map((finding) => [finding.id, groundedScaText]),
+      dependencyFindings.map((finding) => [finding.id, groundedDependencyText]),
     )
     // answer with the canned replies
     const { fakeLlmProvider, client } = createTestClient([
@@ -300,7 +312,7 @@ describe('summarizeFindings', () => {
 
     // summarize the findings
     const summarizeFindingsResult = await summarizeFindings({
-      findings: scaFindings,
+      findings: dependencyFindings,
       advisoriesById: advisoriesByIdSample,
       client,
       maxFindingsPerCall: 5,

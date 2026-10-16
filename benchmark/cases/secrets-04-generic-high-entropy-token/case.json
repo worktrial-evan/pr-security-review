@@ -6,7 +6,7 @@
   "description": "The head adds src/metrics.ts, which posts the request count to a metrics service with a bearer token held in a const apiToken string literal.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/secrets-04-generic-high-entropy-token"
+    "directory": "benchmark/cases/secrets-04-generic-high-entropy-token"
   },
   "expected": [
     {

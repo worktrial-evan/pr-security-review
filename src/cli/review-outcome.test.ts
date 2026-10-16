@@ -2,7 +2,7 @@
 import { describe, expect, test } from 'bun:test'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from '@/shared/finding.samples'
 import type { ReviewResult } from '@/shared/review'
@@ -104,7 +104,7 @@ describe('formatReviewSummary', () => {
       findings: [
         introducedCriticalFinding,
         {
-          ...scaFindingSample,
+          ...dependencyFindingSample,
           severity: 'high',
           isIntroducedByPullRequest: true,
         },

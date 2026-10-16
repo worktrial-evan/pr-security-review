@@ -1,0 +1,12 @@
+{
+  "id": "dependency-06-withdrawn-advisory",
+  "split": "dev",
+  "category": "dependency",
+  "isClean": true,
+  "description": "The head bumps the development dependency semver from 7.6.3 to 7.8.0 in package.json and both lockfiles. Only the withdrawn synthetic advisory PRR-TEST-0003 covers 7.8.0, so the pull request is clean.",
+  "source": {
+    "kind": "snapshot",
+    "directory": "benchmark/cases/dependency-06-withdrawn-advisory"
+  },
+  "expected": []
+}

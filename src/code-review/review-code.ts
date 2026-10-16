@@ -290,12 +290,12 @@ function toCodeReviewFinding({
   promptVersion,
   modelId,
 }: ToCodeReviewFindingOptions): CodeReviewFinding {
-  // derive the id from the file, the range and the cwe
+  // derive the id from the file, the range and the vulnerabilityType
   const stableKey = [
     modelFinding.file,
     String(modelFinding.startLine),
     String(modelFinding.endLine),
-    modelFinding.cwe,
+    modelFinding.vulnerabilityType,
   ].join('\n')
   const id = createFindingId({ detector: codeReviewDetector, stableKey })
 
@@ -311,7 +311,7 @@ function toCodeReviewFinding({
     endLine: modelFinding.endLine,
     isIntroducedByPullRequest: true,
     remediation: modelFinding.remediation,
-    cwe: modelFinding.cwe,
+    vulnerabilityType: modelFinding.vulnerabilityType,
     evidence: modelFinding.evidence,
     sourceToSink: modelFinding.sourceToSink,
     promptVersion,

@@ -36,7 +36,7 @@ const changedFileStatusesByLetter: Record<string, ChangedFileStatus> = {
 }
 
 export interface GitPullRequestSourceOptions {
-  repoPath: string
+  repositoryPath: string
   baseSha: string
   headSha: string
   contextLines?: number
@@ -126,7 +126,7 @@ export class GitPullRequestSource implements PullRequestSource {
 
   // run git in the repository
   private git(gitArguments: string[]): Promise<string> {
-    return runGit({ repoPath: this.options.repoPath, gitArguments })
+    return runGit({ repositoryPath: this.options.repositoryPath, gitArguments })
   }
 
   // read the changed paths with their status. renames are exact renames only

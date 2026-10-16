@@ -22,7 +22,7 @@ import { checkFixtureApp, readAdvisoryFixture } from './fixtures'
 
 // how many cases each category holds when the corpus is complete
 const expectedCountsByCategory: Record<BenchmarkCategory, number> = {
-  sca: 12,
+  dependency: 12,
   code: 15,
   secrets: 4,
   clean: 15,
@@ -182,15 +182,15 @@ function checkSnapshotLayout({
   benchmarkCase,
   caseDirectory,
 }: LoadedBenchmarkCase): string[] {
-  // the source dir points at the case directory under the repository
+  // the source directory points at the case directory under the repository
   const messages: string[] = []
   const expectedSourceDirectory = `benchmark/cases/${benchmarkCase.id}`
   if (
     benchmarkCase.source.kind === 'snapshot' &&
-    benchmarkCase.source.dir !== expectedSourceDirectory
+    benchmarkCase.source.directory !== expectedSourceDirectory
   ) {
     messages.push(
-      `snapshot source dir is "${benchmarkCase.source.dir}" but should be "${expectedSourceDirectory}"`,
+      `snapshot source directory is "${benchmarkCase.source.directory}" but should be "${expectedSourceDirectory}"`,
     )
   }
 
@@ -244,10 +244,10 @@ function checkCleanConsistency(benchmarkCase: BenchmarkCase): string[] {
 // the expected findings name the detector of the case's category and carry the fields its matching rule needs
 function checkExpectedLabels(benchmarkCase: BenchmarkCase): string[] {
   switch (benchmarkCase.category) {
-    case 'sca':
+    case 'dependency':
       return checkDetectorLabels({
         benchmarkCase,
-        detector: 'sca',
+        detector: 'dependency',
         fieldNames: ['packageName', 'advisoryId'],
       })
     case 'secrets':
@@ -259,12 +259,18 @@ function checkExpectedLabels(benchmarkCase: BenchmarkCase): string[] {
     case 'code':
       return checkSingleCodeReviewLabel({
         benchmarkCase,
-        fieldNames: ['cwe', 'file', 'startLine', 'endLine'],
+        fieldNames: ['vulnerabilityType', 'file', 'startLine', 'endLine'],
       })
     case 'real-world':
       return checkSingleCodeReviewLabel({
         benchmarkCase,
-        fieldNames: ['advisoryId', 'cwe', 'file', 'startLine', 'endLine'],
+        fieldNames: [
+          'advisoryId',
+          'vulnerabilityType',
+          'file',
+          'startLine',
+          'endLine',
+        ],
       })
     case 'clean':
       return []
@@ -394,8 +400,8 @@ async function checkSnapshotDiff({
 }: LoadedBenchmarkCase): Promise<string[]> {
   // diff the two trees the way the runner does, leaving out anything under node_modules
   const snapshotSource = new SnapshotPullRequestSource({
-    baseDir: join(caseDirectory, 'base'),
-    headDir: join(caseDirectory, 'head'),
+    baseDirectory: join(caseDirectory, 'base'),
+    headDirectory: join(caseDirectory, 'head'),
   })
   const allChangedFiles = await snapshotSource.listChangedFiles()
   const changedFiles = allChangedFiles.filter(
@@ -514,7 +520,7 @@ function countByCategory(
 ): Record<BenchmarkCategory, number> {
   // start every category at zero and add each case
   const countsByCategory: Record<BenchmarkCategory, number> = {
-    sca: 0,
+    dependency: 0,
     code: 0,
     secrets: 0,
     clean: 0,
@@ -535,7 +541,7 @@ function countBySplit(
     BenchmarkCategory,
     Record<BenchmarkSplit, number>
   > = {
-    sca: { dev: 0, test: 0 },
+    dependency: { dev: 0, test: 0 },
     code: { dev: 0, test: 0 },
     secrets: { dev: 0, test: 0 },
     clean: { dev: 0, test: 0 },

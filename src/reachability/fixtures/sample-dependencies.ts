@@ -129,7 +129,7 @@ function findShortestPath({
   return []
 }
 
-// build one prod fixture version with a parseable version and no workspace flag
+// build one production fixture version with a parseable version and no workspace flag
 function toFixtureVersion({
   name,
   version,
@@ -139,7 +139,7 @@ function toFixtureVersion({
   return {
     name,
     version,
-    scope: 'prod',
+    scope: 'production',
     isDirect,
     isWorkspace: false,
     isVersionUnparseable: false,

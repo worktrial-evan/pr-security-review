@@ -35,12 +35,12 @@ const placeholderToken = 'placeholder-token-for-clone-tests'
 
 // the local remote, its file url and the cache directory each test clones into
 let remoteRepository: TwoCommitRepository = {
-  repoPath: '',
+  repositoryPath: '',
   baseSha: '',
   headSha: '',
 }
 let remoteUrl = ''
-let cacheDir = ''
+let cacheDirectory = ''
 
 // the stubbed fetch, restored after each test
 let fetchSpy: ReturnType<typeof spyOn<typeof globalThis, 'fetch'>> | null = null
@@ -48,26 +48,26 @@ let fetchSpy: ReturnType<typeof spyOn<typeof globalThis, 'fetch'>> | null = null
 beforeAll(async () => {
   // build the remote with pull request heads 1 and 2 at the head commit
   remoteRepository = await createTwoCommitRepository({
-    baseDir: join(snapshotFixtureDirectory, 'base'),
-    headDir: join(snapshotFixtureDirectory, 'head'),
+    baseDirectory: join(snapshotFixtureDirectory, 'base'),
+    headDirectory: join(snapshotFixtureDirectory, 'head'),
   })
-  const { repoPath, headSha } = remoteRepository
+  const { repositoryPath, headSha } = remoteRepository
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: ['update-ref', 'refs/pull/1/head', headSha],
   })
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: ['update-ref', 'refs/pull/2/head', headSha],
   })
 
   // let a shallow fetch ask for the base commit by sha, as GitHub does
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: ['config', 'uploadpack.allowAnySHA1InWant', 'true'],
   })
-  remoteUrl = `file://${repoPath}`
-  cacheDir = await mkdtemp(join(tmpdir(), 'clone-pull-request-cache-'))
+  remoteUrl = `file://${repositoryPath}`
+  cacheDirectory = await mkdtemp(join(tmpdir(), 'clone-pull-request-cache-'))
 })
 
 afterEach(() => {
@@ -76,8 +76,8 @@ afterEach(() => {
 })
 
 afterAll(async () => {
-  await rm(remoteRepository.repoPath, { recursive: true, force: true })
-  await rm(cacheDir, { recursive: true, force: true })
+  await rm(remoteRepository.repositoryPath, { recursive: true, force: true })
+  await rm(cacheDirectory, { recursive: true, force: true })
 })
 
 describe('clonePullRequest', () => {
@@ -85,13 +85,17 @@ describe('clonePullRequest', () => {
     // answer the API with the remote's shas and clone pull request 1
     stubPullRequestShas(1)
     const reference = parsePullRequestReference('acme/widgets#1')
-    const gitSource = await clonePullRequest({ reference, cacheDir, remoteUrl })
+    const gitSource = await clonePullRequest({
+      reference,
+      cacheDirectory,
+      remoteUrl,
+    })
 
     // expect a bare clone in the cache, the shas from the API and the reference in the description
-    const repoPath = join(cacheDir, 'acme', 'widgets')
-    expect(await Bun.file(join(repoPath, 'HEAD')).exists()).toBe(true)
+    const repositoryPath = join(cacheDirectory, 'acme', 'widgets')
+    expect(await Bun.file(join(repositoryPath, 'HEAD')).exists()).toBe(true)
     const shallowOutput = await runGit({
-      repoPath,
+      repositoryPath,
       gitArguments: ['rev-parse', '--is-shallow-repository'],
     })
     expect(shallowOutput.trim()).toBe('true')
@@ -109,15 +113,18 @@ describe('clonePullRequest', () => {
 
   test('reuses the cached clone for a second pull request and keeps the token out of the cache', async () => {
     // mark the cached clone so a fresh clone would be noticed
-    const repoPath = join(cacheDir, 'acme', 'widgets')
-    await runGit({ repoPath, gitArguments: ['config', 'test.marker', 'kept'] })
+    const repositoryPath = join(cacheDirectory, 'acme', 'widgets')
+    await runGit({
+      repositoryPath,
+      gitArguments: ['config', 'test.marker', 'kept'],
+    })
 
     // clone pull request 2 with a token
     stubPullRequestShas(2)
     const reference = parsePullRequestReference('acme/widgets#2')
     const gitSource = await clonePullRequest({
       reference,
-      cacheDir,
+      cacheDirectory,
       remoteUrl,
       token: placeholderToken,
     })
@@ -128,16 +135,16 @@ describe('clonePullRequest', () => {
       `Bearer ${placeholderToken}`,
     )
     const markerOutput = await runGit({
-      repoPath,
+      repositoryPath,
       gitArguments: ['config', 'test.marker'],
     })
     expect(markerOutput.trim()).toBe('kept')
     const pullRequestRefOutput = await runGit({
-      repoPath,
+      repositoryPath,
       gitArguments: ['rev-parse', 'refs/pull-request/2'],
     })
     expect(pullRequestRefOutput.trim()).toBe(remoteRepository.headSha)
-    const configText = await Bun.file(join(repoPath, 'config')).text()
+    const configText = await Bun.file(join(repositoryPath, 'config')).text()
     expect(configText).not.toContain(placeholderToken)
     expect(configText).not.toContain('extraheader')
     expect((await gitSource.listChangedFiles()).length).toBe(7)

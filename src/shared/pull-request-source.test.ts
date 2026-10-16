@@ -40,7 +40,7 @@ const pullRequestDescriptionSample: PullRequestDescription = {
   headSha: '76543210f9e8d7c6b5a4938271605f4e3d2c1b0a',
   pullRequestReference: {
     owner: 'octocat',
-    repo: 'hello-world',
+    repository: 'hello-world',
     number: 42,
     url: 'https://github.com/octocat/hello-world/pull/42',
   },

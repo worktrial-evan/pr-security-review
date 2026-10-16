@@ -244,13 +244,13 @@ describe('writeOracleDatabase', () => {
   test('Database holds every advisory: writes one OSV entry per fixture advisory with its id, aliases, ranges, versions and withdrawn timestamp', async () => {
     // write the archive from the fixture advisories
     const fixtureAdvisories = await readFixtureAdvisories()
-    const databaseDir = await createTemporaryDirectory()
+    const databaseDirectory = await createTemporaryDirectory()
     const writeOracleDatabaseResult = await writeOracleDatabase({
       advisories: fixtureAdvisories,
-      databaseDir,
+      databaseDirectory,
     })
     expect(writeOracleDatabaseResult).toEqual({
-      archivePath: join(databaseDir, oracleDatabaseArchivePath),
+      archivePath: join(databaseDirectory, oracleDatabaseArchivePath),
       advisoryCount: fixtureAdvisories.length,
     })
 
@@ -305,7 +305,7 @@ describe('runOracle', () => {
       expect(isOracleAvailable()).toBe(false)
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir: tmpdir(),
+        databaseDirectory: tmpdir(),
       })
       expect(oracleResult).toEqual({
         status: 'unavailable',
@@ -325,14 +325,14 @@ describe('runOracle', () => {
       exitCode: 127,
     })
     try {
-      const databaseDir = await createTemporaryDirectory()
+      const databaseDirectory = await createTemporaryDirectory()
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir,
+        databaseDirectory,
       })
       expect(oracleResult).toEqual({
         status: 'unavailable',
-        reason: `${oracleBinaryName} could not load the database under ${databaseDir}: ${databaseLoadFailureLine}`,
+        reason: `${oracleBinaryName} could not load the database under ${databaseDirectory}: ${databaseLoadFailureLine}`,
       })
     } finally {
       restorePath()
@@ -351,7 +351,7 @@ describe('runOracle', () => {
     try {
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir: await createTemporaryDirectory(),
+        databaseDirectory: await createTemporaryDirectory(),
       })
       expect(oracleResult).toEqual({
         status: 'ran',
@@ -373,7 +373,7 @@ describe('runOracle', () => {
     try {
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir: await createTemporaryDirectory(),
+        databaseDirectory: await createTemporaryDirectory(),
       })
       expect(oracleResult).toEqual({
         status: 'unavailable',
@@ -387,14 +387,14 @@ describe('runOracle', () => {
   test.skipIf(!isOracleAvailable())(
     'Database load failure: returns unavailable with the stderr line naming the database when the directory is empty, whatever the exit code',
     async () => {
-      const emptyDatabaseDir = await createTemporaryDirectory()
+      const emptyDatabaseDirectory = await createTemporaryDirectory()
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir: emptyDatabaseDir,
+        databaseDirectory: emptyDatabaseDirectory,
       })
       expect(oracleResult).toEqual({
         status: 'unavailable',
-        reason: `${oracleBinaryName} could not load the database under ${emptyDatabaseDir}: ${databaseLoadFailureLine}`,
+        reason: `${oracleBinaryName} could not load the database under ${emptyDatabaseDirectory}: ${databaseLoadFailureLine}`,
       })
     },
   )
@@ -403,19 +403,22 @@ describe('runOracle', () => {
     'Zero packages: returns ran with empty lists when the lockfile resolves no packages',
     async () => {
       // write the database and a lockfile with no packages
-      const databaseDir = await createTemporaryDirectory()
+      const databaseDirectory = await createTemporaryDirectory()
       await writeOracleDatabase({
         advisories: await readFixtureAdvisories(),
-        databaseDir,
+        databaseDirectory,
       })
-      const emptyLockfileDir = await createTemporaryDirectory()
-      const emptyLockfilePath = join(emptyLockfileDir, 'package-lock.json')
+      const emptyLockfileDirectory = await createTemporaryDirectory()
+      const emptyLockfilePath = join(
+        emptyLockfileDirectory,
+        'package-lock.json',
+      )
       await Bun.write(emptyLockfilePath, emptyLockfileText)
 
       // the run completes with nothing seen
       const oracleResult = await runOracle({
         lockfilePath: emptyLockfilePath,
-        databaseDir,
+        databaseDirectory,
       })
       expect(oracleResult).toEqual({ status: 'ran', packages: [], matches: [] })
     },
@@ -425,16 +428,16 @@ describe('runOracle', () => {
     'Live run: scans the fixture lockfile against a database written from the fixture advisories and matches the recorded output',
     async () => {
       // write the database the recorded output was made from
-      const databaseDir = await createTemporaryDirectory()
+      const databaseDirectory = await createTemporaryDirectory()
       await writeOracleDatabase({
         advisories: await readFixtureAdvisories(),
-        databaseDir,
+        databaseDirectory,
       })
 
       // the live run reports the same packages and matches as the recording
       const oracleResult = await runOracle({
         lockfilePath: fixtureLockfilePath,
-        databaseDir,
+        databaseDirectory,
       })
       expect(oracleResult).toEqual({
         status: 'ran',
@@ -459,14 +462,14 @@ async function installFakeOracle({
   exitCode,
 }: InstallFakeOracleOptions): Promise<() => void> {
   // write both streams to files the script copies out
-  const fakeBinaryDir = await createTemporaryDirectory()
-  const stdoutPath = join(fakeBinaryDir, 'stdout.txt')
-  const stderrPath = join(fakeBinaryDir, 'stderr.txt')
+  const fakeBinaryDirectory = await createTemporaryDirectory()
+  const stdoutPath = join(fakeBinaryDirectory, 'stdout.txt')
+  const stderrPath = join(fakeBinaryDirectory, 'stderr.txt')
   await Bun.write(stdoutPath, stdoutText)
   await Bun.write(stderrPath, stderrText)
 
   // write the script under the binary name and make it executable
-  const fakeBinaryPath = join(fakeBinaryDir, oracleBinaryName)
+  const fakeBinaryPath = join(fakeBinaryDirectory, oracleBinaryName)
   await Bun.write(
     fakeBinaryPath,
     `#!/bin/sh\ncat "${stdoutPath}"\ncat "${stderrPath}" >&2\nexit ${exitCode}\n`,
@@ -475,7 +478,7 @@ async function installFakeOracle({
 
   // put the directory first on PATH
   const originalPath = process.env.PATH
-  process.env.PATH = [fakeBinaryDir, originalPath ?? ''].join(delimiter)
+  process.env.PATH = [fakeBinaryDirectory, originalPath ?? ''].join(delimiter)
   return () => {
     process.env.PATH = originalPath
   }

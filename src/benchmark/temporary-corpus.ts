@@ -165,11 +165,11 @@ export function makeSnapshotCase({
     category: 'code',
     isClean: false,
     description: 'a made-up code case',
-    source: { kind: 'snapshot', dir: `benchmark/cases/${id}` },
+    source: { kind: 'snapshot', directory: `benchmark/cases/${id}` },
     expected: [
       {
         detector: 'code-review',
-        cwe: 'CWE-89',
+        vulnerabilityType: 'CWE-89',
         file: 'src/server.ts',
         startLine: 2,
         endLine: 2,
@@ -190,7 +190,7 @@ export function makeGitCase({ id, split }: MakeCaseOptions): BenchmarkCase {
     description: 'a made-up real-world case',
     source: {
       kind: 'git',
-      repoUrl: 'https://example.invalid/lodash/lodash.git',
+      repositoryUrl: 'https://example.invalid/lodash/lodash.git',
       baseSha: fakeFixSha,
       headSha: 'fedcba9876543210fedcba9876543210fedcba98',
     },
@@ -198,7 +198,7 @@ export function makeGitCase({ id, split }: MakeCaseOptions): BenchmarkCase {
       {
         detector: 'code-review',
         advisoryId: temporaryAdvisoryId,
-        cwe: 'CWE-1321',
+        vulnerabilityType: 'CWE-1321',
         file: 'lodash.js',
         startLine: 10,
         endLine: 12,

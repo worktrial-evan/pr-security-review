@@ -112,7 +112,7 @@ tr.detail td { background: var(--surface); }
 <td class="number">0.692</td>
 <td class="number">0.750</td>
 </tr><tr>
-<td>detector: sca</td>
+<td>detector: dependency</td>
 <td class="number">1.000</td>
 <td class="number">1.000</td>
 <td class="number">1.000</td>
@@ -127,7 +127,7 @@ tr.detail td { background: var(--surface); }
 <td class="number">0.667</td>
 <td class="number">0.800</td>
 </tr><tr>
-<td>category: sca</td>
+<td>category: dependency</td>
 <td class="number">1.000</td>
 <td class="number">1.000</td>
 <td class="number">1.000</td>
@@ -163,7 +163,7 @@ tr.detail td { background: var(--surface); }
 <div class="filters"><label>Category
 <select data-filter="category">
 <option value="all">all</option>
-<option value="sca">sca</option>
+<option value="dependency">dependency</option>
 <option value="code">code</option>
 <option value="secrets">secrets</option>
 <option value="clean">clean</option>
@@ -473,9 +473,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0160</td>
 <td class="number">8836 ms</td>
 <td></td>
-</tr><tr data-case="sca-01-direct-prod-vulnerable" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-01-direct-prod-vulnerable</td>
-<td>sca</td>
+</tr><tr data-case="dependency-01-direct-production-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-01-direct-production-vulnerable</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -484,9 +484,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">3562 ms</td>
 <td></td>
-</tr><tr data-case="sca-02-dev-dependency-vulnerable" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-02-dev-dependency-vulnerable</td>
-<td>sca</td>
+</tr><tr data-case="dependency-02-development-dependency-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-02-development-dependency-vulnerable</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -495,9 +495,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">4096 ms</td>
 <td></td>
-</tr><tr data-case="sca-03-transitive-only" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-03-transitive-only</td>
-<td>sca</td>
+</tr><tr data-case="dependency-03-transitive-only" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-03-transitive-only</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -506,9 +506,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">3278 ms</td>
 <td></td>
-</tr><tr data-case="sca-04-last-affected-range" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-04-last-affected-range</td>
-<td>sca</td>
+</tr><tr data-case="dependency-04-last-affected-range" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-04-last-affected-range</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -517,9 +517,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">4516 ms</td>
 <td></td>
-</tr><tr data-case="sca-05-versions-only-listing" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-05-versions-only-listing</td>
-<td>sca</td>
+</tr><tr data-case="dependency-05-versions-only-listing" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-05-versions-only-listing</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -528,9 +528,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">4899 ms</td>
 <td></td>
-</tr><tr data-case="sca-06-withdrawn-advisory" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-06-withdrawn-advisory</td>
-<td>sca</td>
+</tr><tr data-case="dependency-06-withdrawn-advisory" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-06-withdrawn-advisory</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">0</td>
@@ -539,9 +539,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0084</td>
 <td class="number">2050 ms</td>
 <td></td>
-</tr><tr data-case="sca-07-unreviewed-advisory" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-07-unreviewed-advisory</td>
-<td>sca</td>
+</tr><tr data-case="dependency-07-unreviewed-advisory" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-07-unreviewed-advisory</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>
@@ -550,9 +550,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">$0.0087</td>
 <td class="number">3316 ms</td>
 <td></td>
-</tr><tr data-case="sca-08-added-never-imported" data-category="sca" data-split="dev" data-status="completed">
-<td>sca-08-added-never-imported</td>
-<td>sca</td>
+</tr><tr data-case="dependency-08-added-never-imported" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-08-added-never-imported</td>
+<td>dependency</td>
 <td>dev</td>
 <td>completed</td>
 <td class="number">1</td>

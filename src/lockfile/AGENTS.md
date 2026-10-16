@@ -55,8 +55,8 @@ Bun and Node built-ins and npm packages are always allowed.
 ## Invariants
 
 - Both formats go through `buildDependencySet`, so scope, direct flags, merging and order follow one set of rules.
-- Every resolved version appears once per name@version. Several installed copies of one name@version merge: prod and direct win and their dependency keys are joined.
-- Scope is dev only when the root or a workspace devDependencies reach a version and no production root does. An unreachable version is prod.
+- Every resolved version appears once per name@version. Several installed copies of one name@version merge: production and direct win and their dependency keys are joined.
+- Scope is development only when the root or a workspace devDependencies reach a version and no production root does. An unreachable version is production.
 - A version is direct only when the root package.json lists its name and the root resolves that name to it. A nested copy of the same name is not direct.
 - Every package keeps the exact name the lockfile installs it under, with its case unchanged. npm treats `JSONStream` and `jsonstream` as two packages, so they stay two entries. Matching a name against advisory data lowercases it with `normalizePackageName` from `src/shared/package-name.ts`, and that happens outside this module.
 - An alias keeps the installed name as `name` and the aliased package as `realPackageName`, which is set only on an alias.
@@ -81,8 +81,8 @@ A new kind such as pnpm or yarn is one parser file and one line in each registry
 ## Known gaps
 
 - `bun.lockb`, `npm-shrinkwrap.json`, `pnpm-lock.yaml` and `yarn.lock` are detected as unsupported and not parsed.
-- npm's own `dev`, `optional` and `peer` flags are ignored. Scope is computed from the graph, so an optional dependency is prod.
+- npm's own `dev`, `optional` and `peer` flags are ignored. Scope is computed from the graph, so an optional dependency is production.
 - Workspace package.json files are not read. Workspace dependencies come from the lockfile, and the root package.json alone decides which versions are direct.
 - When several versions of a package change at once, the diff reports added and removed entries instead of pairing them as changes.
 - A git dependency in `bun.lock` keeps the `github:` specifier while `package-lock.json` keeps the resolved `git+ssh` url, so the same git dependency has a different version string in each format.
-- `shortestPathTo` searches from every direct dependency, prod and dev alike. When paths of equal length exist, the one through the direct dependency first in sorted order wins.
+- `shortestPathTo` searches from every direct dependency, production and development alike. When paths of equal length exist, the one through the direct dependency first in sorted order wins.

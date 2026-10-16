@@ -74,7 +74,7 @@ export interface CreateDependencyVersionOptions
   version: string
 }
 
-/** Builds a prod, direct, non-workspace dependency version with no dependencies unless overridden. */
+/** Builds a production, direct, non-workspace dependency version with no dependencies unless overridden. */
 export function createDependencyVersion({
   name,
   version,
@@ -83,7 +83,7 @@ export function createDependencyVersion({
   return {
     name,
     version,
-    scope: 'prod',
+    scope: 'production',
     isDirect: true,
     isWorkspace: false,
     isVersionUnparseable: semver.valid(version) === null,

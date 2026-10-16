@@ -8,7 +8,7 @@ import type {
 import type { Finding } from '@/shared/finding'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from '@/shared/finding.samples'
 import {
@@ -38,7 +38,7 @@ function makeBenchmarkCase({
     category,
     isClean,
     description: `the ${id} case`,
-    source: { kind: 'snapshot', dir: `benchmark/cases/${id}` },
+    source: { kind: 'snapshot', directory: `benchmark/cases/${id}` },
     expected,
   }
 }
@@ -72,14 +72,14 @@ const introducedSecretFinding: Finding = {
 }
 
 // the labels that match each sample finding exactly
-const expectedScaFinding: ExpectedFinding = {
-  detector: 'sca',
+const expectedDependencyFinding: ExpectedFinding = {
+  detector: 'dependency',
   packageName: 'lodash',
   advisoryId: 'GHSA-35jh-r3h4-6jhm',
 }
 const expectedCodeReviewFinding: ExpectedFinding = {
   detector: 'code-review',
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   file: 'src/users.ts',
   startLine: 42,
   endLine: 44,
@@ -216,22 +216,22 @@ describe('per-case counts', () => {
   test('failed case misses everything, scores no prediction and keeps the pre-existing findings', () => {
     // a failed case whose pipeline still returned a matching finding and a pre-existing one
     const benchmarkCase = makeBenchmarkCase({
-      id: 'sca-01-lodash',
-      category: 'sca',
-      expected: [expectedScaFinding],
+      id: 'dependency-01-lodash',
+      category: 'dependency',
+      expected: [expectedDependencyFinding],
     })
     const runScore = scoreBenchmark({
       caseOutcomes: [
         makeOutcome({
           benchmarkCase,
-          findings: [scaFindingSample, secretFindingSample],
+          findings: [dependencyFindingSample, secretFindingSample],
           status: 'failed',
           errorMessage: 'pipeline threw',
         }),
       ],
     })
     expect(runScore.caseResults[0]).toEqual({
-      caseId: 'sca-01-lodash',
+      caseId: 'dependency-01-lodash',
       truePositives: 0,
       falsePositives: 0,
       falseNegatives: 1,
@@ -277,16 +277,16 @@ describe('corpus metrics', () => {
       category: 'code',
       expected: [
         expectedCodeReviewFinding,
-        { detector: 'code-review', cwe: 'CWE-79' },
+        { detector: 'code-review', vulnerabilityType: 'CWE-79' },
       ],
     })
     const crossSiteScriptingFinding: Finding = {
       ...codeReviewFindingSample,
-      cwe: 'CWE-79',
+      vulnerabilityType: 'CWE-79',
     }
     const strayFinding: Finding = {
       ...codeReviewFindingSample,
-      cwe: 'CWE-22',
+      vulnerabilityType: 'CWE-22',
     }
     const secondCase = makeBenchmarkCase({
       id: 'secrets-01-missed',
@@ -342,11 +342,11 @@ describe('corpus metrics', () => {
   })
 
   test('breakdown keys', () => {
-    // an sca case and a clean case, with predictions of the sca and secrets detectors
-    const scaCase = makeBenchmarkCase({
-      id: 'sca-02-lodash',
-      category: 'sca',
-      expected: [expectedScaFinding],
+    // a dependency case and a clean case, with predictions of the dependency and secrets detectors
+    const dependencyCase = makeBenchmarkCase({
+      id: 'dependency-02-lodash',
+      category: 'dependency',
+      expected: [expectedDependencyFinding],
     })
     const cleanCase = makeBenchmarkCase({
       id: 'clean-04-secret-shaped',
@@ -356,16 +356,29 @@ describe('corpus metrics', () => {
     })
     const runScore = scoreBenchmark({
       caseOutcomes: [
-        makeOutcome({ benchmarkCase: scaCase, findings: [scaFindingSample] }),
+        makeOutcome({
+          benchmarkCase: dependencyCase,
+          findings: [dependencyFindingSample],
+        }),
         makeOutcome({
           benchmarkCase: cleanCase,
           findings: [introducedSecretFinding],
         }),
       ],
     })
-    expect(Object.keys(runScore.byCategory).sort()).toEqual(['clean', 'sca'])
-    expect(Object.keys(runScore.byDetector).sort()).toEqual(['sca', 'secrets'])
-    expect(runScore.byDetector.sca).toEqual({ precision: 1, recall: 1, f1: 1 })
+    expect(Object.keys(runScore.byCategory).sort()).toEqual([
+      'clean',
+      'dependency',
+    ])
+    expect(Object.keys(runScore.byDetector).sort()).toEqual([
+      'dependency',
+      'secrets',
+    ])
+    expect(runScore.byDetector.dependency).toEqual({
+      precision: 1,
+      recall: 1,
+      f1: 1,
+    })
     expect(runScore.byDetector.secrets).toEqual({
       precision: 0,
       recall: 0,

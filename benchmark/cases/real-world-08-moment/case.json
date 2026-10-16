@@ -6,7 +6,7 @@
   "description": "The moment package at the parent of the fix commit for GHSA-8hfj-j24r-96c4, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/moment/moment.git",
+    "repositoryUrl": "https://github.com/moment/moment.git",
     "baseSha": "4211bfc8f15746be4019bba557e29a7ba83d54c5",
     "headSha": "f2a813afcfd0dd6e63812ea74c46ecc627f6a6a6"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-8hfj-j24r-96c4",
-      "cwe": "CWE-22",
+      "vulnerabilityType": "CWE-22",
       "file": "src/lib/locale/locales.js",
       "startLine": 73,
       "endLine": 73

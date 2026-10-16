@@ -9,7 +9,7 @@ import { resolveCacheDirectory } from '@/shared/cache-directory'
 export const offlineEnvironmentVariable = 'PULL_REQUEST_REVIEW_OFFLINE'
 
 // the directory under the cache that holds every clone
-const clonesDirectoryName = 'benchmark-repos'
+const clonesDirectoryName = 'benchmark-repositories'
 
 // the stderr fragments that mean git could not resolve or connect to the host. a refused url with any other error stays an error
 const networkFailurePatterns = [
@@ -23,7 +23,7 @@ const networkFailurePatterns = [
 
 // what open needs: the repository, the two shas and where to keep the clone
 export interface OpenBenchmarkRepositoryOptions {
-  repoUrl: string
+  repositoryUrl: string
   baseSha: string
   headSha: string
   cacheDirectory?: string
@@ -33,7 +33,7 @@ export interface OpenBenchmarkRepositoryOptions {
  * Clones the repository into the cache on first use and returns the module's git source over the two shas.
  */
 export async function openBenchmarkRepository({
-  repoUrl,
+  repositoryUrl,
   baseSha,
   headSha,
   cacheDirectory = resolveCacheDirectory(),
@@ -42,19 +42,19 @@ export async function openBenchmarkRepository({
   const cloneDirectory = join(
     cacheDirectory,
     clonesDirectoryName,
-    ...resolveClonePathSegments(repoUrl),
+    ...resolveClonePathSegments(repositoryUrl),
   )
 
   // clone once and make sure both shas are in the clone
-  await ensureClone({ repoUrl, cloneDirectory, cacheDirectory })
+  await ensureClone({ repositoryUrl, cloneDirectory, cacheDirectory })
   await ensureShasPresent({
-    repoUrl,
+    repositoryUrl,
     cloneDirectory,
     shas: [baseSha, headSha],
   })
 
   return new GitPullRequestSource({
-    repoPath: cloneDirectory,
+    repositoryPath: cloneDirectory,
     baseSha,
     headSha,
   })
@@ -62,7 +62,7 @@ export async function openBenchmarkRepository({
 
 // what a failed clone says about the repository it could not reach
 interface OfflineCloneErrorOptions {
-  repoUrl: string
+  repositoryUrl: string
   reason: string
 }
 
@@ -71,12 +71,12 @@ interface OfflineCloneErrorOptions {
  */
 export class OfflineCloneError extends Error {
   // the repository that could not be reached
-  readonly repoUrl: string
+  readonly repositoryUrl: string
 
-  constructor({ repoUrl, reason }: OfflineCloneErrorOptions) {
-    super(`cannot reach ${repoUrl}: ${reason}`)
+  constructor({ repositoryUrl, reason }: OfflineCloneErrorOptions) {
+    super(`cannot reach ${repositoryUrl}: ${reason}`)
     this.name = 'OfflineCloneError'
-    this.repoUrl = repoUrl
+    this.repositoryUrl = repositoryUrl
   }
 }
 
@@ -88,10 +88,10 @@ export function isGitSourceOffline(): boolean {
   return offlineValue !== undefined && offlineValue !== ''
 }
 
-// the path segments under benchmark-repos a repository url clones into
-function resolveClonePathSegments(repoUrl: string): string[] {
+// the path segments under benchmark-repositories a repository url clones into
+function resolveClonePathSegments(repositoryUrl: string): string[] {
   // read the host and the path from the url
-  const url = new URL(repoUrl)
+  const url = new URL(repositoryUrl)
   const pathSegments = url.pathname
     .split('/')
     .filter((segment) => segment !== '')
@@ -109,14 +109,14 @@ function resolveClonePathSegments(repoUrl: string): string[] {
 
 // the repository, the directory ensureClone fills and the cache directory it sits under
 interface EnsureCloneOptions {
-  repoUrl: string
+  repositoryUrl: string
   cloneDirectory: string
   cacheDirectory: string
 }
 
 // clone the repository without a checkout, or reuse the clone already there
 async function ensureClone({
-  repoUrl,
+  repositoryUrl,
   cloneDirectory,
   cacheDirectory,
 }: EnsureCloneOptions): Promise<void> {
@@ -128,7 +128,7 @@ async function ensureClone({
   // refuse to go on the network when the offline flag is set
   if (isGitSourceOffline()) {
     throw new OfflineCloneError({
-      repoUrl,
+      repositoryUrl,
       reason: `${offlineEnvironmentVariable} is set`,
     })
   }
@@ -138,12 +138,12 @@ async function ensureClone({
   await mkdir(parentDirectory, { recursive: true })
   const cloneStderr = await readGitFailure(
     runGit({
-      repoPath: parentDirectory,
+      repositoryPath: parentDirectory,
       gitArguments: [
         'clone',
         '--no-checkout',
         '--quiet',
-        repoUrl,
+        repositoryUrl,
         cloneDirectory,
       ],
     }),
@@ -159,9 +159,9 @@ async function ensureClone({
     stopDirectory: cacheDirectory,
   })
   if (isNetworkFailure(cloneStderr)) {
-    throw new OfflineCloneError({ repoUrl, reason: cloneStderr })
+    throw new OfflineCloneError({ repositoryUrl, reason: cloneStderr })
   }
-  throw new Error(`git clone of ${repoUrl} failed: ${cloneStderr}`)
+  throw new Error(`git clone of ${repositoryUrl} failed: ${cloneStderr}`)
 }
 
 // the directory to start removing at and the one that is kept whatever it holds
@@ -192,14 +192,14 @@ async function removeEmptyParentDirectories({
 
 // the clone and the shas ensureShasPresent checks
 interface EnsureShasPresentOptions {
-  repoUrl: string
+  repositoryUrl: string
   cloneDirectory: string
   shas: string[]
 }
 
 // fetch when a sha is missing from the clone, and fail when it is still missing afterwards
 async function ensureShasPresent({
-  repoUrl,
+  repositoryUrl,
   cloneDirectory,
   shas,
 }: EnsureShasPresentOptions): Promise<void> {
@@ -212,7 +212,7 @@ async function ensureShasPresent({
   // refuse to fetch when the offline flag is set
   if (isGitSourceOffline()) {
     throw new OfflineCloneError({
-      repoUrl,
+      repositoryUrl,
       reason: `${offlineEnvironmentVariable} is set and ${missingShas.join(', ')} is not in the clone`,
     })
   }
@@ -220,22 +220,22 @@ async function ensureShasPresent({
   // fetch everything the remote has
   const fetchStderr = await readGitFailure(
     runGit({
-      repoPath: cloneDirectory,
+      repositoryPath: cloneDirectory,
       gitArguments: ['fetch', '--quiet', 'origin'],
     }),
   )
   if (fetchStderr !== null) {
     if (isNetworkFailure(fetchStderr)) {
-      throw new OfflineCloneError({ repoUrl, reason: fetchStderr })
+      throw new OfflineCloneError({ repositoryUrl, reason: fetchStderr })
     }
-    throw new Error(`git fetch of ${repoUrl} failed: ${fetchStderr}`)
+    throw new Error(`git fetch of ${repositoryUrl} failed: ${fetchStderr}`)
   }
 
   // name the shas the remote does not have either
   const stillMissingShas = await listMissingShas({ cloneDirectory, shas })
   if (stillMissingShas.length > 0) {
     throw new Error(
-      `${repoUrl} does not hold ${stillMissingShas.join(', ')} after a fetch`,
+      `${repositoryUrl} does not hold ${stillMissingShas.join(', ')} after a fetch`,
     )
   }
 }
@@ -256,7 +256,7 @@ async function listMissingShas({
   for (const sha of shas) {
     const catFileStderr = await readGitFailure(
       runGit({
-        repoPath: cloneDirectory,
+        repositoryPath: cloneDirectory,
         gitArguments: ['cat-file', '-e', `${sha}^{commit}`],
       }),
     )

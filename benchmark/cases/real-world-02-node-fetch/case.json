@@ -6,7 +6,7 @@
   "description": "The node-fetch package at the parent of the fix commit for GHSA-vp56-6g26-6827, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/node-fetch/node-fetch.git",
+    "repositoryUrl": "https://github.com/node-fetch/node-fetch.git",
     "baseSha": "28802387292baee467e042e168d92597b5bbbe3d",
     "headSha": "e87b093fd678a9ea39c5b17b2a1bdfc4691eedc7"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-vp56-6g26-6827",
-      "cwe": "CWE-1333",
+      "vulnerabilityType": "CWE-1333",
       "file": "src/utils/referrer.js",
       "startLine": 122,
       "endLine": 122

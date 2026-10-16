@@ -14,11 +14,14 @@ const snapshotFixtureDirectory = join(
   'pull-request-source',
   'snapshot',
 )
-const baseDir = join(snapshotFixtureDirectory, 'base')
-const headDir = join(snapshotFixtureDirectory, 'head')
+const baseDirectory = join(snapshotFixtureDirectory, 'base')
+const headDirectory = join(snapshotFixtureDirectory, 'head')
 
 // the source every test reads
-const snapshotSource = new SnapshotPullRequestSource({ baseDir, headDir })
+const snapshotSource = new SnapshotPullRequestSource({
+  baseDirectory,
+  headDirectory,
+})
 
 describe('SnapshotPullRequestSource.listChangedFiles', () => {
   test('lists every changed file with its status, sorted by path', async () => {
@@ -113,10 +116,10 @@ describe('SnapshotPullRequestSource file access', () => {
   })
 
   test('checks out the head as the head directory and describes both trees', async () => {
-    expect(await snapshotSource.checkoutHead()).toBe(headDir)
+    expect(await snapshotSource.checkoutHead()).toBe(headDirectory)
     expect(await snapshotSource.describe()).toEqual({
-      baseSha: `snapshot:${baseDir}`,
-      headSha: `snapshot:${headDir}`,
+      baseSha: `snapshot:${baseDirectory}`,
+      headSha: `snapshot:${headDirectory}`,
     })
     await snapshotSource.dispose()
   })

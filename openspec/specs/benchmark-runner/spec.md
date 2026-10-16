@@ -28,7 +28,7 @@ For a snapshot case the runner SHALL build a pull request source over the case's
 - **THEN** reading it at base returns null and reading it at head returns its text
 
 ### Requirement: Git source and offline skip
-For a git case the runner SHALL clone the repository once into `benchmark-repos` under the shared cache directory and build a pull request source over the two shas from that clone. When the clone fails because the network is unavailable, the runner SHALL skip the case with a warning, record it as skipped, and leave it out of the score.
+For a git case the runner SHALL clone the repository once into `benchmark-repositories` under the shared cache directory and build a pull request source over the two shas from that clone. When the clone fails because the network is unavailable, the runner SHALL skip the case with a warning, record it as skipped, and leave it out of the score.
 
 #### Scenario: Local repository
 - **WHEN** a git case points at a repository on the local disk with two commits

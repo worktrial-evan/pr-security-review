@@ -24,7 +24,7 @@
         "recall": 0.5625,
         "f1": 0.6206896551724138
       },
-      "sca": {
+      "dependency": {
         "precision": 1,
         "recall": 1,
         "f1": 1
@@ -51,7 +51,7 @@
         "recall": 0.5,
         "f1": 0.6
       },
-      "sca": {
+      "dependency": {
         "precision": 1,
         "recall": 1,
         "f1": 1
@@ -223,49 +223,49 @@
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-01-direct-prod-vulnerable",
+        "caseId": "dependency-01-direct-production-vulnerable",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-02-dev-dependency-vulnerable",
+        "caseId": "dependency-02-development-dependency-vulnerable",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-03-transitive-only",
+        "caseId": "dependency-03-transitive-only",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-04-last-affected-range",
+        "caseId": "dependency-04-last-affected-range",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-05-versions-only-listing",
+        "caseId": "dependency-05-versions-only-listing",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-06-withdrawn-advisory",
+        "caseId": "dependency-06-withdrawn-advisory",
         "truePositives": 0,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-07-unreviewed-advisory",
+        "caseId": "dependency-07-unreviewed-advisory",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
       },
       {
-        "caseId": "sca-08-added-never-imported",
+        "caseId": "dependency-08-added-never-imported",
         "truePositives": 1,
         "falsePositives": 0,
         "falseNegatives": 0
@@ -349,7 +349,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -367,7 +367,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -377,7 +377,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -395,7 +395,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -430,7 +430,7 @@
             "summary": "The namePrefix argument is concatenated directly into the SQL string in src/user-search.ts at line 14 and then run against the database. An attacker who controls namePrefix can break out of the quoted LIKE pattern and inject arbitrary SQL, which can expose or alter user data (SQL injection, CWE-89).",
             "remediation": "Replace the string concatenation with a parameterized query: keep the SQL text fixed with a placeholder for the LIKE pattern, pass the value (namePrefix followed by %) as a bound parameter to database.query and selectUsers.all, and do not build SQL from user input.",
             "summarySource": "model",
-            "cwe": "CWE-89",
+            "vulnerabilityType": "CWE-89",
             "evidence": [
               "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\","
             ],
@@ -531,7 +531,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-89",
+              "vulnerabilityType": "CWE-89",
               "file": "src/server.ts",
               "startLine": 29,
               "endLine": 34
@@ -549,7 +549,7 @@
               "summary": "The name query parameter from the incoming request is concatenated directly into a SQL string in src/server.ts (lines 29-33) and passed to database.query. An attacker can supply crafted input that changes the structure of the SQL statement, which is a SQL injection (CWE-89). This can expose or alter user records in the users table.",
               "remediation": "Replace the string interpolation with a parameterized query: keep the LIKE pattern as a placeholder in the SQL text and pass the wildcard-wrapped name value (for example '%' + namePattern + '%') as a bound parameter to database.query in src/server.ts.",
               "summarySource": "model",
-              "cwe": "CWE-89",
+              "vulnerabilityType": "CWE-89",
               "evidence": [
                 "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
                 "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
@@ -578,7 +578,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-79",
+              "vulnerabilityType": "CWE-79",
               "file": "public/app.ts",
               "startLine": 5,
               "endLine": 10
@@ -596,7 +596,7 @@
               "summary": "In public/app.ts line 10, the name query parameter from the page URL is read and inserted without escaping into an HTML string that is assigned to innerHTML. An attacker can craft a link containing HTML or script in the name parameter, which the browser will execute in the context of the victim's page. This is a high severity DOM-based cross-site scripting issue (CWE-79) that can lead to session theft and actions performed as the user.",
               "remediation": "Stop assigning untrusted text to innerHTML on line 10. Build the heading with document.createElement('h1') and set its textContent to visitorName, then append it to the greeting element. If HTML rendering is truly required, sanitize the value with a vetted sanitizer before insertion.",
               "summarySource": "model",
-              "cwe": "CWE-79",
+              "vulnerabilityType": "CWE-79",
               "evidence": [
                 "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
               ],
@@ -624,7 +624,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-78",
+              "vulnerabilityType": "CWE-78",
               "file": "src/server.ts",
               "startLine": 104,
               "endLine": 105
@@ -642,7 +642,7 @@
               "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string that execSync runs through a shell. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges, which is a critical command injection risk (CWE-78).",
               "remediation": "Stop building the command as a string. Replace execSync with execFileSync or spawnSync and pass 'ping' with the arguments ['-c', '1', host] so no shell parses the input. Also validate host against a strict allowlist pattern such as a hostname or IP address format and reject anything else before running the command.",
               "summarySource": "model",
-              "cwe": "CWE-78",
+              "vulnerabilityType": "CWE-78",
               "evidence": [
                 "      const host = new URL(request.url).searchParams.get('host') ?? 'localhost'",
                 "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
@@ -671,7 +671,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-22",
+              "vulnerabilityType": "CWE-22",
               "file": "src/server.ts",
               "startLine": 81,
               "endLine": 82
@@ -689,7 +689,7 @@
               "summary": "The download route takes the name query parameter and joins it onto the uploads directory without checking it, then returns the contents of the resulting file. A request containing ../ sequences can escape the uploads directory and read arbitrary files the server process can access, such as configuration or credentials. This is a high severity path traversal (CWE-22).",
               "remediation": "Resolve the joined path and confirm it stays inside config.uploadsDirectory before reading it, or reject any name that contains path separators or ../ segments. Only serve files whose resolved path begins with the uploads directory prefix, and return a 400 or 404 response otherwise.",
               "summarySource": "model",
-              "cwe": "CWE-22",
+              "vulnerabilityType": "CWE-22",
               "evidence": [
                 "      const uploadName = new URL(request.url).searchParams.get('name') ?? ''",
                 "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
@@ -720,7 +720,7 @@
         "missedExpectations": [
           {
             "detector": "code-review",
-            "cwe": "CWE-798",
+            "vulnerabilityType": "CWE-798",
             "file": "src/server.ts",
             "startLine": 72,
             "endLine": 73
@@ -753,7 +753,7 @@
             "summary": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which reads the claims without checking the signature. An attacker can forge a token with any userId and role, and the code will treat those claims as the authenticated identity. This is a critical authentication bypass (CWE-287) in src/auth.ts, lines 45 to 49.",
             "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify using the server's signing secret or public key, and pass the expected algorithm(s) explicitly. Reject the request when verification throws, and only then read userId and role from the verified payload.",
             "summarySource": "model",
-            "cwe": "CWE-287",
+            "vulnerabilityType": "CWE-287",
             "evidence": [
               "  const payload = jsonwebtoken.decode(token)",
               "  return { userId: Number(payload.userId), role: String(payload.role) }"
@@ -766,7 +766,7 @@
         "missedExpectations": [
           {
             "detector": "code-review",
-            "cwe": "CWE-347",
+            "vulnerabilityType": "CWE-347",
             "file": "src/auth.ts",
             "startLine": 45,
             "endLine": 46
@@ -788,7 +788,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-918",
+              "vulnerabilityType": "CWE-918",
               "file": "src/server.ts",
               "startLine": 103,
               "endLine": 104
@@ -806,7 +806,7 @@
               "summary": "The /preview endpoint in src/server.ts (lines 103-106) takes the url query parameter from the request and passes it straight to fetch without any validation. The first 200 characters of the response are then returned to the caller. This is a server-side request forgery (CWE-918) that lets an external user make the server request internal services or cloud metadata endpoints and read part of the response, which can expose internal data and credentials.",
               "remediation": "Validate the url parameter before calling fetch: parse it, allow only http or https schemes, and check the hostname against an explicit allowlist of permitted hosts. Reject hosts that resolve to private, loopback, link-local, or metadata addresses, and disable or limit redirects so the allowlist cannot be bypassed. Only then call fetch and return the response.",
               "summarySource": "model",
-              "cwe": "CWE-918",
+              "vulnerabilityType": "CWE-918",
               "evidence": [
                 "      const targetUrl = new URL(request.url).searchParams.get('url') ?? ''",
                 "      const upstreamResponse = await fetch(targetUrl)",
@@ -837,7 +837,7 @@
           {
             "expectedFinding": {
               "detector": "code-review",
-              "cwe": "CWE-1321",
+              "vulnerabilityType": "CWE-1321",
               "file": "src/server.ts",
               "startLine": 19,
               "endLine": 35
@@ -855,7 +855,7 @@
               "summary": "The recursive merge in src/server.ts (lines 23-27) copies keys from the JSON body of POST /users/:id/preferences into the target object without filtering them. A key named \"__proto__\" survives Object.keys, so target[\"__proto__\"] resolves to Object.prototype and the merge writes attacker-chosen properties onto it. Those properties then appear on every object in the process, which can alter application logic, bypass checks, or cause crashes. This is a high severity prototype pollution flaw (CWE-1321).",
               "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing target[key], or only merge keys that are own properties of a null-prototype object. Add a test that posts a body containing \"__proto__\" to /users/:id/preferences and confirms Object.prototype is unchanged.",
               "summarySource": "model",
-              "cwe": "CWE-1321",
+              "vulnerabilityType": "CWE-1321",
               "evidence": [
                 "  for (const key of Object.keys(source)) {",
                 "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
@@ -886,7 +886,7 @@
         "missedExpectations": [
           {
             "detector": "code-review",
-            "cwe": "CWE-328",
+            "vulnerabilityType": "CWE-328",
             "file": "src/users.ts",
             "startLine": 76,
             "endLine": 77
@@ -919,7 +919,7 @@
             "summary": "The POST /calculate handler in src/server.ts takes the expression field from the client's JSON body and passes it directly to eval. Anyone who can reach this endpoint can run arbitrary JavaScript on the server, which is a critical code injection flaw (CWE-94) that can lead to full server compromise, data theft, or lateral movement.",
             "remediation": "Remove the eval call on lines 104-105 of src/server.ts. Replace it with a safe expression parser or a fixed set of supported operations that validates the input before computing a result, and reject any expression that does not match that grammar.",
             "summarySource": "model",
-            "cwe": "CWE-94",
+            "vulnerabilityType": "CWE-94",
             "evidence": [
               "        const calculationBody = (await request.json()) as { expression: string }",
               "        const calculationResult = eval(String(calculationBody.expression))"
@@ -932,7 +932,7 @@
         "missedExpectations": [
           {
             "detector": "code-review",
-            "cwe": "CWE-95",
+            "vulnerabilityType": "CWE-95",
             "file": "src/server.ts",
             "startLine": 104,
             "endLine": 105
@@ -955,7 +955,7 @@
             "expectedFinding": {
               "detector": "code-review",
               "advisoryId": "GHSA-w9mr-4mfr-499f",
-              "cwe": "CWE-1333",
+              "vulnerabilityType": "CWE-1333",
               "file": "index.js",
               "startLine": 49,
               "endLine": 49
@@ -973,7 +973,7 @@
               "summary": "The input length cap in the duration parser was raised from a small limit to 10000 characters. The regex that parses the string, /^((?:\\d+)?\\.?\\d+) *(...)?$/i, can backtrack quadratically on a long run of digits followed by an invalid character. An attacker who supplies a long duration string can therefore tie up CPU in the parser, which is a denial-of-service risk.",
               "remediation": "Lower the length cap in index.js at line 49 back to its previous smaller value, or reject inputs that fail a simpler pre-check before the regex runs. Then rewrite the duration regex so the digit groups cannot overlap, for example by removing the optional leading (?:\\d+)? ambiguity, and add a test with a long digit run followed by an invalid character to confirm parsing stays fast.",
               "summarySource": "model",
-              "cwe": "CWE-1333",
+              "vulnerabilityType": "CWE-1333",
               "evidence": ["  if (str.length > 10000) {"],
               "sourceToSink": "The str argument of parse, typically a user-supplied duration string, now reaches the regex /^((?:\\d+)?\\.?\\d+) *(...)?$/i with up to 10000 characters, and a long run of digits followed by an invalid character triggers quadratic backtracking.",
               "promptVersion": "1",
@@ -1000,7 +1000,7 @@
             "expectedFinding": {
               "detector": "code-review",
               "advisoryId": "GHSA-vp56-6g26-6827",
-              "cwe": "CWE-1333",
+              "vulnerabilityType": "CWE-1333",
               "file": "src/utils/referrer.js",
               "startLine": 122,
               "endLine": 122
@@ -1018,7 +1018,7 @@
               "summary": "The regular expression /^(.+\\.)*localhost$/ applied to the URL host at src/utils/referrer.js line 122 has a nested quantifier that matches the same characters in many ways. When an attacker supplies a long dotted host that does not end in localhost, the regex engine backtracks exponentially, which can freeze the event loop and cause a denial of service (CWE-1333).",
               "remediation": "Replace the pattern with a non-backtracking check on line 122, such as comparing the host directly: test whether url.host equals 'localhost' or ends with '.localhost' using string methods like endsWith, and remove the nested-quantifier regex.",
               "summarySource": "model",
-              "cwe": "CWE-1333",
+              "vulnerabilityType": "CWE-1333",
               "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
               "sourceToSink": "The host of a request or referrer URL that an attacker controls is tested against /^(.+\\.)*localhost$/, whose ambiguous nested quantifier backtracks exponentially on a long dotted host that does not end in localhost.",
               "promptVersion": "1",
@@ -1046,7 +1046,7 @@
           {
             "detector": "code-review",
             "advisoryId": "GHSA-f5x3-32g6-xq36",
-            "cwe": "CWE-400",
+            "vulnerabilityType": "CWE-400",
             "file": "lib/unpack.js",
             "startLine": 242,
             "endLine": 260
@@ -1070,7 +1070,7 @@
           {
             "detector": "code-review",
             "advisoryId": "GHSA-rhx6-c78j-4q9w",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "file": "index.js",
             "startLine": 75,
             "endLine": 88
@@ -1103,7 +1103,7 @@
             "summary": "At line 289 of lib/websocket-server.js, the Sec-WebSocket-Protocol header from the client is split with the regular expression / *, */. A long run of spaces without a comma can make the regex engine backtrack quadratically, so a crafted handshake can tie up CPU for a noticeable time. The severity is low, but a remote client can trigger it before any authentication.",
             "remediation": "Replace the split at line 289 with a regex that has no ambiguous space runs, such as splitting on /\\s*,\\s*/ after trimming, or split on ',' and trim each token with a linear-time method, then add a test with a long run of spaces in the Sec-WebSocket-Protocol header.",
             "summarySource": "model",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "evidence": ["      protocol = protocol.trim().split(/ *, */);"],
             "sourceToSink": "The client-controlled Sec-WebSocket-Protocol header is split with the regex / *, */, and a long run of inner spaces with no comma forces quadratic backtracking in the regex engine.",
             "promptVersion": "1",
@@ -1114,7 +1114,7 @@
           {
             "detector": "code-review",
             "advisoryId": "GHSA-6fc8-4gx4-v693",
-            "cwe": "CWE-400",
+            "vulnerabilityType": "CWE-400",
             "file": "lib/websocket-server.js",
             "startLine": 289,
             "endLine": 289
@@ -1137,7 +1137,7 @@
             "expectedFinding": {
               "detector": "code-review",
               "advisoryId": "GHSA-8hfj-j24r-96c4",
-              "cwe": "CWE-22",
+              "vulnerabilityType": "CWE-22",
               "file": "src/lib/locale/locales.js",
               "startLine": 73,
               "endLine": 73
@@ -1155,7 +1155,7 @@
               "summary": "A locale name that an application passes in from user input, for example through moment.locale(name), now reaches the require call in loadLocale without the check that previously rejected '/' and '\\'. That lets a crafted name walk out of the locale directory and load an unintended module, which is a path traversal risk (CWE-22) at medium severity.",
               "remediation": "Restore the removed check so that locale names containing '/' or '\\' are rejected before the require call in loadLocale in src/lib/locale/locales.js, around line 73. Then add a test that passes a traversal-style name and confirms it is refused.",
               "summarySource": "model",
-              "cwe": "CWE-22",
+              "vulnerabilityType": "CWE-22",
               "evidence": ["        module.exports"],
               "sourceToSink": "A locale name that an application passes in from user input (for example to moment.locale(name)) now reaches the require call in loadLocale without the check that rejected '/' and '\\\\', so it can walk out of the locale directory.",
               "promptVersion": "1",
@@ -1170,8 +1170,8 @@
         "durationMs": 8836
       },
       {
-        "caseId": "sca-01-direct-prod-vulnerable",
-        "category": "sca",
+        "caseId": "dependency-01-direct-production-vulnerable",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1180,13 +1180,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "ms",
               "advisoryId": "GHSA-w9mr-4mfr-499f"
             },
             "predictedFinding": {
               "id": "8cca972a87dc4701",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
@@ -1200,7 +1200,7 @@
               "advisoryId": "GHSA-w9mr-4mfr-499f",
               "aliases": ["CVE-2017-20162"],
               "isGithubReviewed": true,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "direct-imported",
               "importedBy": ["src/auth.ts"],
               "dependencyPath": ["ms@1.0.0"],
@@ -1215,7 +1215,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1233,7 +1233,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1243,7 +1243,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1261,7 +1261,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1274,8 +1274,8 @@
         "durationMs": 3562
       },
       {
-        "caseId": "sca-02-dev-dependency-vulnerable",
-        "category": "sca",
+        "caseId": "dependency-02-development-dependency-vulnerable",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1284,13 +1284,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "semver",
               "advisoryId": "GHSA-c2qf-rxjj-qqgw"
             },
             "predictedFinding": {
               "id": "0a57c13fdb977fef",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
@@ -1304,7 +1304,7 @@
               "advisoryId": "GHSA-c2qf-rxjj-qqgw",
               "aliases": ["CVE-2022-25883"],
               "isGithubReviewed": true,
-              "dependencyScope": "dev",
+              "dependencyScope": "development",
               "reachability": "direct-unused",
               "importedBy": [],
               "dependencyPath": ["semver@7.5.1"],
@@ -1319,7 +1319,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1337,7 +1337,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1347,7 +1347,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1365,7 +1365,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1378,8 +1378,8 @@
         "durationMs": 4096
       },
       {
-        "caseId": "sca-03-transitive-only",
-        "category": "sca",
+        "caseId": "dependency-03-transitive-only",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1388,13 +1388,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "jws",
               "advisoryId": "GHSA-869p-cjfg-cm3x"
             },
             "predictedFinding": {
               "id": "4988df57ece212b0",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
@@ -1408,7 +1408,7 @@
               "advisoryId": "GHSA-869p-cjfg-cm3x",
               "aliases": ["CVE-2025-65945"],
               "isGithubReviewed": true,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "transitive",
               "importedBy": [],
               "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
@@ -1423,7 +1423,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1441,7 +1441,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1451,7 +1451,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1469,7 +1469,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1482,8 +1482,8 @@
         "durationMs": 3278
       },
       {
-        "caseId": "sca-04-last-affected-range",
-        "category": "sca",
+        "caseId": "dependency-04-last-affected-range",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1492,13 +1492,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "semver",
               "advisoryId": "PRR-TEST-0001"
             },
             "predictedFinding": {
               "id": "eb6fd5caa016e07d",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "semver@7.7.1 is affected by PRR-TEST-0001",
@@ -1512,7 +1512,7 @@
               "advisoryId": "PRR-TEST-0001",
               "aliases": [],
               "isGithubReviewed": true,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "direct-unused",
               "importedBy": [],
               "dependencyPath": ["semver@7.7.1"],
@@ -1527,7 +1527,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1545,7 +1545,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1555,7 +1555,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1573,7 +1573,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1586,8 +1586,8 @@
         "durationMs": 4516
       },
       {
-        "caseId": "sca-05-versions-only-listing",
-        "category": "sca",
+        "caseId": "dependency-05-versions-only-listing",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1596,13 +1596,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "lodash",
               "advisoryId": "PRR-TEST-0002"
             },
             "predictedFinding": {
               "id": "ab6e92035cf3d705",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
@@ -1616,7 +1616,7 @@
               "advisoryId": "PRR-TEST-0002",
               "aliases": [],
               "isGithubReviewed": true,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "direct-imported",
               "importedBy": ["src/config.ts"],
               "dependencyPath": ["lodash@4.18.0"],
@@ -1633,8 +1633,8 @@
         "durationMs": 4899
       },
       {
-        "caseId": "sca-06-withdrawn-advisory",
-        "category": "sca",
+        "caseId": "dependency-06-withdrawn-advisory",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 0,
@@ -1646,7 +1646,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1664,7 +1664,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1674,7 +1674,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1692,7 +1692,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1705,8 +1705,8 @@
         "durationMs": 2050
       },
       {
-        "caseId": "sca-07-unreviewed-advisory",
-        "category": "sca",
+        "caseId": "dependency-07-unreviewed-advisory",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1715,13 +1715,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "mustache",
               "advisoryId": "PRR-TEST-0004"
             },
             "predictedFinding": {
               "id": "6c0a2313a8264885",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
@@ -1735,7 +1735,7 @@
               "advisoryId": "PRR-TEST-0004",
               "aliases": [],
               "isGithubReviewed": false,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "direct-imported",
               "importedBy": ["src/templates.ts"],
               "dependencyPath": ["mustache@4.1.0"],
@@ -1750,7 +1750,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1768,7 +1768,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1778,7 +1778,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1796,7 +1796,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1809,8 +1809,8 @@
         "durationMs": 3316
       },
       {
-        "caseId": "sca-08-added-never-imported",
-        "category": "sca",
+        "caseId": "dependency-08-added-never-imported",
+        "category": "dependency",
         "split": "dev",
         "status": "completed",
         "truePositives": 1,
@@ -1819,13 +1819,13 @@
         "matchedPairs": [
           {
             "expectedFinding": {
-              "detector": "sca",
+              "detector": "dependency",
               "packageName": "path-to-regexp",
               "advisoryId": "GHSA-rhx6-c78j-4q9w"
             },
             "predictedFinding": {
               "id": "dec610c032dea335",
-              "detector": "sca",
+              "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
@@ -1839,7 +1839,7 @@
               "advisoryId": "GHSA-rhx6-c78j-4q9w",
               "aliases": ["CVE-2024-52798"],
               "isGithubReviewed": true,
-              "dependencyScope": "prod",
+              "dependencyScope": "production",
               "reachability": "direct-unused",
               "importedBy": [],
               "dependencyPath": ["path-to-regexp@0.1.11"],
@@ -1854,7 +1854,7 @@
         "preExistingFindings": [
           {
             "id": "afbf4e83d5d40eab",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -1872,7 +1872,7 @@
               "GHSA-r5fr-rjxr-66jc"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -1882,7 +1882,7 @@
           },
           {
             "id": "e7bef7af5775624b",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -1900,7 +1900,7 @@
               "GHSA-xxjr-mmjv-4gpg"
             ],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.17.21"],
@@ -2073,7 +2073,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -2087,7 +2087,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -2097,7 +2097,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -2111,7 +2111,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -2146,7 +2146,7 @@
           "summary": "The namePrefix argument is concatenated directly into the SQL string in src/user-search.ts at line 14 and then run against the database. An attacker who controls namePrefix can break out of the quoted LIKE pattern and inject arbitrary SQL, which can expose or alter user data (SQL injection, CWE-89).",
           "remediation": "Replace the string concatenation with a parameterized query: keep the SQL text fixed with a placeholder for the LIKE pattern, pass the value (namePrefix followed by %) as a bound parameter to database.query and selectUsers.all, and do not build SQL from user input.",
           "summarySource": "model",
-          "cwe": "CWE-89",
+          "vulnerabilityType": "CWE-89",
           "evidence": [
             "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\","
           ],
@@ -2247,7 +2247,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-89",
+            "vulnerabilityType": "CWE-89",
             "file": "src/server.ts",
             "startLine": 29,
             "endLine": 34
@@ -2265,7 +2265,7 @@
             "summary": "The name query parameter from the incoming request is concatenated directly into a SQL string in src/server.ts (lines 29-33) and passed to database.query. An attacker can supply crafted input that changes the structure of the SQL statement, which is a SQL injection (CWE-89). This can expose or alter user records in the users table.",
             "remediation": "Replace the string interpolation with a parameterized query: keep the LIKE pattern as a placeholder in the SQL text and pass the wildcard-wrapped name value (for example '%' + namePattern + '%') as a bound parameter to database.query in src/server.ts.",
             "summarySource": "model",
-            "cwe": "CWE-89",
+            "vulnerabilityType": "CWE-89",
             "evidence": [
               "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
               "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
@@ -2294,7 +2294,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-79",
+            "vulnerabilityType": "CWE-79",
             "file": "public/app.ts",
             "startLine": 5,
             "endLine": 10
@@ -2312,7 +2312,7 @@
             "summary": "In public/app.ts line 10, the name query parameter from the page URL is read and inserted without escaping into an HTML string that is assigned to innerHTML. An attacker can craft a link containing HTML or script in the name parameter, which the browser will execute in the context of the victim's page. This is a high severity DOM-based cross-site scripting issue (CWE-79) that can lead to session theft and actions performed as the user.",
             "remediation": "Stop assigning untrusted text to innerHTML on line 10. Build the heading with document.createElement('h1') and set its textContent to visitorName, then append it to the greeting element. If HTML rendering is truly required, sanitize the value with a vetted sanitizer before insertion.",
             "summarySource": "model",
-            "cwe": "CWE-79",
+            "vulnerabilityType": "CWE-79",
             "evidence": [
               "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
             ],
@@ -2340,7 +2340,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-78",
+            "vulnerabilityType": "CWE-78",
             "file": "src/server.ts",
             "startLine": 104,
             "endLine": 105
@@ -2358,7 +2358,7 @@
             "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string that execSync runs through a shell. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges, which is a critical command injection risk (CWE-78).",
             "remediation": "Stop building the command as a string. Replace execSync with execFileSync or spawnSync and pass 'ping' with the arguments ['-c', '1', host] so no shell parses the input. Also validate host against a strict allowlist pattern such as a hostname or IP address format and reject anything else before running the command.",
             "summarySource": "model",
-            "cwe": "CWE-78",
+            "vulnerabilityType": "CWE-78",
             "evidence": [
               "      const host = new URL(request.url).searchParams.get('host') ?? 'localhost'",
               "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
@@ -2387,7 +2387,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-22",
+            "vulnerabilityType": "CWE-22",
             "file": "src/server.ts",
             "startLine": 81,
             "endLine": 82
@@ -2405,7 +2405,7 @@
             "summary": "The download route takes the name query parameter and joins it onto the uploads directory without checking it, then returns the contents of the resulting file. A request containing ../ sequences can escape the uploads directory and read arbitrary files the server process can access, such as configuration or credentials. This is a high severity path traversal (CWE-22).",
             "remediation": "Resolve the joined path and confirm it stays inside config.uploadsDirectory before reading it, or reject any name that contains path separators or ../ segments. Only serve files whose resolved path begins with the uploads directory prefix, and return a 400 or 404 response otherwise.",
             "summarySource": "model",
-            "cwe": "CWE-22",
+            "vulnerabilityType": "CWE-22",
             "evidence": [
               "      const uploadName = new URL(request.url).searchParams.get('name') ?? ''",
               "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
@@ -2436,7 +2436,7 @@
       "missedExpectations": [
         {
           "detector": "code-review",
-          "cwe": "CWE-798",
+          "vulnerabilityType": "CWE-798",
           "file": "src/server.ts",
           "startLine": 72,
           "endLine": 73
@@ -2469,7 +2469,7 @@
           "summary": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which reads the claims without checking the signature. An attacker can forge a token with any userId and role, and the code will treat those claims as the authenticated identity. This is a critical authentication bypass (CWE-287) in src/auth.ts, lines 45 to 49.",
           "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify using the server's signing secret or public key, and pass the expected algorithm(s) explicitly. Reject the request when verification throws, and only then read userId and role from the verified payload.",
           "summarySource": "model",
-          "cwe": "CWE-287",
+          "vulnerabilityType": "CWE-287",
           "evidence": [
             "  const payload = jsonwebtoken.decode(token)",
             "  return { userId: Number(payload.userId), role: String(payload.role) }"
@@ -2482,7 +2482,7 @@
       "missedExpectations": [
         {
           "detector": "code-review",
-          "cwe": "CWE-347",
+          "vulnerabilityType": "CWE-347",
           "file": "src/auth.ts",
           "startLine": 45,
           "endLine": 46
@@ -2504,7 +2504,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-918",
+            "vulnerabilityType": "CWE-918",
             "file": "src/server.ts",
             "startLine": 103,
             "endLine": 104
@@ -2522,7 +2522,7 @@
             "summary": "The /preview endpoint in src/server.ts (lines 103-106) takes the url query parameter from the request and passes it straight to fetch without any validation. The first 200 characters of the response are then returned to the caller. This is a server-side request forgery (CWE-918) that lets an external user make the server request internal services or cloud metadata endpoints and read part of the response, which can expose internal data and credentials.",
             "remediation": "Validate the url parameter before calling fetch: parse it, allow only http or https schemes, and check the hostname against an explicit allowlist of permitted hosts. Reject hosts that resolve to private, loopback, link-local, or metadata addresses, and disable or limit redirects so the allowlist cannot be bypassed. Only then call fetch and return the response.",
             "summarySource": "model",
-            "cwe": "CWE-918",
+            "vulnerabilityType": "CWE-918",
             "evidence": [
               "      const targetUrl = new URL(request.url).searchParams.get('url') ?? ''",
               "      const upstreamResponse = await fetch(targetUrl)",
@@ -2553,7 +2553,7 @@
         {
           "expectedFinding": {
             "detector": "code-review",
-            "cwe": "CWE-1321",
+            "vulnerabilityType": "CWE-1321",
             "file": "src/server.ts",
             "startLine": 19,
             "endLine": 35
@@ -2571,7 +2571,7 @@
             "summary": "The recursive merge in src/server.ts (lines 23-27) copies keys from the JSON body of POST /users/:id/preferences into the target object without filtering them. A key named \"__proto__\" survives Object.keys, so target[\"__proto__\"] resolves to Object.prototype and the merge writes attacker-chosen properties onto it. Those properties then appear on every object in the process, which can alter application logic, bypass checks, or cause crashes. This is a high severity prototype pollution flaw (CWE-1321).",
             "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing target[key], or only merge keys that are own properties of a null-prototype object. Add a test that posts a body containing \"__proto__\" to /users/:id/preferences and confirms Object.prototype is unchanged.",
             "summarySource": "model",
-            "cwe": "CWE-1321",
+            "vulnerabilityType": "CWE-1321",
             "evidence": [
               "  for (const key of Object.keys(source)) {",
               "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
@@ -2602,7 +2602,7 @@
       "missedExpectations": [
         {
           "detector": "code-review",
-          "cwe": "CWE-328",
+          "vulnerabilityType": "CWE-328",
           "file": "src/users.ts",
           "startLine": 76,
           "endLine": 77
@@ -2635,7 +2635,7 @@
           "summary": "The POST /calculate handler in src/server.ts takes the expression field from the client's JSON body and passes it directly to eval. Anyone who can reach this endpoint can run arbitrary JavaScript on the server, which is a critical code injection flaw (CWE-94) that can lead to full server compromise, data theft, or lateral movement.",
           "remediation": "Remove the eval call on lines 104-105 of src/server.ts. Replace it with a safe expression parser or a fixed set of supported operations that validates the input before computing a result, and reject any expression that does not match that grammar.",
           "summarySource": "model",
-          "cwe": "CWE-94",
+          "vulnerabilityType": "CWE-94",
           "evidence": [
             "        const calculationBody = (await request.json()) as { expression: string }",
             "        const calculationResult = eval(String(calculationBody.expression))"
@@ -2648,7 +2648,7 @@
       "missedExpectations": [
         {
           "detector": "code-review",
-          "cwe": "CWE-95",
+          "vulnerabilityType": "CWE-95",
           "file": "src/server.ts",
           "startLine": 104,
           "endLine": 105
@@ -2671,7 +2671,7 @@
           "expectedFinding": {
             "detector": "code-review",
             "advisoryId": "GHSA-w9mr-4mfr-499f",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "file": "index.js",
             "startLine": 49,
             "endLine": 49
@@ -2689,7 +2689,7 @@
             "summary": "The input length cap in the duration parser was raised from a small limit to 10000 characters. The regex that parses the string, /^((?:\\d+)?\\.?\\d+) *(...)?$/i, can backtrack quadratically on a long run of digits followed by an invalid character. An attacker who supplies a long duration string can therefore tie up CPU in the parser, which is a denial-of-service risk.",
             "remediation": "Lower the length cap in index.js at line 49 back to its previous smaller value, or reject inputs that fail a simpler pre-check before the regex runs. Then rewrite the duration regex so the digit groups cannot overlap, for example by removing the optional leading (?:\\d+)? ambiguity, and add a test with a long digit run followed by an invalid character to confirm parsing stays fast.",
             "summarySource": "model",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "evidence": ["  if (str.length > 10000) {"],
             "sourceToSink": "The str argument of parse, typically a user-supplied duration string, now reaches the regex /^((?:\\d+)?\\.?\\d+) *(...)?$/i with up to 10000 characters, and a long run of digits followed by an invalid character triggers quadratic backtracking.",
             "promptVersion": "1",
@@ -2716,7 +2716,7 @@
           "expectedFinding": {
             "detector": "code-review",
             "advisoryId": "GHSA-vp56-6g26-6827",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "file": "src/utils/referrer.js",
             "startLine": 122,
             "endLine": 122
@@ -2734,7 +2734,7 @@
             "summary": "The regular expression /^(.+\\.)*localhost$/ applied to the URL host at src/utils/referrer.js line 122 has a nested quantifier that matches the same characters in many ways. When an attacker supplies a long dotted host that does not end in localhost, the regex engine backtracks exponentially, which can freeze the event loop and cause a denial of service (CWE-1333).",
             "remediation": "Replace the pattern with a non-backtracking check on line 122, such as comparing the host directly: test whether url.host equals 'localhost' or ends with '.localhost' using string methods like endsWith, and remove the nested-quantifier regex.",
             "summarySource": "model",
-            "cwe": "CWE-1333",
+            "vulnerabilityType": "CWE-1333",
             "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
             "sourceToSink": "The host of a request or referrer URL that an attacker controls is tested against /^(.+\\.)*localhost$/, whose ambiguous nested quantifier backtracks exponentially on a long dotted host that does not end in localhost.",
             "promptVersion": "1",
@@ -2762,7 +2762,7 @@
         {
           "detector": "code-review",
           "advisoryId": "GHSA-f5x3-32g6-xq36",
-          "cwe": "CWE-400",
+          "vulnerabilityType": "CWE-400",
           "file": "lib/unpack.js",
           "startLine": 242,
           "endLine": 260
@@ -2786,7 +2786,7 @@
         {
           "detector": "code-review",
           "advisoryId": "GHSA-rhx6-c78j-4q9w",
-          "cwe": "CWE-1333",
+          "vulnerabilityType": "CWE-1333",
           "file": "index.js",
           "startLine": 75,
           "endLine": 88
@@ -2819,7 +2819,7 @@
           "summary": "At line 289 of lib/websocket-server.js, the Sec-WebSocket-Protocol header from the client is split with the regular expression / *, */. A long run of spaces without a comma can make the regex engine backtrack quadratically, so a crafted handshake can tie up CPU for a noticeable time. The severity is low, but a remote client can trigger it before any authentication.",
           "remediation": "Replace the split at line 289 with a regex that has no ambiguous space runs, such as splitting on /\\s*,\\s*/ after trimming, or split on ',' and trim each token with a linear-time method, then add a test with a long run of spaces in the Sec-WebSocket-Protocol header.",
           "summarySource": "model",
-          "cwe": "CWE-1333",
+          "vulnerabilityType": "CWE-1333",
           "evidence": ["      protocol = protocol.trim().split(/ *, */);"],
           "sourceToSink": "The client-controlled Sec-WebSocket-Protocol header is split with the regex / *, */, and a long run of inner spaces with no comma forces quadratic backtracking in the regex engine.",
           "promptVersion": "1",
@@ -2830,7 +2830,7 @@
         {
           "detector": "code-review",
           "advisoryId": "GHSA-6fc8-4gx4-v693",
-          "cwe": "CWE-400",
+          "vulnerabilityType": "CWE-400",
           "file": "lib/websocket-server.js",
           "startLine": 289,
           "endLine": 289
@@ -2853,7 +2853,7 @@
           "expectedFinding": {
             "detector": "code-review",
             "advisoryId": "GHSA-8hfj-j24r-96c4",
-            "cwe": "CWE-22",
+            "vulnerabilityType": "CWE-22",
             "file": "src/lib/locale/locales.js",
             "startLine": 73,
             "endLine": 73
@@ -2871,7 +2871,7 @@
             "summary": "A locale name that an application passes in from user input, for example through moment.locale(name), now reaches the require call in loadLocale without the check that previously rejected '/' and '\\'. That lets a crafted name walk out of the locale directory and load an unintended module, which is a path traversal risk (CWE-22) at medium severity.",
             "remediation": "Restore the removed check so that locale names containing '/' or '\\' are rejected before the require call in loadLocale in src/lib/locale/locales.js, around line 73. Then add a test that passes a traversal-style name and confirms it is refused.",
             "summarySource": "model",
-            "cwe": "CWE-22",
+            "vulnerabilityType": "CWE-22",
             "evidence": ["        module.exports"],
             "sourceToSink": "A locale name that an application passes in from user input (for example to moment.locale(name)) now reaches the require call in loadLocale without the check that rejected '/' and '\\\\', so it can walk out of the locale directory.",
             "promptVersion": "1",
@@ -2886,8 +2886,8 @@
       "durationMs": 8836
     },
     {
-      "caseId": "sca-01-direct-prod-vulnerable",
-      "category": "sca",
+      "caseId": "dependency-01-direct-production-vulnerable",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -2896,13 +2896,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "ms",
             "advisoryId": "GHSA-w9mr-4mfr-499f"
           },
           "predictedFinding": {
             "id": "8cca972a87dc4701",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
@@ -2916,7 +2916,7 @@
             "advisoryId": "GHSA-w9mr-4mfr-499f",
             "aliases": ["CVE-2017-20162"],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/auth.ts"],
             "dependencyPath": ["ms@1.0.0"],
@@ -2931,7 +2931,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -2945,7 +2945,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -2955,7 +2955,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -2969,7 +2969,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -2982,8 +2982,8 @@
       "durationMs": 3562
     },
     {
-      "caseId": "sca-02-dev-dependency-vulnerable",
-      "category": "sca",
+      "caseId": "dependency-02-development-dependency-vulnerable",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -2992,13 +2992,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "semver",
             "advisoryId": "GHSA-c2qf-rxjj-qqgw"
           },
           "predictedFinding": {
             "id": "0a57c13fdb977fef",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
@@ -3012,7 +3012,7 @@
             "advisoryId": "GHSA-c2qf-rxjj-qqgw",
             "aliases": ["CVE-2022-25883"],
             "isGithubReviewed": true,
-            "dependencyScope": "dev",
+            "dependencyScope": "development",
             "reachability": "direct-unused",
             "importedBy": [],
             "dependencyPath": ["semver@7.5.1"],
@@ -3027,7 +3027,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3041,7 +3041,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3051,7 +3051,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3065,7 +3065,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3078,8 +3078,8 @@
       "durationMs": 4096
     },
     {
-      "caseId": "sca-03-transitive-only",
-      "category": "sca",
+      "caseId": "dependency-03-transitive-only",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -3088,13 +3088,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "jws",
             "advisoryId": "GHSA-869p-cjfg-cm3x"
           },
           "predictedFinding": {
             "id": "4988df57ece212b0",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
@@ -3108,7 +3108,7 @@
             "advisoryId": "GHSA-869p-cjfg-cm3x",
             "aliases": ["CVE-2025-65945"],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "transitive",
             "importedBy": [],
             "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
@@ -3123,7 +3123,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3137,7 +3137,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3147,7 +3147,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3161,7 +3161,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3174,8 +3174,8 @@
       "durationMs": 3278
     },
     {
-      "caseId": "sca-04-last-affected-range",
-      "category": "sca",
+      "caseId": "dependency-04-last-affected-range",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -3184,13 +3184,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "semver",
             "advisoryId": "PRR-TEST-0001"
           },
           "predictedFinding": {
             "id": "eb6fd5caa016e07d",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "semver@7.7.1 is affected by PRR-TEST-0001",
@@ -3204,7 +3204,7 @@
             "advisoryId": "PRR-TEST-0001",
             "aliases": [],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-unused",
             "importedBy": [],
             "dependencyPath": ["semver@7.7.1"],
@@ -3219,7 +3219,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3233,7 +3233,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3243,7 +3243,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3257,7 +3257,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3270,8 +3270,8 @@
       "durationMs": 4516
     },
     {
-      "caseId": "sca-05-versions-only-listing",
-      "category": "sca",
+      "caseId": "dependency-05-versions-only-listing",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -3280,13 +3280,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "lodash",
             "advisoryId": "PRR-TEST-0002"
           },
           "predictedFinding": {
             "id": "ab6e92035cf3d705",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
@@ -3300,7 +3300,7 @@
             "advisoryId": "PRR-TEST-0002",
             "aliases": [],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/config.ts"],
             "dependencyPath": ["lodash@4.18.0"],
@@ -3317,8 +3317,8 @@
       "durationMs": 4899
     },
     {
-      "caseId": "sca-06-withdrawn-advisory",
-      "category": "sca",
+      "caseId": "dependency-06-withdrawn-advisory",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 0,
@@ -3330,7 +3330,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3344,7 +3344,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3354,7 +3354,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3368,7 +3368,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3381,8 +3381,8 @@
       "durationMs": 2050
     },
     {
-      "caseId": "sca-07-unreviewed-advisory",
-      "category": "sca",
+      "caseId": "dependency-07-unreviewed-advisory",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -3391,13 +3391,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "mustache",
             "advisoryId": "PRR-TEST-0004"
           },
           "predictedFinding": {
             "id": "6c0a2313a8264885",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
@@ -3411,7 +3411,7 @@
             "advisoryId": "PRR-TEST-0004",
             "aliases": [],
             "isGithubReviewed": false,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-imported",
             "importedBy": ["src/templates.ts"],
             "dependencyPath": ["mustache@4.1.0"],
@@ -3426,7 +3426,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3440,7 +3440,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3450,7 +3450,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3464,7 +3464,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3477,8 +3477,8 @@
       "durationMs": 3316
     },
     {
-      "caseId": "sca-08-added-never-imported",
-      "category": "sca",
+      "caseId": "dependency-08-added-never-imported",
+      "category": "dependency",
       "split": "dev",
       "status": "completed",
       "truePositives": 1,
@@ -3487,13 +3487,13 @@
       "matchedPairs": [
         {
           "expectedFinding": {
-            "detector": "sca",
+            "detector": "dependency",
             "packageName": "path-to-regexp",
             "advisoryId": "GHSA-rhx6-c78j-4q9w"
           },
           "predictedFinding": {
             "id": "dec610c032dea335",
-            "detector": "sca",
+            "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
@@ -3507,7 +3507,7 @@
             "advisoryId": "GHSA-rhx6-c78j-4q9w",
             "aliases": ["CVE-2024-52798"],
             "isGithubReviewed": true,
-            "dependencyScope": "prod",
+            "dependencyScope": "production",
             "reachability": "direct-unused",
             "importedBy": [],
             "dependencyPath": ["path-to-regexp@0.1.11"],
@@ -3522,7 +3522,7 @@
       "preExistingFindings": [
         {
           "id": "afbf4e83d5d40eab",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
@@ -3536,7 +3536,7 @@
           "advisoryId": "GHSA-35jh-r3h4-6jhm",
           "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],
@@ -3546,7 +3546,7 @@
         },
         {
           "id": "e7bef7af5775624b",
-          "detector": "sca",
+          "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
           "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
@@ -3560,7 +3560,7 @@
           "advisoryId": "GHSA-f23m-r3pf-42rh",
           "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
           "isGithubReviewed": true,
-          "dependencyScope": "prod",
+          "dependencyScope": "production",
           "reachability": "direct-imported",
           "importedBy": ["src/config.ts"],
           "dependencyPath": ["lodash@4.17.21"],

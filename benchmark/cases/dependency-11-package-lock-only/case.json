@@ -1,16 +1,16 @@
 {
-  "id": "sca-11-package-lock-only",
+  "id": "dependency-11-package-lock-only",
   "split": "test",
-  "category": "sca",
+  "category": "dependency",
   "isClean": false,
   "description": "The head changes only package-lock.json, resolving the transitive jws under jsonwebtoken from 3.2.3 to 3.2.2, a version GHSA-869p-cjfg-cm3x affects. package.json and bun.lock stay as they are.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/sca-11-package-lock-only"
+    "directory": "benchmark/cases/dependency-11-package-lock-only"
   },
   "expected": [
     {
-      "detector": "sca",
+      "detector": "dependency",
       "packageName": "jws",
       "advisoryId": "GHSA-869p-cjfg-cm3x"
     }

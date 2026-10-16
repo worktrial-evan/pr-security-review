@@ -6,7 +6,7 @@
   "description": "The head adds findUserByName to src/users.ts, a sqlite SELECT that binds the name as a parameter.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-01-parameterized-query"
+    "directory": "benchmark/cases/clean-01-parameterized-query"
   },
   "expected": []
 }

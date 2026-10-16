@@ -19,18 +19,22 @@ const snapshotFixtureDirectory = join(
   'pull-request-source',
   'snapshot',
 )
-const baseDir = join(snapshotFixtureDirectory, 'base')
-const headDir = join(snapshotFixtureDirectory, 'head')
+const baseDirectory = join(snapshotFixtureDirectory, 'base')
+const headDirectory = join(snapshotFixtureDirectory, 'head')
 
 // the repository holding the fixture's base tree and head tree as two commits
-let repository: TwoCommitRepository = { repoPath: '', baseSha: '', headSha: '' }
+let repository: TwoCommitRepository = {
+  repositoryPath: '',
+  baseSha: '',
+  headSha: '',
+}
 
 beforeAll(async () => {
-  repository = await createTwoCommitRepository({ baseDir, headDir })
+  repository = await createTwoCommitRepository({ baseDirectory, headDirectory })
 })
 
 afterAll(async () => {
-  await rm(repository.repoPath, { recursive: true, force: true })
+  await rm(repository.repositoryPath, { recursive: true, force: true })
 })
 
 describe('git and snapshot sources', () => {
@@ -43,8 +47,8 @@ describe('git and snapshot sources', () => {
         contextLines,
       })
       const snapshotSource = new SnapshotPullRequestSource({
-        baseDir,
-        headDir,
+        baseDirectory,
+        headDirectory,
         contextLines,
       })
       const gitChangedFiles = await gitSource.listChangedFiles()
@@ -58,7 +62,10 @@ describe('git and snapshot sources', () => {
 
   test('return the same text for every changed path at base and head', async () => {
     const gitSource = new GitPullRequestSource(repository)
-    const snapshotSource = new SnapshotPullRequestSource({ baseDir, headDir })
+    const snapshotSource = new SnapshotPullRequestSource({
+      baseDirectory,
+      headDirectory,
+    })
     const changedFiles = await gitSource.listChangedFiles()
     const textChangedFiles = changedFiles.filter(
       (changedFile) => !changedFile.isBinary,

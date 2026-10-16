@@ -13,7 +13,7 @@ export const reviewOptionsSchema = z.object({
   isLlmEnabled: z.boolean(),
   isCacheEnabled: z.boolean(),
   isOffline: z.boolean(),
-  advisoryCacheDir: z.string(),
+  advisoryCacheDirectory: z.string(),
   reviewModelId: z.string(),
   summarizeModelId: z.string(),
   contextLines: z.number().int().nonnegative(),

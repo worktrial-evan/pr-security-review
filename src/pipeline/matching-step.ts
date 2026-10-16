@@ -260,17 +260,17 @@ async function crossCheckWithOracle({
     lockfileChange,
     advisoryStore,
   })
-  const databaseDir = await mkdtemp(
+  const databaseDirectory = await mkdtemp(
     join(tmpdir(), 'pull-request-review-oracle-'),
   )
   try {
-    await writeOracleDatabase({ advisories, databaseDir })
+    await writeOracleDatabase({ advisories, databaseDirectory })
     return await runOracle({
       lockfilePath: join(headDirectory, lockfileChange.lockfilePath),
-      databaseDir,
+      databaseDirectory,
     })
   } finally {
-    await rm(databaseDir, { recursive: true, force: true })
+    await rm(databaseDirectory, { recursive: true, force: true })
   }
 }
 

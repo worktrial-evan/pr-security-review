@@ -17,7 +17,7 @@ import { parseOsvEntry } from './parse-osv'
 // what to refresh and where. sourceUrl replaces the OSV export, and now replaces the clock
 export interface RefreshAdvisoriesOptions {
   ecosystem: AdvisoryEcosystem
-  cacheDir: string
+  cacheDirectory: string
   sourceUrl?: string
   now?: Date
 }
@@ -63,7 +63,7 @@ export class AdvisoryParseError extends Error {
  */
 export async function refreshAdvisories({
   ecosystem,
-  cacheDir,
+  cacheDirectory,
   sourceUrl = resolveOsvArchiveUrl(ecosystem),
   now = new Date(),
 }: RefreshAdvisoriesOptions): Promise<RefreshAdvisoriesResult> {
@@ -88,7 +88,7 @@ export async function refreshAdvisories({
   // write the index and the snapshot into the cache
   const writeAdvisoryCacheResult = await writeAdvisoryCache({
     ecosystem,
-    cacheDir,
+    cacheDirectory,
     advisoriesByPackage,
     snapshot,
   })
@@ -98,7 +98,7 @@ export async function refreshAdvisories({
 // the ecosystem and cache to write with the indexed advisories and their snapshot
 export interface WriteAdvisoryCacheOptions {
   ecosystem: AdvisoryEcosystem
-  cacheDir: string
+  cacheDirectory: string
   advisoriesByPackage: Map<string, Advisory[]>
   snapshot: AdvisorySnapshot
 }
@@ -111,13 +111,13 @@ export type WriteAdvisoryCacheResult = Omit<RefreshAdvisoriesResult, 'snapshot'>
  */
 export async function writeAdvisoryCache({
   ecosystem,
-  cacheDir,
+  cacheDirectory,
   advisoriesByPackage,
   snapshot,
 }: WriteAdvisoryCacheOptions): Promise<WriteAdvisoryCacheResult> {
   // write both files beside their final paths. then move them into place
   const { ecosystemDirectory, indexPath, snapshotPath } =
-    resolveAdvisoryCachePaths({ cacheDir, ecosystem })
+    resolveAdvisoryCachePaths({ cacheDirectory, ecosystem })
   await mkdir(ecosystemDirectory, { recursive: true })
   await writeIndexFile({ indexPath, advisoriesByPackage })
   await replaceFile({

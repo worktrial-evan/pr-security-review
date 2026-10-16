@@ -70,8 +70,8 @@ function renderPullRequest(metadata: ReviewMetadata): string {
   if (pullRequestReference === undefined) {
     return emptyValueText
   }
-  const { owner, repo, number, url } = pullRequestReference
-  return renderLink({ url, label: `${owner}/${repo}#${number}` })
+  const { owner, repository, number, url } = pullRequestReference
+  return renderLink({ url, label: `${owner}/${repository}#${number}` })
 }
 
 // show the date the advisory snapshot was fetched

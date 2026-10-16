@@ -2,9 +2,11 @@
 import { z } from 'zod'
 import { severitySchema } from '@/shared/finding'
 
-// one weakness the model reports. cwe is any string
+// one weakness the model reports. vulnerabilityType is any string
 export const modelFindingSchema = z.object({
-  cwe: z.string().describe('the CWE id from the allowlist, such as CWE-89'),
+  vulnerabilityType: z
+    .string()
+    .describe('the CWE id from the allowlist, such as CWE-89'),
   title: z.string().describe('a short title naming the weakness'),
   severity: severitySchema.describe(
     'the severity: critical, high, medium, low or info',

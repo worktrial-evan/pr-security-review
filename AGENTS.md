@@ -1,6 +1,6 @@
-# pr-review
+# pull-request-review
 
-pr-review is a pull request security review agent. Given a pull request it reads the changed files, parses the lockfile diff, matches new dependency versions against the OSV advisory snapshot, decides whether a vulnerable dependency is reachable, scans the added lines for secrets, asks an LLM to review the diff for security issues, summarizes the findings and renders a report, and writes a per-run audit log the whole way through. A benchmark runs recorded cases through the same pipeline and scores them, a harness runs prompt and model experiments against the benchmark, and a CLI and an HTTP server expose all of it. The code is a modular monolith: one Bun process, one repository, nineteen modules under `src/`, and an allowed-imports matrix between them that a boundary check enforces on every commit.
+pull-request-review is a pull request security review agent. Given a pull request it reads the changed files, parses the lockfile diff, matches new dependency versions against the OSV advisory snapshot, decides whether a vulnerable dependency is reachable, scans the added lines for secrets, asks an LLM to review the diff for security issues, summarizes the findings and renders a report, and writes a per-run audit log the whole way through. A benchmark runs recorded cases through the same pipeline and scores them, a harness runs prompt and model experiments against the benchmark, and a CLI and an HTTP server expose all of it. The code is a modular monolith: one Bun process, one repository, nineteen modules under `src/`, and an allowed-imports matrix between them that a boundary check enforces on every commit.
 
 ## Modules
 
@@ -82,11 +82,11 @@ Every `.ts` file under `src/`, `scripts/` and `benchmark/` starts with a `//` co
 
 ## Naming
 
-Never abbreviate pull request in any name: `PullRequest` in types, `pullRequest` in values, `pull-request` in file and module names, and "pull request" in prose. The product name `pr-review` and the repository name `pr-security-review` are the two exceptions and are never renamed.
+Never abbreviate pull request in any name: `PullRequest` in types, `pullRequest` in values, `pull-request` in file and module names, and "pull request" in prose. The repository name `pr-security-review` is the one exception and is never renamed.
 
 ## Caches and worktrees
 
-Caches live outside the repo: every module that caches (advisories, LLM responses, cloned benchmark repositories) writes under the directory `resolveCacheDirectory()` from `src/shared/cache-directory.ts` returns, which is `PULL_REQUEST_REVIEW_CACHE_DIR` when set and non-empty, else `~/.cache/pull-request-review`. There is no `cache/` directory in the tree and `.gitignore` does not list one, so every worktree shares the one cache. Tests and CI point the variable at a temporary directory.
+Caches live outside the repository: every module that caches (advisories, LLM responses, cloned benchmark repositories) writes under the directory `resolveCacheDirectory()` from `src/shared/cache-directory.ts` returns, which is `PULL_REQUEST_REVIEW_CACHE_DIR` when set and non-empty, else `~/.cache/pull-request-review`. There is no `cache/` directory in the tree and `.gitignore` does not list one, so every worktree shares the one cache. Tests and CI point the variable at a temporary directory.
 
 `.worktreeinclude` at the root lists `.env` and `.env.local`, the gitignored files the desktop app copies into every new worktree.
 

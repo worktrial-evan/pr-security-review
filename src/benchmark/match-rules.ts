@@ -2,13 +2,13 @@
 import type { ExpectedFinding } from '@/shared/benchmark'
 import type {
   CodeReviewFinding,
+  DependencyFinding,
   Finding,
-  ScaFinding,
   SecretFinding,
 } from '@/shared/finding'
 
-// cwes the code rule treats as the same weakness
-export const cweFamilies = [
+// vulnerabilityTypes the code rule treats as the same weakness
+export const vulnerabilityTypeFamilies = [
   ['CWE-79', 'CWE-80'],
   ['CWE-22', 'CWE-23'],
 ] as const
@@ -39,8 +39,8 @@ export function matchesExpectedFinding({
 
   // apply the rule of the detector
   switch (predictedFinding.detector) {
-    case 'sca':
-      return matchesScaFinding({ expectedFinding, predictedFinding })
+    case 'dependency':
+      return matchesDependencyFinding({ expectedFinding, predictedFinding })
     case 'code-review':
       return matchesCodeReviewFinding({ expectedFinding, predictedFinding })
     case 'secrets':
@@ -48,17 +48,17 @@ export function matchesExpectedFinding({
   }
 }
 
-// the sca pair the dependency rule compares
-interface MatchesScaFindingOptions {
+// the dependency pair the dependency rule compares
+interface MatchesDependencyFindingOptions {
   expectedFinding: ExpectedFinding
-  predictedFinding: ScaFinding
+  predictedFinding: DependencyFinding
 }
 
 // the dependency rule: same package, and the expected advisory id is the predicted id or one of its aliases
-function matchesScaFinding({
+function matchesDependencyFinding({
   expectedFinding,
   predictedFinding,
-}: MatchesScaFindingOptions): boolean {
+}: MatchesDependencyFindingOptions): boolean {
   // the package names must be equal, compared exactly
   if (expectedFinding.packageName !== predictedFinding.packageName) {
     return false
@@ -83,25 +83,25 @@ interface MatchesCodeReviewFindingOptions {
   predictedFinding: CodeReviewFinding
 }
 
-// the code rule: same cwe family, same file, and line ranges within the tolerance
+// the code rule: same vulnerabilityType family, same file, and line ranges within the tolerance
 function matchesCodeReviewFinding({
   expectedFinding,
   predictedFinding,
 }: MatchesCodeReviewFindingOptions): boolean {
-  // the cwes must be equal or in the same family
-  if (expectedFinding.cwe === undefined) {
+  // the vulnerabilityTypes must be equal or in the same family
+  if (expectedFinding.vulnerabilityType === undefined) {
     return false
   }
   if (
-    !areCwesInSameFamily({
-      firstCwe: expectedFinding.cwe,
-      secondCwe: predictedFinding.cwe,
+    !areVulnerabilityTypesInSameFamily({
+      firstVulnerabilityType: expectedFinding.vulnerabilityType,
+      secondVulnerabilityType: predictedFinding.vulnerabilityType,
     })
   ) {
     return false
   }
 
-  // an expected finding with no file matches on the cwe alone
+  // an expected finding with no file matches on the vulnerabilityType alone
   if (expectedFinding.file === undefined) {
     return true
   }
@@ -133,43 +133,47 @@ function matchesCodeReviewFinding({
   })
 }
 
-// the two cwes a family check compares
-export interface AreCwesInSameFamilyOptions {
-  firstCwe: string
-  secondCwe: string
+// the two vulnerabilityTypes a family check compares
+export interface AreVulnerabilityTypesInSameFamilyOptions {
+  firstVulnerabilityType: string
+  secondVulnerabilityType: string
 }
 
 /**
- * Tells whether two cwes are equal or belong to the same family, ignoring case, the CWE prefix and leading zeros.
+ * Tells whether two vulnerabilityTypes are equal or belong to the same family, ignoring case, the CWE prefix and leading zeros.
  */
-export function areCwesInSameFamily({
-  firstCwe,
-  secondCwe,
-}: AreCwesInSameFamilyOptions): boolean {
+export function areVulnerabilityTypesInSameFamily({
+  firstVulnerabilityType,
+  secondVulnerabilityType,
+}: AreVulnerabilityTypesInSameFamilyOptions): boolean {
   // compare the normalized forms first
-  const normalizedFirstCwe = normalizeCwe(firstCwe)
-  const normalizedSecondCwe = normalizeCwe(secondCwe)
-  if (normalizedFirstCwe === normalizedSecondCwe) {
+  const normalizedFirstVulnerabilityType = normalizeVulnerabilityType(
+    firstVulnerabilityType,
+  )
+  const normalizedSecondVulnerabilityType = normalizeVulnerabilityType(
+    secondVulnerabilityType,
+  )
+  if (normalizedFirstVulnerabilityType === normalizedSecondVulnerabilityType) {
     return true
   }
 
   // otherwise look for a family that holds both
-  return cweFamilies.some((cweFamily) => {
-    const familyMembers: readonly string[] = cweFamily
+  return vulnerabilityTypeFamilies.some((vulnerabilityTypeFamily) => {
+    const familyMembers: readonly string[] = vulnerabilityTypeFamily
     return (
-      familyMembers.includes(normalizedFirstCwe) &&
-      familyMembers.includes(normalizedSecondCwe)
+      familyMembers.includes(normalizedFirstVulnerabilityType) &&
+      familyMembers.includes(normalizedSecondVulnerabilityType)
     )
   })
 }
 
-// write a cwe as CWE- followed by its number without leading zeros, whatever case, prefix or separator it arrived with
-function normalizeCwe(cwe: string): string {
-  const upperCaseCwe = cwe.trim().toUpperCase()
-  const cweNumber = upperCaseCwe
+// write a vulnerabilityType as CWE- followed by its number without leading zeros, whatever case, prefix or separator it arrived with
+function normalizeVulnerabilityType(vulnerabilityType: string): string {
+  const upperCaseVulnerabilityType = vulnerabilityType.trim().toUpperCase()
+  const vulnerabilityTypeNumber = upperCaseVulnerabilityType
     .replace(/^CWE[-\s]?/, '')
     .replace(/^0+(?=\d)/, '')
-  return `CWE-${cweNumber}`
+  return `CWE-${vulnerabilityTypeNumber}`
 }
 
 // a line range with both ends inclusive

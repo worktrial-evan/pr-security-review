@@ -36,16 +36,16 @@ const archiveServer = Bun.serve({
 const archiveUrl = new URL('/all.zip', archiveServer.url).href
 
 // a fresh cache directory per test
-let cacheDir = ''
+let cacheDirectory = ''
 beforeAll(async () => {
-  cacheDir = await mkdtemp(join(tmpdir(), 'advisories-refresh-'))
+  cacheDirectory = await mkdtemp(join(tmpdir(), 'advisories-refresh-'))
 })
 afterEach(async () => {
-  await rm(cacheDir, { recursive: true, force: true })
-  cacheDir = await mkdtemp(join(tmpdir(), 'advisories-refresh-'))
+  await rm(cacheDirectory, { recursive: true, force: true })
+  cacheDirectory = await mkdtemp(join(tmpdir(), 'advisories-refresh-'))
 })
 afterAll(async () => {
-  await rm(cacheDir, { recursive: true, force: true })
+  await rm(cacheDirectory, { recursive: true, force: true })
   archiveServer.stop(true)
 })
 
@@ -81,7 +81,7 @@ describe('refreshAdvisories', () => {
 
     const refreshAdvisoriesResult = await refreshAdvisories({
       ecosystem: 'npm',
-      cacheDir,
+      cacheDirectory,
       sourceUrl: archiveUrl,
       now,
     })
@@ -102,7 +102,7 @@ describe('refreshAdvisories', () => {
 
     // the index sits in the cache layout and holds every npm package once
     const { indexPath } = resolveAdvisoryCachePaths({
-      cacheDir,
+      cacheDirectory,
       ecosystem: 'npm',
     })
     expect(refreshAdvisoriesResult.indexPath).toBe(indexPath)
@@ -122,7 +122,7 @@ describe('refreshAdvisories', () => {
 
     const refreshAdvisoriesResult = await refreshAdvisories({
       ecosystem: 'npm',
-      cacheDir,
+      cacheDirectory,
       sourceUrl: archiveUrl,
     })
 
@@ -146,7 +146,7 @@ describe('refreshAdvisories', () => {
     servedArchive = zipEntries(await readOsvFixtures(['withdrawn']))
     const refreshAdvisoriesResult = await refreshAdvisories({
       ecosystem: 'npm',
-      cacheDir,
+      cacheDirectory,
       sourceUrl: archiveUrl,
     })
     const indexBefore = await Bun.file(refreshAdvisoriesResult.indexPath).text()
@@ -169,7 +169,7 @@ describe('refreshAdvisories', () => {
     // the refresh rejects and names the malformed entry
     const refreshPromise = refreshAdvisories({
       ecosystem: 'npm',
-      cacheDir,
+      cacheDirectory,
       sourceUrl: archiveUrl,
     })
     expect(refreshPromise).rejects.toBeInstanceOf(AdvisoryParseError)
@@ -190,14 +190,22 @@ describe('refreshAdvisories', () => {
       'GHSA-broken.json': new TextEncoder().encode('{ not json'),
     })
     expect(
-      refreshAdvisories({ ecosystem: 'npm', cacheDir, sourceUrl: archiveUrl }),
+      refreshAdvisories({
+        ecosystem: 'npm',
+        cacheDirectory,
+        sourceUrl: archiveUrl,
+      }),
     ).rejects.toThrow('GHSA-broken.json')
   })
 
   test('fails when the download fails', async () => {
     const missingUrl = new URL('/missing.zip', archiveServer.url).href
     expect(
-      refreshAdvisories({ ecosystem: 'npm', cacheDir, sourceUrl: missingUrl }),
+      refreshAdvisories({
+        ecosystem: 'npm',
+        cacheDirectory,
+        sourceUrl: missingUrl,
+      }),
     ).rejects.toThrow('status 404')
   })
 })
@@ -211,7 +219,7 @@ describe.skipIf(process.env.RUN_NETWORK_TESTS !== '1')(
       async () => {
         const refreshAdvisoriesResult = await refreshAdvisories({
           ecosystem: 'npm',
-          cacheDir,
+          cacheDirectory,
         })
         expect(refreshAdvisoriesResult.snapshot.entryCount).toBeGreaterThan(
           100000,

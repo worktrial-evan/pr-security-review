@@ -224,7 +224,7 @@ async function noteGroundingRejection({
       message: 'finding rejected by grounding',
       reason,
       file: finding.file,
-      cwe: finding.cwe,
+      vulnerabilityType: finding.vulnerabilityType,
       title: finding.title,
       startLine: finding.startLine,
       endLine: finding.endLine,

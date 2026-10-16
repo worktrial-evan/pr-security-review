@@ -6,7 +6,7 @@
   "description": "The head commits deploy/key.pem, a PEM file holding an RSA private key block.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/secrets-03-committed-private-key"
+    "directory": "benchmark/cases/secrets-03-committed-private-key"
   },
   "expected": [
     {

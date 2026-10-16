@@ -4,7 +4,7 @@ import { type CodeReviewFinding, createFindingId } from '@/shared/finding'
 // the fields that differ between code review fixture findings. every other field has a default
 type CodeReviewFixtureOptions = Pick<
   CodeReviewFinding,
-  'cwe' | 'severity' | 'title' | 'evidence' | 'sourceToSink'
+  'vulnerabilityType' | 'severity' | 'title' | 'evidence' | 'sourceToSink'
 > &
   Partial<CodeReviewFinding>
 
@@ -23,10 +23,10 @@ function createCodeReviewFixture(
   options: CodeReviewFixtureOptions,
 ): CodeReviewFinding {
   // derive the id from the weakness and where it sits
-  const { cwe, file, startLine } = options
+  const { vulnerabilityType, file, startLine } = options
   const findingId = createFindingId({
     detector: 'code-review',
-    stableKey: `${cwe}:${file ?? 'no-file'}:${startLine ?? 0}`,
+    stableKey: `${vulnerabilityType}:${file ?? 'no-file'}:${startLine ?? 0}`,
   })
 
   // let the options override every default
@@ -36,7 +36,7 @@ function createCodeReviewFixture(
 // the code review findings in the fixture review result
 export const codeReviewFixtureFindings: CodeReviewFinding[] = [
   createCodeReviewFixture({
-    cwe: 'CWE-89',
+    vulnerabilityType: 'CWE-89',
     severity: 'critical',
     title: 'SQL injection through the search term',
     file: 'src/db/search.ts',
@@ -54,7 +54,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Pass the term as a bound parameter.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-79',
+    vulnerabilityType: 'CWE-79',
     severity: 'high',
     title: 'Unescaped <input> value reaches innerHTML',
     file: 'src/ui/render.ts',
@@ -69,7 +69,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Assign the label to textContent instead.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-22',
+    vulnerabilityType: 'CWE-22',
     severity: 'high',
     title: 'Download path is built from the request without a check',
     file: 'src/files/download.ts',
@@ -85,7 +85,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Reject names that resolve outside the uploads directory.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-918',
+    vulnerabilityType: 'CWE-918',
     severity: 'medium',
     title: 'Proxy fetches a url chosen by the caller',
     file: 'src/http/proxy.ts',
@@ -98,7 +98,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Allow only listed hosts.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-327',
+    vulnerabilityType: 'CWE-327',
     severity: 'medium',
     title: 'Password digest uses MD5',
     file: 'src/auth/hash.ts',
@@ -112,7 +112,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Use Bun.password.hash.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-352',
+    vulnerabilityType: 'CWE-352',
     severity: 'low',
     title: 'Settings form accepts a post without a token',
     file: 'src/routes/settings.ts',
@@ -125,7 +125,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Check a per-session token on state-changing routes.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-209',
+    vulnerabilityType: 'CWE-209',
     severity: 'info',
     title: 'Error response includes the stack trace',
     file: 'src/errors.ts',
@@ -138,7 +138,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Log the stack and return only the message.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-78',
+    vulnerabilityType: 'CWE-78',
     severity: 'high',
     title: 'Shell command is built from a job name',
     file: 'src/jobs/run.ts',
@@ -152,7 +152,7 @@ export const codeReviewFixtureFindings: CodeReviewFinding[] = [
     remediation: 'Pass the name as an argument, not inside a shell string.',
   }),
   createCodeReviewFixture({
-    cwe: 'CWE-307',
+    vulnerabilityType: 'CWE-307',
     severity: 'low',
     title: 'Login has no limit on failed attempts',
     confidence: 0.4,

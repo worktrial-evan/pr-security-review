@@ -30,7 +30,7 @@ const columnLabels: Record<ColumnKey, string> = {
   dependencyScope: 'Dependency scope',
   reachability: 'Reachability',
   matcherAgreement: 'Matcher agreement',
-  cwe: 'CWE',
+  vulnerabilityType: 'Vulnerability type (CWE)',
   confidence: 'Confidence',
   introduced: 'Introduced by pull request',
 }
@@ -152,7 +152,7 @@ function renderCell({ finding, column, value }: RenderCellOptions): string {
   if (column === 'location' || column === 'package') {
     return `<td><code>${text}</code></td>`
   }
-  if (column === 'advisory' && finding.detector === 'sca') {
+  if (column === 'advisory' && finding.detector === 'dependency') {
     return `<td>${renderAdvisoryLinks(finding)}</td>`
   }
   if (column === 'confidence') {

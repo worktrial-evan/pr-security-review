@@ -1,11 +1,11 @@
 // classifies a package as direct-imported, direct-unused or transitive from one import scan, the dependency set and the dependency graph
 import type { DependencyGraph, DependencySet } from '@/shared/dependency'
-import type { ScaFinding } from '@/shared/finding'
+import type { DependencyFinding } from '@/shared/finding'
 import type { ImportsByPackage } from './collect-imports'
 
-// the reachability fields of an SCA finding
+// the reachability fields of a dependency finding
 export type ReachabilityClassification = Pick<
-  ScaFinding,
+  DependencyFinding,
   'reachability' | 'importedBy' | 'dependencyPath'
 >
 

@@ -6,7 +6,7 @@
   "description": "The head renames the loginBody variable in the /login route of src/server.ts to loginRequestBody. Nothing else changes.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-10-rename-variable"
+    "directory": "benchmark/cases/clean-10-rename-variable"
   },
   "expected": []
 }

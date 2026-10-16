@@ -6,7 +6,7 @@
   "description": "The head adds a README.md to the app that lists the routes and how to start it. No code changes.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-06-docs-only"
+    "directory": "benchmark/cases/clean-06-docs-only"
   },
   "expected": []
 }

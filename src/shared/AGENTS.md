@@ -11,21 +11,21 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 ### finding.ts
 
 - `severities`, `severitySchema`, `Severity`: critical, high, medium, low, info
-- `detectorKinds`, `detectorKindSchema`, `DetectorKind`: sca, code-review, secrets
+- `detectorKinds`, `detectorKindSchema`, `DetectorKind`: dependency, code-review, secrets
 - `findingIdSchema`, `FindingId`: a 16-character lowercase hex string branded `FindingId`
 - `summarySources`, `summarySourceSchema`, `SummarySource`: model, template
 - `reachabilityKinds`, `reachabilityKindSchema`, `ReachabilityKind`: direct-imported, direct-unused, transitive
 - `matcherAgreements`, `matcherAgreementSchema`, `MatcherAgreement`: both, handwritten-only, oracle-only, oracle-unavailable
 - `findingBaseSchema`, `FindingBase`: id, detector, severity, confidence in 0..1, title, optional file, startLine and endLine, isIntroducedByPullRequest, optional summary, remediation and summarySource
-- `scaFindingSchema`, `ScaFinding`: the base plus packageName, version, advisoryId, aliases, isGithubReviewed, dependencyScope, reachability, importedBy, dependencyPath, fixedVersions, optional cvssScore, isVersionUnparseable, matcherAgreement
-- `codeReviewFindingSchema`, `CodeReviewFinding`: the base plus cwe, evidence, sourceToSink, promptVersion, model
+- `dependencyFindingSchema`, `DependencyFinding`: the base plus packageName, version, advisoryId, aliases, isGithubReviewed, dependencyScope, reachability, importedBy, dependencyPath, fixedVersions, optional cvssScore, isVersionUnparseable, matcherAgreement
+- `codeReviewFindingSchema`, `CodeReviewFinding`: the base plus vulnerabilityType, evidence, sourceToSink, promptVersion, model
 - `secretFindingSchema`, `SecretFinding`: the base plus ruleId, fingerprint
 - `findingSchema`, `Finding`: the discriminated union of the three variants on detector
 - `CreateFindingIdOptions`, `createFindingId({ detector, stableKey })`: derives a `FindingId` as the first 16 hex characters of sha256 over `detector`, a newline and `stableKey`
 
 ### pull-request-source.ts
 
-- `pullRequestReferenceSchema`, `PullRequestReference`: owner, repo, number, url
+- `pullRequestReferenceSchema`, `PullRequestReference`: owner, repository, number, url
 - `hunkLineKinds`, `hunkLineKindSchema`, `HunkLineKind`: added, removed, context
 - `hunkLineSchema`, `HunkLine`: kind, headLine, text
 - `hunkSchema`, `Hunk`: oldStart, oldLines, newStart, newLines, lines
@@ -37,7 +37,7 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 
 ### dependency.ts
 
-- `dependencyScopes`, `dependencyScopeSchema`, `DependencyScope`: prod, dev
+- `dependencyScopes`, `dependencyScopeSchema`, `DependencyScope`: production, development
 - `dependencyVersionSchema`, `DependencyVersion`: name, version, scope, isDirect, isWorkspace, isVersionUnparseable, optional realPackageName, dependencyKeys as name@version
 - `lockfileKinds`, `lockfileKindSchema`, `LockfileKind`: bun, npm
 - `dependencySetSchema`, `DependencySet`: lockfileKind, lockfilePath, versionsByDependency as a `Map` of name to versions, directDependencyNames as a `Set`
@@ -74,7 +74,7 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 
 ### review.ts
 
-- `reviewOptionsSchema`, `ReviewOptions`: isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDir, reviewModelId, summarizeModelId, contextLines, optional failOnSeverity
+- `reviewOptionsSchema`, `ReviewOptions`: isLlmEnabled, isCacheEnabled, isOffline, advisoryCacheDirectory, reviewModelId, summarizeModelId, contextLines, optional failOnSeverity
 - `reviewMetadataSchema`, `ReviewMetadata`: runId, startedAt, finishedAt, optional pullRequestReference, baseSha, headSha, stepDurations, totalCostUsd, optional advisorySnapshot, promptVersions, modelIds, groundingRejectionCount, suspectedPromptInjectionCount, degradedSteps
 - `stepErrorSchema`, `StepError`: step, message, isFatal
 - `reviewResultSchema`, `ReviewResult`: metadata, findings, errors
@@ -91,11 +91,11 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 ### benchmark.ts
 
 - `benchmarkSplits`, `benchmarkSplitSchema`, `BenchmarkSplit`: dev, test
-- `benchmarkCategories`, `benchmarkCategorySchema`, `BenchmarkCategory`: sca, code, secrets, clean, real-world
-- `snapshotBenchmarkSourceSchema`, `SnapshotBenchmarkSource`: a strict object with kind snapshot and dir
-- `gitBenchmarkSourceSchema`, `GitBenchmarkSource`: a strict object with kind git, repoUrl, baseSha, headSha
+- `benchmarkCategories`, `benchmarkCategorySchema`, `BenchmarkCategory`: dependency, code, secrets, clean, real-world
+- `snapshotBenchmarkSourceSchema`, `SnapshotBenchmarkSource`: a strict object with kind snapshot and directory
+- `gitBenchmarkSourceSchema`, `GitBenchmarkSource`: a strict object with kind git, repositoryUrl, baseSha, headSha
 - `benchmarkSourceSchema`, `BenchmarkSource`: the discriminated union of both on kind
-- `expectedFindingSchema`, `ExpectedFinding`: detector, optional packageName, advisoryId, cwe, file, startLine, endLine, severity
+- `expectedFindingSchema`, `ExpectedFinding`: detector, optional packageName, advisoryId, vulnerabilityType, file, startLine, endLine, severity
 - `benchmarkCaseSchema`, `BenchmarkCase`: id, split, category, isClean, description, source, expected
 - `scoreTripleSchema`, `ScoreTriple`: precision, recall, f1
 - `benchmarkCaseResultSchema`, `BenchmarkCaseResult`: caseId, truePositives, falsePositives, falseNegatives
@@ -103,7 +103,7 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 
 ### finding.samples.ts
 
-- `scaFindingSample`, `codeReviewFindingSample`, `secretFindingSample`: one valid finding per detector variant for the tests in this module
+- `dependencyFindingSample`, `codeReviewFindingSample`, `secretFindingSample`: one valid finding per detector variant for the tests in this module
 
 ### cache-directory.ts
 
@@ -179,5 +179,5 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - Only the finding id is branded. `runId` and the shas are plain strings.
 - `HunkLine.headLine` is a number on every line, including removed lines, which have no line of their own in the head revision. The pull-request-source module decides what it stores there.
-- `AdvisoryRange` has no `repo` field, so a GIT range cannot name its repository yet.
+- `AdvisoryRange` has no `repository` field, so a GIT range cannot name its repository yet.
 - `DependencyGraph` has only `shortestPathTo`. Other graph queries are added when a module needs them.

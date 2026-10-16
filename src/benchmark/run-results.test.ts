@@ -18,8 +18,11 @@ const sampleResults: BenchmarkRunResults = (() => {
           category: 'code',
           isClean: false,
           description: 'the sample case',
-          source: { kind: 'snapshot', dir: 'benchmark/cases/code-01-sql' },
-          expected: [{ detector: 'code-review', cwe: 'CWE-89' }],
+          source: {
+            kind: 'snapshot',
+            directory: 'benchmark/cases/code-01-sql',
+          },
+          expected: [{ detector: 'code-review', vulnerabilityType: 'CWE-89' }],
         },
         findings: [codeReviewFindingSample],
         costUsd: 0.01,

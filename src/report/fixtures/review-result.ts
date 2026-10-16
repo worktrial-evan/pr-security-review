@@ -1,7 +1,7 @@
 // the fixture review result: 27 findings from all three detectors, one step error and full run metadata
 import type { ReviewResult } from '@/shared/review'
 import { codeReviewFixtureFindings } from './code-review-findings'
-import { scaFixtureFindings } from './sca-findings'
+import { dependencyFixtureFindings } from './dependency-findings'
 import { secretFixtureFindings } from './secret-findings'
 
 // a finished review of a pull request whose summarize step degraded to template text
@@ -12,7 +12,7 @@ export const fixtureReviewResult: ReviewResult = {
     finishedAt: '2026-10-14T09:34:12.000Z',
     pullRequestReference: {
       owner: 'octocat',
-      repo: 'hello-world',
+      repository: 'hello-world',
       number: 42,
       url: 'https://github.com/octocat/hello-world/pull/42',
     },
@@ -43,7 +43,7 @@ export const fixtureReviewResult: ReviewResult = {
     degradedSteps: ['summarize'],
   },
   findings: [
-    ...scaFixtureFindings,
+    ...dependencyFixtureFindings,
     ...codeReviewFixtureFindings,
     ...secretFixtureFindings,
   ],

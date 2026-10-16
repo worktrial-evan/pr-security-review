@@ -6,12 +6,12 @@
   "description": "The head adds a client script public/app.ts that writes the name query parameter into the page through innerHTML without escaping it.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-02-xss-innerhtml"
+    "directory": "benchmark/cases/code-02-xss-innerhtml"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-79",
+      "vulnerabilityType": "CWE-79",
       "file": "public/app.ts",
       "startLine": 5,
       "endLine": 10

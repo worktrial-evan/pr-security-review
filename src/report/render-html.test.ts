@@ -1,8 +1,8 @@
 // tests the HTML report: header values, counts, a row per finding, muted rows, escaping, detail rows, embedding and well-formedness
 import { describe, expect, test } from 'bun:test'
 import type { ReviewResult } from '../shared/review'
+import { dependencyFixtureFindings } from './fixtures/dependency-findings'
 import { fixtureReviewResult } from './fixtures/review-result'
-import { scaFixtureFindings } from './fixtures/sca-findings'
 import { renderHtmlReport } from './render-html'
 import { findTagImbalance } from './tag-balance'
 
@@ -59,7 +59,7 @@ describe('renderHtmlReport header', () => {
 
   test('counts only introduced findings and reports the pre-existing split', () => {
     // five high findings of which the last two were already there
-    const highFindings = scaFixtureFindings
+    const highFindings = dependencyFixtureFindings
       .slice(0, 5)
       .map((finding, index) => ({
         ...finding,
@@ -74,7 +74,7 @@ describe('renderHtmlReport header', () => {
     const html = renderHtmlReport(result)
     expect(html).toContain('data-severity="high" data-count="3"')
     expect(html).toContain('data-severity="critical" data-count="0"')
-    expect(html).toContain('data-detector="sca" data-count="3"')
+    expect(html).toContain('data-detector="dependency" data-count="3"')
     expect(html).toContain('2 pre-existing, 3 introduced')
   })
 })
@@ -163,7 +163,7 @@ describe('renderHtmlReport detail rows', () => {
     )
   })
 
-  test('shows the dependency path, importing files and fixed versions of an sca finding', () => {
+  test('shows the dependency path, importing files and fixed versions of a dependency finding', () => {
     expect(fixtureHtml).toContain(
       '<code>mkdirp@0.5.5</code> &gt; <code>minimist@1.2.5</code>',
     )

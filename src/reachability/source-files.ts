@@ -18,29 +18,29 @@ export const excludedDirectoryNames: ReadonlySet<string> = new Set([
 
 // the directory to walk and the most files to return
 export interface ListSourceFilesOptions {
-  rootDir: string
+  rootDirectory: string
   maxFileCount: number
 }
 
 // the resolved root, the absolute paths of the files found under it, whether the walk stopped at the cap, and the directories it could not read
 export interface SourceFileListing {
-  realRootDir: string
+  realRootDirectory: string
   filePaths: string[]
   isFileCapReached: boolean
   warnings: string[]
 }
 
 /**
- * Lists the source files under rootDir breadth first in name order, stopping once maxFileCount files are found.
+ * Lists the source files under rootDirectory breadth first in name order, stopping once maxFileCount files are found.
  */
 export async function listSourceFiles({
-  rootDir,
+  rootDirectory,
   maxFileCount,
 }: ListSourceFilesOptions): Promise<SourceFileListing> {
-  const realRootDir = await realpath(rootDir)
+  const realRootDirectory = await realpath(rootDirectory)
   const filePaths: string[] = []
   const warnings: string[] = []
-  const pendingDirectories = [realRootDir]
+  const pendingDirectories = [realRootDirectory]
 
   // visit each directory once, queueing its subdirectories as they are found
   for (const directory of pendingDirectories) {
@@ -59,20 +59,25 @@ export async function listSourceFiles({
 
       // stop at the cap once one more file is waiting
       if (filePaths.length >= maxFileCount) {
-        return { realRootDir, filePaths, isFileCapReached: true, warnings }
+        return {
+          realRootDirectory,
+          filePaths,
+          isFileCapReached: true,
+          warnings,
+        }
       }
 
       // keep the file only when its real path stays inside the root
       const isInsideRoot = await isRealPathInsideRoot({
         filePath: entryPath,
-        realRootDir,
+        realRootDirectory,
       })
       if (isInsideRoot) {
         filePaths.push(entryPath)
       }
     }
   }
-  return { realRootDir, filePaths, isFileCapReached: false, warnings }
+  return { realRootDirectory, filePaths, isFileCapReached: false, warnings }
 }
 
 // the directory to read and the warnings to add to when it cannot be read
@@ -117,15 +122,15 @@ function isSourceFile(directoryEntry: Dirent): boolean {
 // the file to check and the resolved root it must stay inside
 interface IsRealPathInsideRootOptions {
   filePath: string
-  realRootDir: string
+  realRootDirectory: string
 }
 
 // resolve a file's real path and tell whether it is inside the root
 async function isRealPathInsideRoot({
   filePath,
-  realRootDir,
+  realRootDirectory,
 }: IsRealPathInsideRootOptions): Promise<boolean> {
   const realFilePath = await realpath(filePath)
-  const relativePath = relative(realRootDir, realFilePath)
+  const relativePath = relative(realRootDirectory, realFilePath)
   return !relativePath.startsWith('..') && !isAbsolute(relativePath)
 }

@@ -6,12 +6,12 @@
   "description": "The head changes verifySessionToken to read the claims with jsonwebtoken.decode, so the token signature is never checked.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-06-jwt-verification-disabled"
+    "directory": "benchmark/cases/code-06-jwt-verification-disabled"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-347",
+      "vulnerabilityType": "CWE-347",
       "file": "src/auth.ts",
       "startLine": 45,
       "endLine": 46

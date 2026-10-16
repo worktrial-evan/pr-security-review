@@ -54,7 +54,13 @@ export const testReviewOptions: ReviewOptions = {
   isLlmEnabled: true,
   isCacheEnabled: false,
   isOffline: true,
-  advisoryCacheDir: join(import.meta.dir, '..', '..', 'benchmark', 'fixtures'),
+  advisoryCacheDirectory: join(
+    import.meta.dir,
+    '..',
+    '..',
+    'benchmark',
+    'fixtures',
+  ),
   reviewModelId: testReviewModelId,
   summarizeModelId: testSummarizeModelId,
   contextLines: 3,
@@ -74,9 +80,9 @@ const lockfileFixturesDirectory = join(
 
 // a snapshot pull request on disk and the directory holding both trees
 export interface SnapshotPullRequest {
-  rootDir: string
-  baseDir: string
-  headDir: string
+  rootDirectory: string
+  baseDirectory: string
+  headDirectory: string
 }
 
 /**
@@ -84,32 +90,34 @@ export interface SnapshotPullRequest {
  */
 export async function writeSnapshotPullRequest(): Promise<SnapshotPullRequest> {
   // copy the lockfile fixtures into base and head
-  const rootDir = await mkdtemp(join(tmpdir(), 'pull-request-review-pipeline-'))
-  const baseDir = join(rootDir, 'base')
-  const headDir = join(rootDir, 'head')
-  await cp(join(lockfileFixturesDirectory, 'diff-base'), baseDir, {
+  const rootDirectory = await mkdtemp(
+    join(tmpdir(), 'pull-request-review-pipeline-'),
+  )
+  const baseDirectory = join(rootDirectory, 'base')
+  const headDirectory = join(rootDirectory, 'head')
+  await cp(join(lockfileFixturesDirectory, 'diff-base'), baseDirectory, {
     recursive: true,
   })
-  await cp(join(lockfileFixturesDirectory, 'diff-head'), headDir, {
+  await cp(join(lockfileFixturesDirectory, 'diff-head'), headDirectory, {
     recursive: true,
   })
 
   // add a source file at base and change it at head
   await Bun.write(
-    join(baseDir, 'src', 'config.ts'),
+    join(baseDirectory, 'src', 'config.ts'),
     'export const name = "app"\n',
   )
   await Bun.write(
-    join(headDir, 'src', 'config.ts'),
+    join(headDirectory, 'src', 'config.ts'),
     `export const name = "app"\nexport const token = '${testGithubToken}'\n`,
   )
 
   // add a minified file with one overlong line
   await Bun.write(
-    join(headDir, 'public', 'app.min.js'),
+    join(headDirectory, 'public', 'app.min.js'),
     `${'a'.repeat(5000)}\n`,
   )
-  return { rootDir, baseDir, headDir }
+  return { rootDirectory, baseDirectory, headDirectory }
 }
 
 /**
@@ -118,7 +126,7 @@ export async function writeSnapshotPullRequest(): Promise<SnapshotPullRequest> {
 export async function removeSnapshotPullRequest(
   snapshotPullRequest: SnapshotPullRequest,
 ): Promise<void> {
-  await rm(snapshotPullRequest.rootDir, { recursive: true, force: true })
+  await rm(snapshotPullRequest.rootDirectory, { recursive: true, force: true })
 }
 
 /**

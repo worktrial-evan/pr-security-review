@@ -31,8 +31,8 @@ let auditSink: MemoryAuditSink
 beforeEach(async () => {
   snapshotPullRequest = await writeSnapshotPullRequest()
   pullRequestSource = new SnapshotPullRequestSource({
-    baseDir: snapshotPullRequest.baseDir,
-    headDir: snapshotPullRequest.headDir,
+    baseDirectory: snapshotPullRequest.baseDirectory,
+    headDirectory: snapshotPullRequest.headDirectory,
     contextLines: 3,
   })
   auditSink = createMemoryAuditSink()
@@ -91,10 +91,10 @@ describe('runReview', () => {
   })
 
   test('keeps a grounded review finding and counts rejections and injection attempts', async () => {
-    // the reviewer reports one grounded finding, one finding with a cwe off the allowlist and one injection attempt
+    // the reviewer reports one grounded finding, one finding with a vulnerabilityType off the allowlist and one injection attempt
     const tokenLine = `export const token = '${testGithubToken}'`
     const reviewFinding = {
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
       title: 'Query text built from a constant',
       severity: 'high',
       confidence: 0.8,
@@ -116,7 +116,10 @@ describe('runReview', () => {
         {
           kind: 'output',
           output: {
-            findings: [reviewFinding, { ...reviewFinding, cwe: 'CWE-9999' }],
+            findings: [
+              reviewFinding,
+              { ...reviewFinding, vulnerabilityType: 'CWE-9999' },
+            ],
             injectionAttempts: [{ file: 'src/config.ts', line: 2 }],
           },
         },

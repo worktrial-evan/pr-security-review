@@ -34,7 +34,7 @@ export const benchmarkAdvisoryPackageNames = [
 ] as const
 
 // the directory the subset is written under, laid out like a cache directory
-export const benchmarkAdvisoryCacheDir = join(
+export const benchmarkAdvisoryCacheDirectory = join(
   import.meta.dir,
   '..',
   '..',
@@ -44,8 +44,8 @@ export const benchmarkAdvisoryCacheDir = join(
 
 // where to read the full cache, where to write the subset and which packages to keep
 export interface WriteAdvisorySubsetOptions {
-  sourceCacheDir: string
-  targetCacheDir: string
+  sourceCacheDirectory: string
+  targetCacheDirectory: string
   packageNames: readonly string[]
 }
 
@@ -53,12 +53,12 @@ export interface WriteAdvisorySubsetOptions {
  * Copies the advisories of the given packages from a full cache into a subset with its own snapshot, formatted for the repository.
  */
 export async function writeAdvisorySubset({
-  sourceCacheDir,
-  targetCacheDir,
+  sourceCacheDirectory,
+  targetCacheDirectory,
   packageNames,
 }: WriteAdvisorySubsetOptions): Promise<AdvisorySnapshot> {
   // look up every package in the full cache, keyed by its normalized name
-  const sourceStore = await loadAdvisoryStore(sourceCacheDir)
+  const sourceStore = await loadAdvisoryStore(sourceCacheDirectory)
   const sortedPackageNames = packageNames.map(normalizePackageName).toSorted()
   const subsetIndex: Record<string, Advisory[]> = {}
   for (const packageName of sortedPackageNames) {
@@ -78,7 +78,10 @@ export async function writeAdvisorySubset({
 
   // write both files in the cache layout and format them the way biome checks them
   const { ecosystemDirectory, indexPath, snapshotPath } =
-    resolveAdvisoryCachePaths({ cacheDir: targetCacheDir, ecosystem: 'npm' })
+    resolveAdvisoryCachePaths({
+      cacheDirectory: targetCacheDirectory,
+      ecosystem: 'npm',
+    })
   await mkdir(ecosystemDirectory, { recursive: true })
   await Bun.write(indexPath, JSON.stringify(subsetIndex))
   await Bun.write(snapshotPath, JSON.stringify(subsetSnapshot))
@@ -89,8 +92,8 @@ export async function writeAdvisorySubset({
 // regenerate the committed subset from the shared cache when invoked as a script
 if (import.meta.main) {
   const subsetSnapshot = await writeAdvisorySubset({
-    sourceCacheDir: resolveCacheDirectory(),
-    targetCacheDir: benchmarkAdvisoryCacheDir,
+    sourceCacheDirectory: resolveCacheDirectory(),
+    targetCacheDirectory: benchmarkAdvisoryCacheDirectory,
     packageNames: benchmarkAdvisoryPackageNames,
   })
   console.log(

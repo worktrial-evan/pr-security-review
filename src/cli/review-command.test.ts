@@ -91,8 +91,8 @@ async function runSnapshotReview(
     openPullRequestSource: async () => {
       openCount += 1
       return new SnapshotPullRequestSource({
-        baseDir: join(temporaryDirectory, 'base'),
-        headDir: join(temporaryDirectory, 'head'),
+        baseDirectory: join(temporaryDirectory, 'base'),
+        headDirectory: join(temporaryDirectory, 'head'),
       })
     },
   })

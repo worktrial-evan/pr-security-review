@@ -6,7 +6,7 @@
   "description": "The head makes the /login route of src/server.ts answer 400 when the request body is not json instead of throwing.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-13-error-handling-added"
+    "directory": "benchmark/cases/clean-13-error-handling-added"
   },
   "expected": []
 }

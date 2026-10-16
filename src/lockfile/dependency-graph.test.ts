@@ -7,7 +7,7 @@ import { readFixtureDependencySet } from './lockfile-fixtures'
 describe.each(lockfileKinds)(
   'buildDependencyGraph with the %s lockfile',
   (lockfileKind) => {
-    test('finds the path to a transitive dependency through the dev dependency', async () => {
+    test('finds the path to a transitive dependency through the development dependency', async () => {
       const dependencyGraph = buildDependencyGraph(
         await readFixtureDependencySet({ lockfileKind, fixtureCase: 'scopes' }),
       )
@@ -55,7 +55,7 @@ describe('buildDependencyGraph with an alias', () => {
             {
               name: 'app-kit',
               version: '1.0.0',
-              scope: 'prod',
+              scope: 'production',
               isDirect: true,
               isWorkspace: false,
               isVersionUnparseable: false,
@@ -69,7 +69,7 @@ describe('buildDependencyGraph with an alias', () => {
             {
               name: 'lodash-legacy',
               version: '4.17.20',
-              scope: 'prod',
+              scope: 'production',
               isDirect: false,
               isWorkspace: false,
               isVersionUnparseable: false,

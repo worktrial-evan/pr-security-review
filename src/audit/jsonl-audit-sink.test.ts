@@ -40,21 +40,26 @@ const auditEventSamples: AuditEvent[] = [
   },
 ]
 
-// a fresh runs directory outside the repo for every test
-let tempRunsDir: string
+// a fresh runs directory outside the repository for every test
+let temporaryRunsDirectory: string
 
 beforeEach(() => {
-  tempRunsDir = mkdtempSync(join(tmpdir(), 'pr-review-audit-'))
+  temporaryRunsDirectory = mkdtempSync(
+    join(tmpdir(), 'pull-request-review-audit-'),
+  )
 })
 
 afterEach(() => {
-  rmSync(tempRunsDir, { recursive: true, force: true })
+  rmSync(temporaryRunsDirectory, { recursive: true, force: true })
 })
 
 describe('JsonlAuditSink', () => {
   test('three events become three lines that each pass the audit contract', async () => {
     // write the three events through one sink
-    const sink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const sink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     for (const auditEvent of auditEventSamples) {
       await sink.write(auditEvent)
     }
@@ -69,20 +74,28 @@ describe('JsonlAuditSink', () => {
     expect(parsedAuditEvents).toEqual(auditEventSamples)
   })
 
-  test('the run directory and the log file are created under runsDir', () => {
+  test('the run directory and the log file are created under runsDirectory', () => {
     // open a sink for a run whose directory does not exist yet
-    const sink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const sink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     sink.dispose()
 
     // expect the directory and the empty log in place
-    expect(sink.filePath).toBe(join(tempRunsDir, runId, 'audit.jsonl'))
-    expect(existsSync(join(tempRunsDir, runId))).toBe(true)
+    expect(sink.filePath).toBe(
+      join(temporaryRunsDirectory, runId, 'audit.jsonl'),
+    )
+    expect(existsSync(join(temporaryRunsDirectory, runId))).toBe(true)
     expect(existsSync(sink.filePath)).toBe(true)
   })
 
   test('a fake token is redacted on disk', async () => {
     // write an event whose payload holds the token under an authorization header
-    const sink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const sink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     await sink.write({
       timestamp: '2026-10-15T08:30:00.000Z',
       runId,
@@ -105,7 +118,10 @@ describe('JsonlAuditSink', () => {
 
   test('the file ends with the event as soon as write resolves', async () => {
     // after each write, read the file back before writing the next event
-    const sink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const sink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     for (const auditEvent of auditEventSamples) {
       await sink.write(auditEvent)
       const auditLines = await readAuditLines(sink)
@@ -118,10 +134,16 @@ describe('JsonlAuditSink', () => {
 
   test('a second sink appends to the log instead of truncating it', async () => {
     // write one event, close the sink, then write another through a new sink for the same run
-    const firstSink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const firstSink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     await firstSink.write(auditEventSamples[0] as AuditEvent)
     firstSink.dispose()
-    const secondSink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const secondSink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     await secondSink.write(auditEventSamples[1] as AuditEvent)
     secondSink.dispose()
 
@@ -132,7 +154,10 @@ describe('JsonlAuditSink', () => {
 
   test('dispose closes the descriptor and can be called twice', async () => {
     // close a sink twice and then try to write through it
-    const sink = new JsonlAuditSink({ runId, runsDir: tempRunsDir })
+    const sink = new JsonlAuditSink({
+      runId,
+      runsDirectory: temporaryRunsDirectory,
+    })
     sink.dispose()
     sink.dispose()
 

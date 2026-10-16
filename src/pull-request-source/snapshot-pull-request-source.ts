@@ -20,8 +20,8 @@ const binaryScanByteCount = 8000
 const allFilesGlob = new Bun.Glob('**/*')
 
 export interface SnapshotPullRequestSourceOptions {
-  baseDir: string
-  headDir: string
+  baseDirectory: string
+  headDirectory: string
   contextLines?: number
 }
 
@@ -36,33 +36,33 @@ interface FileChange {
 
 // a pull request read from a base directory and a head directory
 export class SnapshotPullRequestSource implements PullRequestSource {
-  private readonly baseDir: string
-  private readonly headDir: string
+  private readonly baseDirectory: string
+  private readonly headDirectory: string
   private readonly contextLines: number
 
   constructor({
-    baseDir,
-    headDir,
+    baseDirectory,
+    headDirectory,
     contextLines = defaultContextLines,
   }: SnapshotPullRequestSourceOptions) {
-    this.baseDir = resolve(baseDir)
-    this.headDir = resolve(headDir)
+    this.baseDirectory = resolve(baseDirectory)
+    this.headDirectory = resolve(headDirectory)
     this.contextLines = contextLines
   }
 
   /** Describes the snapshot with each directory path standing in for a sha. */
   async describe(): Promise<PullRequestDescription> {
     return {
-      baseSha: `snapshot:${this.baseDir}`,
-      headSha: `snapshot:${this.headDir}`,
+      baseSha: `snapshot:${this.baseDirectory}`,
+      headSha: `snapshot:${this.headDirectory}`,
     }
   }
 
   /** Lists every file that differs between the trees, sorted by path. */
   async listChangedFiles(): Promise<ChangedFile[]> {
     // read both trees into path to bytes maps
-    const baseFiles = await readTree(this.baseDir)
-    const headFiles = await readTree(this.headDir)
+    const baseFiles = await readTree(this.baseDirectory)
+    const headFiles = await readTree(this.headDirectory)
 
     // find the changes, then pair identical deletions and additions into renames
     const fileChanges = findFileChanges(baseFiles, headFiles)
@@ -77,17 +77,17 @@ export class SnapshotPullRequestSource implements PullRequestSource {
 
   /** Reads a file's text in the base tree, or null when it is not there. */
   async readFileAtBase(path: string): Promise<string | null> {
-    return readTreeFile(this.baseDir, path)
+    return readTreeFile(this.baseDirectory, path)
   }
 
   /** Reads a file's text in the head tree, or null when it is not there. */
   async readFileAtHead(path: string): Promise<string | null> {
-    return readTreeFile(this.headDir, path)
+    return readTreeFile(this.headDirectory, path)
   }
 
   /** Returns the head directory, which already holds the head files. */
   async checkoutHead(): Promise<string> {
-    return this.headDir
+    return this.headDirectory
   }
 
   /** Does nothing, since a snapshot creates nothing to clean up. */

@@ -2,17 +2,17 @@
 import {
   type CodeReviewFinding,
   createFindingId,
-  type ScaFinding,
+  type DependencyFinding,
   type SecretFinding,
 } from './finding'
 
 // a vulnerable lodash version reached through a direct import
-export const scaFindingSample: ScaFinding = {
+export const dependencyFindingSample: DependencyFinding = {
   id: createFindingId({
-    detector: 'sca',
+    detector: 'dependency',
     stableKey: 'lodash@4.17.20:GHSA-35jh-r3h4-6jhm',
   }),
-  detector: 'sca',
+  detector: 'dependency',
   severity: 'high',
   confidence: 0.9,
   title: 'lodash 4.17.20 is affected by GHSA-35jh-r3h4-6jhm',
@@ -29,7 +29,7 @@ export const scaFindingSample: ScaFinding = {
   advisoryId: 'GHSA-35jh-r3h4-6jhm',
   aliases: ['CVE-2021-23337'],
   isGithubReviewed: true,
-  dependencyScope: 'prod',
+  dependencyScope: 'production',
   reachability: 'direct-imported',
   importedBy: ['src/render.ts'],
   dependencyPath: ['lodash@4.17.20'],
@@ -57,7 +57,7 @@ export const codeReviewFindingSample: CodeReviewFinding = {
     'The id query parameter reaches the query string without a parameter binding.',
   remediation: 'Pass the id as a bound parameter.',
   summarySource: 'model',
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   evidence: [
     'const query = "select * from users where id = " + request.query.id',
   ],

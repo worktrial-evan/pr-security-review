@@ -6,12 +6,12 @@
   "description": "The head makes redirectWithinApp accept any target that starts with http:// or https://, so the to query parameter can send the client to another site.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/code-11-open-redirect"
+    "directory": "benchmark/cases/code-11-open-redirect"
   },
   "expected": [
     {
       "detector": "code-review",
-      "cwe": "CWE-601",
+      "vulnerabilityType": "CWE-601",
       "file": "src/redirects.ts",
       "startLine": 8,
       "endLine": 9

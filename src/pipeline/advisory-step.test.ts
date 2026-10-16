@@ -7,7 +7,7 @@ import { loadAdvisories } from './advisory-step'
 import { testReviewOptions } from './pipeline-fixtures'
 
 // the committed advisory fixture. its snapshot is older than a stale limit of a few hours
-const fixtureCacheDirectory = testReviewOptions.advisoryCacheDir
+const fixtureCacheDirectory = testReviewOptions.advisoryCacheDirectory
 
 // an empty cache directory for the current test
 let emptyCacheDirectory: string
@@ -24,17 +24,17 @@ afterEach(async () => {
 
 // a refresh that copies the committed fixture into the cache and counts its calls
 function createFixtureRefresh(): {
-  refreshAdvisoryCache: (cacheDir: string) => Promise<void>
+  refreshAdvisoryCache: (cacheDirectory: string) => Promise<void>
   refreshCount: () => number
 } {
   let refreshCallCount = 0
   return {
     refreshCount: () => refreshCallCount,
-    async refreshAdvisoryCache(cacheDir: string): Promise<void> {
+    async refreshAdvisoryCache(cacheDirectory: string): Promise<void> {
       refreshCallCount += 1
       await cp(
         join(fixtureCacheDirectory, 'advisories', 'npm'),
-        join(cacheDir, 'advisories', 'npm'),
+        join(cacheDirectory, 'advisories', 'npm'),
         {
           recursive: true,
         },
@@ -48,7 +48,7 @@ describe('loadAdvisories', () => {
     const fixtureRefresh = createFixtureRefresh()
     const advisoryLoad = await loadAdvisories({
       isNeeded: false,
-      advisoryCacheDir: emptyCacheDirectory,
+      advisoryCacheDirectory: emptyCacheDirectory,
       advisoryStaleHours: 24,
       isOffline: false,
       refreshAdvisoryCache: fixtureRefresh.refreshAdvisoryCache,
@@ -61,7 +61,7 @@ describe('loadAdvisories', () => {
   test('uses a stale cache as it is when offline', async () => {
     const advisoryLoad = await loadAdvisories({
       isNeeded: true,
-      advisoryCacheDir: fixtureCacheDirectory,
+      advisoryCacheDirectory: fixtureCacheDirectory,
       advisoryStaleHours: 0.001,
       isOffline: true,
     })
@@ -75,7 +75,7 @@ describe('loadAdvisories', () => {
   test('fails offline when there is no cache', async () => {
     const advisoryLoad = loadAdvisories({
       isNeeded: true,
-      advisoryCacheDir: emptyCacheDirectory,
+      advisoryCacheDirectory: emptyCacheDirectory,
       advisoryStaleHours: 24,
       isOffline: true,
     })
@@ -87,7 +87,7 @@ describe('loadAdvisories', () => {
     const fixtureRefresh = createFixtureRefresh()
     const advisoryLoad = await loadAdvisories({
       isNeeded: true,
-      advisoryCacheDir: emptyCacheDirectory,
+      advisoryCacheDirectory: emptyCacheDirectory,
       advisoryStaleHours: 24 * 365 * 100,
       isOffline: false,
       refreshAdvisoryCache: fixtureRefresh.refreshAdvisoryCache,
@@ -104,7 +104,7 @@ describe('loadAdvisories', () => {
     const freshRefresh = createFixtureRefresh()
     await loadAdvisories({
       isNeeded: true,
-      advisoryCacheDir: fixtureCacheDirectory,
+      advisoryCacheDirectory: fixtureCacheDirectory,
       advisoryStaleHours: 24 * 365 * 100,
       isOffline: false,
       refreshAdvisoryCache: freshRefresh.refreshAdvisoryCache,
@@ -116,7 +116,7 @@ describe('loadAdvisories', () => {
     const staleRefresh = createFixtureRefresh()
     await loadAdvisories({
       isNeeded: true,
-      advisoryCacheDir: emptyCacheDirectory,
+      advisoryCacheDirectory: emptyCacheDirectory,
       advisoryStaleHours: 0.001,
       isOffline: false,
       refreshAdvisoryCache: staleRefresh.refreshAdvisoryCache,

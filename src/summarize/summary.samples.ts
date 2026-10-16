@@ -3,7 +3,7 @@ import type { Advisory } from '@/shared/advisory'
 import {
   type CodeReviewFinding,
   createFindingId,
-  type ScaFinding,
+  type DependencyFinding,
   type SecretFinding,
 } from '@/shared/finding'
 
@@ -37,9 +37,9 @@ export const lodashAdvisorySample: Advisory = {
 }
 
 // a vulnerable lodash reached through a scoped direct dependency
-export const scaFindingSample: ScaFinding = {
-  id: createFindingId({ detector: 'sca', stableKey: 'lodash@4.17.20' }),
-  detector: 'sca',
+export const dependencyFindingSample: DependencyFinding = {
+  id: createFindingId({ detector: 'dependency', stableKey: 'lodash@4.17.20' }),
+  detector: 'dependency',
   severity: 'high',
   confidence: 0.9,
   title: 'lodash 4.17.20 is affected by GHSA-35jh-r3h4-6jhm',
@@ -50,7 +50,7 @@ export const scaFindingSample: ScaFinding = {
   advisoryId: 'GHSA-35jh-r3h4-6jhm',
   aliases: ['CVE-2021-23337'],
   isGithubReviewed: true,
-  dependencyScope: 'prod',
+  dependencyScope: 'production',
   reachability: 'transitive',
   importedBy: [],
   dependencyPath: ['@acme/render@2.1.0', 'lodash@4.17.20'],
@@ -74,7 +74,7 @@ export const codeReviewFindingSample: CodeReviewFinding = {
   startLine: 42,
   endLine: 44,
   isIntroducedByPullRequest: true,
-  cwe: 'CWE-89',
+  vulnerabilityType: 'CWE-89',
   evidence: [
     'const query = "select * from users where id = " + request.query.id',
   ],

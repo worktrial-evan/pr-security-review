@@ -8,7 +8,7 @@ The corpus holds 54 cases under `benchmark/cases`. Each case is one pull request
 
 The cases fall into five categories:
 
-- 12 dependency cases (`sca`): a pull request changes a dependency and a known advisory applies, or does not.
+- 12 dependency cases (`dependency`): a pull request changes a dependency and a known advisory applies, or does not.
 - 15 code cases (`code`): a pull request adds one weakness to the code.
 - 4 secrets cases (`secrets`): a pull request commits a credential.
 - 15 clean cases (`clean`): a pull request that looks suspicious but adds nothing a reviewer should flag.
@@ -42,11 +42,11 @@ A finding whose `isIntroducedByPullRequest` is false is set aside as pre-existin
 
 ### Detectors must match first
 
-A label and a prediction can only match when they come from the same detector. An sca label never matches a code-review prediction, even when both name the same file and lines.
+A label and a prediction can only match when they come from the same detector. A dependency label never matches a code-review prediction, even when both name the same file and lines.
 
 ### Dependency rule
 
-An sca prediction matches an sca label when both are true:
+A dependency prediction matches a dependency label when both are true:
 
 - The package names are equal.
 - The label's advisory id equals the prediction's advisory id, or is one of the prediction's aliases.

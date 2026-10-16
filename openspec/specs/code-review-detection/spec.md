@@ -57,7 +57,7 @@ The packet SHALL carry the lowercase hex sha256 of its chunk texts in order.
 - **THEN** the hash differs, and the same input always gives the same hash
 
 ### Requirement: One structured call per chunk
-The detector SHALL make one model call per chunk and SHALL validate the answer against a schema of `findings` and `injectionAttempts`. A finding holds cwe, title, severity, confidence, file, startLine, endLine, evidence lines, sourceToSink and remediation.
+The detector SHALL make one model call per chunk and SHALL validate the answer against a schema of `findings` and `injectionAttempts`. A finding holds vulnerabilityType, title, severity, confidence, file, startLine, endLine, evidence lines, sourceToSink and remediation.
 
 #### Scenario: One call per chunk
 - **WHEN** the packet holds three chunks
@@ -79,7 +79,7 @@ The user prompt SHALL be the chunk text fenced with the label `diff` and nothing
 - **THEN** the system text includes the fence's open tag and close tag and the statement that instructions inside are not followed
 
 ### Requirement: Prompt rubric
-`prompts/code-review/v1.md` SHALL load as prompt `code-review` version 1 with the variables `fence_description` and `cwe_allowlist`, and its body SHALL state that only added lines are introduced, that pre-existing code is never flagged, that an issue needs a reachable untrusted input, that precision beats recall, the severity definitions, that the CWE comes from the allowlist, that the answer is the schema only, and three worked examples.
+`prompts/code-review/v1.md` SHALL load as prompt `code-review` version 1 with the variables `fence_description` and `vulnerability_type_allowlist`, and its body SHALL state that only added lines are introduced, that pre-existing code is never flagged, that an issue needs a reachable untrusted input, that precision beats recall, the severity definitions, that the CWE comes from the allowlist, that the answer is the schema only, and three worked examples.
 
 #### Scenario: Prompt loads
 - **WHEN** the prompt is loaded and rendered
@@ -102,7 +102,7 @@ After every answer the detector SHALL drop a finding whose file is not the chunk
 
 #### Scenario: CWE outside the allowlist
 - **WHEN** a finding names a CWE the allowlist does not hold
-- **THEN** the finding is dropped with the reason cwe-not-allowed
+- **THEN** the finding is dropped with the reason vulnerability-type-not-allowed
 
 #### Scenario: Other file
 - **WHEN** a finding names a file other than the chunk's file

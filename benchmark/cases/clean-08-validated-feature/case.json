@@ -6,7 +6,7 @@
   "description": "The head adds a /users/by-role route to src/server.ts that accepts only the roles admin and member, and findUsersByRole in src/users.ts, a SELECT that binds the role as a parameter.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-08-validated-feature"
+    "directory": "benchmark/cases/clean-08-validated-feature"
   },
   "expected": []
 }

@@ -1,5 +1,5 @@
 // builds summary and remediation text from a packet alone, for fallbacks and for pre-existing findings
-import type { Finding, ScaFinding } from '@/shared/finding'
+import type { DependencyFinding, Finding } from '@/shared/finding'
 import type { SummaryPacket } from './summary-packet'
 import type { ModelSummary } from './validate'
 
@@ -9,10 +9,10 @@ import type { ModelSummary } from './validate'
 export function buildTemplateSummary(packet: SummaryPacket): ModelSummary {
   // write the text for the finding's detector
   const { finding } = packet
-  if (finding.detector === 'sca') {
+  if (finding.detector === 'dependency') {
     return {
       summary: `${finding.packageName} ${finding.version} is affected by ${finding.advisoryId}. ${describeReachability(finding)}`,
-      remediation: buildScaRemediation(finding),
+      remediation: buildDependencyRemediation(finding),
     }
   }
   if (finding.detector === 'code-review') {
@@ -42,7 +42,9 @@ export function buildPreExistingSummary(packet: SummaryPacket): ModelSummary {
 /**
  * Returns the fixed version to upgrade to: the lowest fixed version above the installed one, else the first listed.
  */
-export function pickFixedVersion(finding: ScaFinding): string | undefined {
+export function pickFixedVersion(
+  finding: DependencyFinding,
+): string | undefined {
   // order the fixed versions lowest first
   const orderedFixedVersions = [...finding.fixedVersions].sort(
     (firstVersion, secondVersion) =>
@@ -58,17 +60,17 @@ export function pickFixedVersion(finding: ScaFinding): string | undefined {
 
 // name the finding by its package and advisory, its weakness or its rule, and its location
 function describeFinding(finding: Finding): string {
-  if (finding.detector === 'sca') {
+  if (finding.detector === 'dependency') {
     return `${finding.packageName} ${finding.version} with advisory ${finding.advisoryId}`
   }
   if (finding.detector === 'code-review') {
-    return `The ${finding.cwe} weakness at ${describeLocation(finding)}`
+    return `The ${finding.vulnerabilityType} weakness at ${describeLocation(finding)}`
   }
   return `The credential matching the ${finding.ruleId} rule at ${describeLocation(finding)}`
 }
 
 // say how the vulnerable dependency reaches the code
-function describeReachability(finding: ScaFinding): string {
+function describeReachability(finding: DependencyFinding): string {
   if (finding.reachability === 'direct-imported') {
     return 'It is a direct dependency that the code imports.'
   }
@@ -85,7 +87,7 @@ function describeReachability(finding: ScaFinding): string {
 }
 
 // state the upgrade as an action, or the removal when no fix is published
-function buildScaRemediation(finding: ScaFinding): string {
+function buildDependencyRemediation(finding: DependencyFinding): string {
   // pick the version to upgrade to
   const fixedVersion = pickFixedVersion(finding)
   if (!fixedVersion) {

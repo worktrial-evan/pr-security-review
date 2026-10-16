@@ -25,7 +25,7 @@ const repositoryEnvironmentVariables = [
 ]
 
 export interface RunGitOptions {
-  repoPath: string
+  repositoryPath: string
   gitArguments: string[]
   environment?: Record<string, string>
 }
@@ -57,14 +57,14 @@ export class GitCommandError extends Error {
  * Runs git in a directory and returns its stdout, throwing a GitCommandError on a non-zero exit.
  */
 export async function runGit({
-  repoPath,
+  repositoryPath,
   gitArguments,
   environment = {},
 }: RunGitOptions): Promise<string> {
-  // run in repoPath alone, with the caller's extra environment on top
+  // run in repositoryPath alone, with the caller's extra environment on top
   const commandEnvironment = buildCommandEnvironment(environment)
   const gitOutput =
-    await $`git -C ${repoPath} ${globalGitArguments} ${gitArguments}`
+    await $`git -C ${repositoryPath} ${globalGitArguments} ${gitArguments}`
       .env(commandEnvironment)
       .nothrow()
       .quiet()

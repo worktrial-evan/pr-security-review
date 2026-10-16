@@ -6,7 +6,7 @@
   "description": "The head bumps the direct dependency jsonwebtoken from 9.0.2 to 9.0.3 in package.json, bun.lock and package-lock.json, which moves its transitive jws to 4.0.1 and jwa to 2.0.1. No advisory in the fixture affects any of the three new versions.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-04-safe-dependency-bump"
+    "directory": "benchmark/cases/clean-04-safe-dependency-bump"
   },
   "expected": []
 }

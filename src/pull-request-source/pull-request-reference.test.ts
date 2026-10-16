@@ -1,4 +1,4 @@
-// tests parsing pull request URLs and owner/repo#number text into references
+// tests parsing pull request URLs and owner/repository#number text into references
 import { describe, expect, test } from 'bun:test'
 import {
   InvalidPullRequestReferenceError,
@@ -8,7 +8,7 @@ import {
 // the reference both accepted forms of acme/widgets#42 parse to
 const expectedReference = {
   owner: 'acme',
-  repo: 'widgets',
+  repository: 'widgets',
   number: 42,
   url: 'https://github.com/acme/widgets/pull/42',
 }
@@ -30,7 +30,7 @@ describe('parsePullRequestReference', () => {
     const reference = parsePullRequestReference(
       'https://github.com/acme/widgets.js/pull/7/',
     )
-    expect(reference.repo).toBe('widgets.js')
+    expect(reference.repository).toBe('widgets.js')
     expect(reference.url).toBe('https://github.com/acme/widgets.js/pull/7')
   })
 

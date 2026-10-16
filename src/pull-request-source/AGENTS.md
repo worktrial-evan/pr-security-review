@@ -8,7 +8,7 @@ Reads a pull request from a GitHub pull request, a local repository with two sha
 
 ### pull-request-reference.ts
 
-- `parsePullRequestReference(text)`: parses `https://github.com/owner/repo/pull/123` or `owner/repo#123` into a `PullRequestReference` with the canonical URL
+- `parsePullRequestReference(text)`: parses `https://github.com/owner/repository/pull/123` or `owner/repository#123` into a `PullRequestReference` with the canonical URL
 - `InvalidPullRequestReferenceError`: thrown for any other text, holding the text
 
 ### github-api.ts
@@ -20,17 +20,17 @@ Reads a pull request from a GitHub pull request, a local repository with two sha
 
 ### git-pull-request-source.ts
 
-- `GitPullRequestSource`: a `PullRequestSource` over `{ repoPath, baseSha, headSha }` of a local repository, with optional `contextLines` and `pullRequestReference`
+- `GitPullRequestSource`: a `PullRequestSource` over `{ repositoryPath, baseSha, headSha }` of a local repository, with optional `contextLines` and `pullRequestReference`
 - `GitPullRequestSourceOptions`: its options
 
 ### clone-pull-request.ts
 
-- `clonePullRequest({ reference, cacheDir, token })`: shallow-clones the repository under `cacheDir` when absent, fetches the base sha and `refs/pull/<n>/head`, and returns a `GitPullRequestSource`. Optional `contextLines`, and `remoteUrl` for tests
+- `clonePullRequest({ reference, cacheDirectory, token })`: shallow-clones the repository under `cacheDirectory` when absent, fetches the base sha and `refs/pull/<n>/head`, and returns a `GitPullRequestSource`. Optional `contextLines`, and `remoteUrl` for tests
 - `ClonePullRequestOptions`: its options
 
 ### snapshot-pull-request-source.ts
 
-- `SnapshotPullRequestSource`: a `PullRequestSource` over `{ baseDir, headDir }`, with optional `contextLines`
+- `SnapshotPullRequestSource`: a `PullRequestSource` over `{ baseDirectory, headDirectory }`, with optional `contextLines`
 - `SnapshotPullRequestSourceOptions`: its options
 
 ### Internal to the module
@@ -96,7 +96,7 @@ The fixtures live in `test/fixtures/pull-request-source/`: `github/` holds the r
 - Every git command acts on the repository it is given. The repository variables that `git rev-parse --local-env-vars` lists, such as `GIT_DIR`, are dropped, so the module works when it runs inside a git hook.
 - Git output does not depend on the user's git config: color, external diff tools, text conversion, the diff algorithm, rename settings and path quoting are fixed on every call.
 - A token never reaches disk, git's arguments, or a host other than github.com.
-- `checkoutHead` on the git source creates one worktree per source, and `dispose` removes it. The snapshot source's checkout is `headDir`, and its `dispose` does nothing.
+- `checkoutHead` on the git source creates one worktree per source, and `dispose` removes it. The snapshot source's checkout is `headDirectory`, and its `dispose` does nothing.
 
 ## How to test
 

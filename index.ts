@@ -1,4 +1,4 @@
-// command-line entry for pr-review. runs the cli on the process arguments and exits with its status
+// command-line entry for pull-request-review. runs the cli on the process arguments and exits with its status
 import { createCliHandlers } from '@/cli/cli-handlers'
 import { runCli } from '@/cli/program'
 import { createProcessOutput } from '@/cli/terminal-text'

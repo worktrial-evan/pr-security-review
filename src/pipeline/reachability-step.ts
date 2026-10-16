@@ -1,13 +1,13 @@
-// the reachability step. it scans the head checkout's imports once and turns each matcher finding into an sca finding
+// the reachability step. it scans the head checkout's imports once and turns each matcher finding into a dependency finding
 import { buildDependencyGraph } from '@/lockfile/dependency-graph'
-import type { DependencyFinding } from '@/matcher/dependency-finding'
+import type { DependencyFinding as MatchedDependency } from '@/matcher/dependency-finding'
 import {
   classifyReachability,
   type ReachabilityClassification,
 } from '@/reachability/classify-reachability'
 import { collectImports } from '@/reachability/collect-imports'
 import type { AuditSink } from '@/shared/audit'
-import { createFindingId, type ScaFinding } from '@/shared/finding'
+import { createFindingId, type DependencyFinding } from '@/shared/finding'
 import type { PullRequestSource } from '@/shared/pull-request-source'
 import type { LockfileMatches } from './matching-step'
 
@@ -20,14 +20,14 @@ export interface ClassifyDependencyFindingsOptions {
 }
 
 /**
- * Classifies the reachability of every dependency match and returns them as sca findings. Nothing is scanned when there are no matches.
+ * Classifies the reachability of every dependency match and returns them as dependency findings. Nothing is scanned when there are no matches.
  */
 export async function classifyDependencyFindings({
   lockfileMatches,
   pullRequestSource,
   auditSink,
   runId,
-}: ClassifyDependencyFindingsOptions): Promise<ScaFinding[]> {
+}: ClassifyDependencyFindingsOptions): Promise<DependencyFinding[]> {
   // skip the checkout and the scan when nothing matched
   const findingCount = lockfileMatches.reduce(
     (count, lockfileMatch) => count + lockfileMatch.dependencyFindings.length,
@@ -40,50 +40,53 @@ export async function classifyDependencyFindings({
   // collect the imports of the head checkout once
   const headDirectory = await pullRequestSource.checkoutHead()
   const importCollection = await collectImports({
-    rootDir: headDirectory,
+    rootDirectory: headDirectory,
     auditSink,
     runId,
   })
 
   // classify every match against its own lockfile's dependency graph
-  const scaFindings: ScaFinding[] = []
-  for (const { lockfileChange, dependencyFindings } of lockfileMatches) {
+  const dependencyFindings: DependencyFinding[] = []
+  for (const {
+    lockfileChange,
+    dependencyFindings: matches,
+  } of lockfileMatches) {
     const dependencySet = lockfileChange.headDependencySet
     const dependencyGraph = buildDependencyGraph(dependencySet)
-    for (const dependencyFinding of dependencyFindings) {
+    for (const match of matches) {
       const reachabilityClassification = classifyReachability({
-        packageName: dependencyFinding.installedPackageName,
+        packageName: match.installedPackageName,
         dependencySet,
         dependencyGraph,
         imports: importCollection.imports,
       })
-      scaFindings.push(
-        toScaFinding({
-          dependencyFinding,
+      dependencyFindings.push(
+        toDependencyFinding({
+          dependencyFinding: match,
           lockfilePath: lockfileChange.lockfilePath,
           reachabilityClassification,
         }),
       )
     }
   }
-  return scaFindings
+  return dependencyFindings
 }
 
 // one match with the lockfile it was found in and its reachability
-export interface ToScaFindingOptions {
-  dependencyFinding: DependencyFinding
+export interface ToDependencyFindingOptions {
+  dependencyFinding: MatchedDependency
   lockfilePath: string
   reachabilityClassification: ReachabilityClassification
 }
 
 /**
- * Builds the sca finding of a dependency match, with an id derived from the lockfile, package, version and advisory.
+ * Builds the dependency finding of a dependency match, with an id derived from the lockfile, package, version and advisory.
  */
-export function toScaFinding({
+export function toDependencyFinding({
   dependencyFinding,
   lockfilePath,
   reachabilityClassification,
-}: ToScaFindingOptions): ScaFinding {
+}: ToDependencyFindingOptions): DependencyFinding {
   // derive a stable id from where and what the match is
   const { installedPackageName, ...matchFields } = dependencyFinding
   const stableKey = [
@@ -96,8 +99,8 @@ export function toScaFinding({
   return {
     ...matchFields,
     ...reachabilityClassification,
-    id: createFindingId({ detector: 'sca', stableKey }),
-    detector: 'sca',
+    id: createFindingId({ detector: 'dependency', stableKey }),
+    detector: 'dependency',
     title: `${dependencyFinding.packageName}@${dependencyFinding.version} is affected by ${dependencyFinding.advisoryId}`,
     file: lockfilePath,
   }

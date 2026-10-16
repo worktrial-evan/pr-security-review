@@ -13,7 +13,7 @@ The scorer SHALL score only predicted findings whose `isIntroducedByPullRequest`
 - **THEN** the case has zero false positives and the finding appears in the case's pre-existing list
 
 ### Requirement: Dependency match rule
-A predicted sca finding SHALL match an expected sca finding when the package names are equal and the expected advisory id equals the predicted advisory id or any of its aliases.
+A predicted dependency finding SHALL match an expected dependency finding when the package names are equal and the expected advisory id equals the predicted advisory id or any of its aliases.
 
 #### Scenario: Alias matches
 - **WHEN** the expected advisory id is a CVE id and the predicted finding has a GHSA id with that CVE among its aliases
@@ -61,7 +61,7 @@ Each expected finding SHALL be matched by at most one predicted finding and each
 - **THEN** the case has one true positive and one false positive
 
 #### Scenario: Detector mismatch
-- **WHEN** an expected sca finding and a predicted code-review finding share a file and lines
+- **WHEN** an expected dependency finding and a predicted code-review finding share a file and lines
 - **THEN** they do not match
 
 ### Requirement: Per-case counts
@@ -87,8 +87,8 @@ The scorer SHALL micro-average precision, recall and F1 over the summed counts o
 - **THEN** precision, recall and F1 are all 0
 
 #### Scenario: Breakdown keys
-- **WHEN** a run holds cases of the categories sca and clean and predictions of the detectors sca and secrets
-- **THEN** the by-category breakdown has entries for sca and clean and the by-detector breakdown has entries for sca and secrets
+- **WHEN** a run holds cases of the categories dependency and clean and predictions of the detectors dependency and secrets
+- **THEN** the by-category breakdown has entries for dependency and clean and the by-detector breakdown has entries for dependency and secrets
 
 ### Requirement: Score is pure and documented
 The scorer SHALL be a pure function of the cases, their predicted findings and their cost and duration, with no file or network access. Every rule above, where the labels come from, and what the primary score and tiebreak mean SHALL be written in `docs/benchmark.md` in plain language.

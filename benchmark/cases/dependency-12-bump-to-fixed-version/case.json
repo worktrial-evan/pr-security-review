@@ -1,0 +1,12 @@
+{
+  "id": "dependency-12-bump-to-fixed-version",
+  "split": "test",
+  "category": "dependency",
+  "isClean": true,
+  "description": "The head bumps the development dependency semver from 7.6.3 to 7.7.2 in package.json and both lockfiles, a version past every fixed event and past the last_affected version of PRR-TEST-0001, so the pull request is clean.",
+  "source": {
+    "kind": "snapshot",
+    "directory": "benchmark/cases/dependency-12-bump-to-fixed-version"
+  },
+  "expected": []
+}

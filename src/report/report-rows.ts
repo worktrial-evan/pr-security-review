@@ -13,7 +13,7 @@ export const columnKeys = [
   'dependencyScope',
   'reachability',
   'matcherAgreement',
-  'cwe',
+  'vulnerabilityType',
   'confidence',
   'introduced',
 ] as const
@@ -27,7 +27,7 @@ type DetectorColumnKey =
   | 'dependencyScope'
   | 'reachability'
   | 'matcherAgreement'
-  | 'cwe'
+  | 'vulnerabilityType'
 
 // one table value. null means the column does not apply to the finding
 export type CellValue = string | number | null
@@ -46,7 +46,7 @@ const emptyDetectorCells: Record<DetectorColumnKey, CellValue> = {
   dependencyScope: null,
   reachability: null,
   matcherAgreement: null,
-  cwe: null,
+  vulnerabilityType: null,
 }
 
 /**
@@ -93,7 +93,7 @@ function formatLocation(finding: Finding): string | null {
 function toDetectorCells(
   finding: Finding,
 ): Record<DetectorColumnKey, CellValue> {
-  if (finding.detector === 'sca') {
+  if (finding.detector === 'dependency') {
     return {
       ...emptyDetectorCells,
       package: `${finding.packageName}@${finding.version}`,
@@ -105,7 +105,10 @@ function toDetectorCells(
     }
   }
   if (finding.detector === 'code-review') {
-    return { ...emptyDetectorCells, cwe: finding.cwe }
+    return {
+      ...emptyDetectorCells,
+      vulnerabilityType: finding.vulnerabilityType,
+    }
   }
   return emptyDetectorCells
 }

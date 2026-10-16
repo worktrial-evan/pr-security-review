@@ -21,5 +21,5 @@ export function openRunAuditLog({
   runId,
   runsDirectory,
 }: OpenRunAuditLogOptions): RunAuditLog {
-  return new JsonlAuditSink({ runId, runsDir: runsDirectory })
+  return new JsonlAuditSink({ runId, runsDirectory: runsDirectory })
 }

@@ -20,66 +20,68 @@ const commitArguments = [
 ]
 
 export interface CreateTwoCommitRepositoryOptions {
-  baseDir: string
-  headDir: string
+  baseDirectory: string
+  headDirectory: string
 }
 
 // a repository whose two commits hold the base tree and the head tree
 export interface TwoCommitRepository {
-  repoPath: string
+  repositoryPath: string
   baseSha: string
   headSha: string
 }
 
 /**
- * Creates a temporary repository whose first commit holds baseDir's files and whose second holds headDir's.
+ * Creates a temporary repository whose first commit holds baseDirectory's files and whose second holds headDirectory's.
  */
 export async function createTwoCommitRepository({
-  baseDir,
-  headDir,
+  baseDirectory,
+  headDirectory,
 }: CreateTwoCommitRepositoryOptions): Promise<TwoCommitRepository> {
-  const repoPath = await mkdtemp(join(tmpdir(), 'pull-request-repository-'))
-  await runGit({ repoPath, gitArguments: ['init', '--quiet'] })
+  const repositoryPath = await mkdtemp(
+    join(tmpdir(), 'pull-request-repository-'),
+  )
+  await runGit({ repositoryPath, gitArguments: ['init', '--quiet'] })
   const baseSha = await commitTree({
-    repoPath,
-    treeDir: baseDir,
+    repositoryPath,
+    treeDirectory: baseDirectory,
     message: 'base',
   })
   const headSha = await commitTree({
-    repoPath,
-    treeDir: headDir,
+    repositoryPath,
+    treeDirectory: headDirectory,
     message: 'head',
   })
-  return { repoPath, baseSha, headSha }
+  return { repositoryPath, baseSha, headSha }
 }
 
 interface CommitTreeOptions {
-  repoPath: string
-  treeDir: string
+  repositoryPath: string
+  treeDirectory: string
   message: string
 }
 
 // replace the tracked files with a tree's files, commit them and return the new sha
 async function commitTree({
-  repoPath,
-  treeDir,
+  repositoryPath,
+  treeDirectory,
   message,
 }: CommitTreeOptions): Promise<string> {
   // swap the working tree for the tree's files
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: ['rm', '-r', '--quiet', '--ignore-unmatch', '.'],
   })
-  await $`cp -R ${treeDir}/. ${repoPath}`.quiet()
+  await $`cp -R ${treeDirectory}/. ${repositoryPath}`.quiet()
 
   // commit everything and read the sha back
-  await runGit({ repoPath, gitArguments: ['add', '--all'] })
+  await runGit({ repositoryPath, gitArguments: ['add', '--all'] })
   await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: [...commitArguments, '--message', message],
   })
   const headOutput = await runGit({
-    repoPath,
+    repositoryPath,
     gitArguments: ['rev-parse', 'HEAD'],
   })
   return headOutput.trim()

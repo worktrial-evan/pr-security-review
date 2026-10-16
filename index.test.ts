@@ -1,4 +1,4 @@
-// tests the pr-review command-line entry by spawning it with no command, with --help and with an unknown command
+// tests the pull-request-review command-line entry by spawning it with no command, with --help and with an unknown command
 
 import { describe, expect, test } from 'bun:test'
 
@@ -13,7 +13,7 @@ interface EntryRun {
 const repositoryRoot = import.meta.dir
 
 // the first line of the usage text commander prints for the program
-const usageLine = 'Usage: pr-review [options] [command]'
+const usageLine = 'Usage: pull-request-review [options] [command]'
 
 // cover the three invocations the cli spec names
 describe('index.ts', () => {

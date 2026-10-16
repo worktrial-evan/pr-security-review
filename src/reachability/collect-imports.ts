@@ -16,7 +16,7 @@ export type ImportsByPackage = Map<string, string[]>
 
 // the checkout to scan, where the scan is audited and the most files it reads
 export interface CollectImportsOptions {
-  rootDir: string
+  rootDirectory: string
   auditSink: AuditSink
   runId: string
   maxFileCount?: number
@@ -31,10 +31,10 @@ export interface ImportCollection {
 }
 
 /**
- * Scans the source files under rootDir once and returns the files importing each npm package.
+ * Scans the source files under rootDirectory once and returns the files importing each npm package.
  */
 export async function collectImports({
-  rootDir,
+  rootDirectory,
   auditSink,
   runId,
   maxFileCount = defaultMaxFileCount,
@@ -42,7 +42,10 @@ export async function collectImports({
   const startedAt = performance.now()
 
   // list the files the scan may read and warn when the cap cut the list short
-  const sourceFileListing = await listSourceFiles({ rootDir, maxFileCount })
+  const sourceFileListing = await listSourceFiles({
+    rootDirectory,
+    maxFileCount,
+  })
   const warnings = [...sourceFileListing.warnings]
   if (sourceFileListing.isFileCapReached) {
     warnings.push(
@@ -53,7 +56,7 @@ export async function collectImports({
   // parse every file and record the packages it imports
   const importingFilesByPackage = await readImportingFiles({
     filePaths: sourceFileListing.filePaths,
-    realRootDir: sourceFileListing.realRootDir,
+    realRootDirectory: sourceFileListing.realRootDirectory,
     warnings,
   })
   const imports = toImportsByPackage(importingFilesByPackage.importingFiles)
@@ -82,7 +85,7 @@ export async function collectImports({
 // the files to parse, the resolved root their paths are made relative to and the warnings to add to
 interface ReadImportingFilesOptions {
   filePaths: string[]
-  realRootDir: string
+  realRootDirectory: string
   warnings: string[]
 }
 
@@ -95,7 +98,7 @@ interface ImportingFiles {
 // parse each file in an in-memory project and collect the packages its specifiers name
 async function readImportingFiles({
   filePaths,
-  realRootDir,
+  realRootDirectory,
   warnings,
 }: ReadImportingFilesOptions): Promise<ImportingFiles> {
   const project = createSyntaxOnlyProject()
@@ -113,7 +116,9 @@ async function readImportingFiles({
     const sourceFile = project.createSourceFile(filePath, fileText, {
       overwrite: true,
     })
-    const relativePath = relative(realRootDir, filePath).split(sep).join('/')
+    const relativePath = relative(realRootDirectory, filePath)
+      .split(sep)
+      .join('/')
     for (const moduleSpecifier of listModuleSpecifiers(sourceFile)) {
       addImportingFile({ importingFiles, moduleSpecifier, relativePath })
     }

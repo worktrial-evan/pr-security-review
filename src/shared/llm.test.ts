@@ -11,8 +11,8 @@ const promptTemplateSample: PromptTemplate = {
   id: 'code-review',
   version: '1',
   hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
-  text: 'Review the diff in {{diff}} for the weaknesses in {{cwes}}.',
-  variables: ['diff', 'cwes'],
+  text: 'Review the diff in {{diff}} for the weaknesses in {{vulnerabilityTypes}}.',
+  variables: ['diff', 'vulnerabilityTypes'],
 }
 
 // a generate result from a model with no configured price

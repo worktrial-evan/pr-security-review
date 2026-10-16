@@ -191,7 +191,7 @@ async function runDetectorSteps({
   const { runRecord, detectors } = reviewRun
 
   // find vulnerable dependencies the pull request introduces
-  const { scaFindings, advisoryStore } = await runDependencySteps({
+  const { dependencyFindings, advisoryStore } = await runDependencySteps({
     reviewRun,
     collectedFiles,
   })
@@ -217,14 +217,18 @@ async function runDetectorSteps({
     collectedFiles,
   })
   return {
-    findings: [...scaFindings, ...secretFindings, ...codeReviewOutput.findings],
+    findings: [
+      ...dependencyFindings,
+      ...secretFindings,
+      ...codeReviewOutput.findings,
+    ],
     advisoryStore,
   }
 }
 
 // the dependency findings and the store they were matched against
 interface DependencyOutcome {
-  scaFindings: Finding[]
+  dependencyFindings: Finding[]
   advisoryStore: AdvisoryStore | undefined
 }
 
@@ -261,13 +265,13 @@ async function runDependencySteps({
     runRecord,
     step: 'load-advisories',
     input: {
-      advisoryCacheDir: reviewOptions.advisoryCacheDir,
+      advisoryCacheDirectory: reviewOptions.advisoryCacheDirectory,
       isOffline: reviewOptions.isOffline,
     },
     run: () =>
       loadAdvisories({
         isNeeded: parsedLockfiles.lockfileChanges.length > 0,
-        advisoryCacheDir: reviewOptions.advisoryCacheDir,
+        advisoryCacheDirectory: reviewOptions.advisoryCacheDirectory,
         advisoryStaleHours: runSettings.advisoryStaleHours,
         isOffline: reviewOptions.isOffline,
         refreshAdvisoryCache: options.refreshAdvisoryCache,
@@ -301,7 +305,7 @@ async function runDependencySteps({
   }
 
   // classify how the head checkout reaches each match
-  const scaFindings = await runStep({
+  const dependencyFindings = await runStep({
     runRecord,
     step: 'reachability',
     input: dependencyMatching.lockfileMatches,
@@ -315,7 +319,7 @@ async function runDependencySteps({
     isFatal: false,
     fallback: [],
   })
-  return { scaFindings, advisoryStore }
+  return { dependencyFindings, advisoryStore }
 }
 
 // run the code reviewer. record its prompt and model and counters and degraded reasons

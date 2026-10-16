@@ -4,7 +4,7 @@ import type { BenchmarkCase } from '@/shared/benchmark'
 import type { Finding } from '@/shared/finding'
 import {
   codeReviewFindingSample,
-  scaFindingSample,
+  dependencyFindingSample,
   secretFindingSample,
 } from '@/shared/finding.samples'
 import type {
@@ -14,13 +14,13 @@ import type {
 } from '@/shared/review'
 
 // the three case ids, prefixed so the sorted order differs from the writing order
-export const scaCaseId = 'a-01-sca-lodash'
+export const dependencyCaseId = 'a-01-dependency-lodash'
 export const codeCaseId = 'b-02-code-sql'
 export const cleanCaseId = 'c-03-clean-rename'
 
 // a git case that points at a repository nothing can reach
 export const gitCaseId = 'd-04-real-world-offline'
-export const unreachableRepoUrl = 'https://127.0.0.1:9/none/none.git'
+export const unreachableRepositoryUrl = 'https://127.0.0.1:9/none/none.git'
 
 // a fake sha handed to the runner. not a real commit
 export const fakeGitSha = '0123456789abcdef0123456789abcdef01234567'
@@ -38,17 +38,20 @@ export const fakeAppFiles: Record<string, string> = {
 export const changedUsersFile =
   'export const users = []\nexport const query = "select * from users where id = " + id\n'
 
-// the three snapshot cases: one sca label, one code label and one clean
-export const scaCase: BenchmarkCase = {
-  id: scaCaseId,
+// the three snapshot cases: one dependency label, one code label and one clean
+export const dependencyCase: BenchmarkCase = {
+  id: dependencyCaseId,
   split: 'dev',
-  category: 'sca',
+  category: 'dependency',
   isClean: false,
   description: 'bumps lodash to a vulnerable version',
-  source: { kind: 'snapshot', dir: `benchmark/cases/${scaCaseId}` },
+  source: {
+    kind: 'snapshot',
+    directory: `benchmark/cases/${dependencyCaseId}`,
+  },
   expected: [
     {
-      detector: 'sca',
+      detector: 'dependency',
       packageName: 'lodash',
       advisoryId: 'GHSA-35jh-r3h4-6jhm',
     },
@@ -60,11 +63,11 @@ export const codeCase: BenchmarkCase = {
   category: 'code',
   isClean: false,
   description: 'interpolates a user id into a sql query',
-  source: { kind: 'snapshot', dir: `benchmark/cases/${codeCaseId}` },
+  source: { kind: 'snapshot', directory: `benchmark/cases/${codeCaseId}` },
   expected: [
     {
       detector: 'code-review',
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
       file: 'src/users.ts',
       startLine: 2,
       endLine: 2,
@@ -77,7 +80,7 @@ export const cleanCase: BenchmarkCase = {
   category: 'clean',
   isClean: true,
   description: 'renames a variable',
-  source: { kind: 'snapshot', dir: `benchmark/cases/${cleanCaseId}` },
+  source: { kind: 'snapshot', directory: `benchmark/cases/${cleanCaseId}` },
   expected: [],
 }
 export const gitCase: BenchmarkCase = {
@@ -88,17 +91,22 @@ export const gitCase: BenchmarkCase = {
   description: 'a real-world case whose repository cannot be reached',
   source: {
     kind: 'git',
-    repoUrl: unreachableRepoUrl,
+    repositoryUrl: unreachableRepositoryUrl,
     baseSha: fakeGitSha,
     headSha: fakeGitSha,
   },
-  expected: [{ detector: 'code-review', cwe: 'CWE-79' }],
+  expected: [{ detector: 'code-review', vulnerabilityType: 'CWE-79' }],
 }
 
-// the findings the stub returns per case: one match for sca, one match and one extra for code, one pre-existing for clean
+// the findings the stub returns per case: one match for dependency, one match and one extra for code, one pre-existing for clean
 const cannedFindingsByCaseId: Record<string, Finding[]> = {
-  [scaCaseId]: [
-    { ...scaFindingSample, file: 'package.json', startLine: 3, endLine: 3 },
+  [dependencyCaseId]: [
+    {
+      ...dependencyFindingSample,
+      file: 'package.json',
+      startLine: 3,
+      endLine: 3,
+    },
   ],
   [codeCaseId]: [
     {
@@ -110,7 +118,7 @@ const cannedFindingsByCaseId: Record<string, Finding[]> = {
     {
       ...codeReviewFindingSample,
       title: 'Command built from user input',
-      cwe: 'CWE-78',
+      vulnerabilityType: 'CWE-78',
       file: 'src/users.ts',
       startLine: 2,
       endLine: 2,

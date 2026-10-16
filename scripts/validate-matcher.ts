@@ -28,7 +28,7 @@ import {
   toDisagreementKey,
 } from './matcher-disagreements'
 
-// the repo root is the parent of the scripts directory
+// the repository root is the parent of the scripts directory
 export const repositoryRoot = resolve(import.meta.dir, '..')
 
 // where the lockfiles come from, relative to the root. a missing root is empty
@@ -39,7 +39,7 @@ export const defaultLockfileRoots = [
 ]
 
 // the cache directory holding the committed advisory subset, relative to the root
-export const defaultAdvisoryCacheDir = 'benchmark/fixtures'
+export const defaultAdvisoryCacheDirectory = 'benchmark/fixtures'
 
 // the document of accepted disagreements, relative to the root
 export const defaultDisagreementsDocumentPath = 'docs/matcher-disagreements.md'
@@ -51,7 +51,7 @@ const lockfileGlob = new Bun.Glob('**/{bun.lock,package-lock.json}')
 export interface ValidateMatcherOptions {
   root?: string
   lockfileRoots?: string[]
-  advisoryCacheDir?: string
+  advisoryCacheDirectory?: string
   disagreementsDocumentPath?: string
 }
 
@@ -84,14 +84,14 @@ interface ValidateLockfileOptions {
   root: string
   lockfilePath: string
   advisoryStore: AdvisoryStore
-  databaseDir: string
+  databaseDirectory: string
 }
 
 /** Runs both matchers over every lockfile under the roots and reports the disagreements not accepted in the document. */
 export async function validateMatcher({
   root = repositoryRoot,
   lockfileRoots = defaultLockfileRoots,
-  advisoryCacheDir = defaultAdvisoryCacheDir,
+  advisoryCacheDirectory = defaultAdvisoryCacheDirectory,
   disagreementsDocumentPath = defaultDisagreementsDocumentPath,
 }: ValidateMatcherOptions = {}): Promise<ValidateMatcherResult> {
   // refuse to validate anything without the oracle
@@ -105,26 +105,26 @@ export async function validateMatcher({
   const lockfilePaths = await listLockfilePaths({ root, roots: lockfileRoots })
 
   // load the advisory subset for both matchers
-  const cacheDir = join(root, advisoryCacheDir)
-  const advisoryStore = await loadAdvisoryStore(cacheDir)
-  const advisories = await readCachedAdvisories(cacheDir)
+  const cacheDirectory = join(root, advisoryCacheDirectory)
+  const advisoryStore = await loadAdvisoryStore(cacheDirectory)
+  const advisories = await readCachedAdvisories(cacheDirectory)
 
   // write the oracle database once and validate every lockfile against it
-  const databaseDir = await mkdtemp(join(tmpdir(), 'validate-matcher-'))
+  const databaseDirectory = await mkdtemp(join(tmpdir(), 'validate-matcher-'))
   const validations: LockfileValidation[] = []
   try {
-    await writeOracleDatabase({ advisories, databaseDir })
+    await writeOracleDatabase({ advisories, databaseDirectory })
     for (const lockfilePath of lockfilePaths) {
       const lockfileValidation = await validateLockfile({
         root,
         lockfilePath,
         advisoryStore,
-        databaseDir,
+        databaseDirectory,
       })
       validations.push(lockfileValidation)
     }
   } finally {
-    await rm(databaseDir, { recursive: true, force: true })
+    await rm(databaseDirectory, { recursive: true, force: true })
   }
 
   // keep the disagreements the document does not accept
@@ -175,9 +175,11 @@ function isDirectory(directoryPath: string): boolean {
 }
 
 // read every advisory of the npm index under the cache directory
-async function readCachedAdvisories(cacheDir: string): Promise<Advisory[]> {
+async function readCachedAdvisories(
+  cacheDirectory: string,
+): Promise<Advisory[]> {
   const { indexPath } = resolveAdvisoryCachePaths({
-    cacheDir,
+    cacheDirectory,
     ecosystem: 'npm',
   })
   const advisoryIndex = await readAdvisoryIndex(indexPath)
@@ -189,7 +191,7 @@ async function validateLockfile({
   root,
   lockfilePath,
   advisoryStore,
-  databaseDir,
+  databaseDirectory,
 }: ValidateLockfileOptions): Promise<LockfileValidation> {
   // read the lockfile and the package.json beside it
   const absoluteLockfilePath = join(root, lockfilePath)
@@ -231,7 +233,7 @@ async function validateLockfile({
   })
   const oracleResult = await runOracle({
     lockfilePath: absoluteLockfilePath,
-    databaseDir,
+    databaseDirectory,
   })
   if (oracleResult.status === 'unavailable') {
     throw new Error(

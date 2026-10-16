@@ -9,7 +9,7 @@ export type BenchmarkSplit = z.infer<typeof benchmarkSplitSchema>
 
 // what a case exercises: one detector, a clean pull request or a real-world one
 export const benchmarkCategories = [
-  'sca',
+  'dependency',
   'code',
   'secrets',
   'clean',
@@ -21,7 +21,7 @@ export type BenchmarkCategory = z.infer<typeof benchmarkCategorySchema>
 // a source checked into the benchmark directory. the object is strict
 export const snapshotBenchmarkSourceSchema = z.strictObject({
   kind: z.literal('snapshot'),
-  dir: z.string(),
+  directory: z.string(),
 })
 export type SnapshotBenchmarkSource = z.infer<
   typeof snapshotBenchmarkSourceSchema
@@ -30,7 +30,7 @@ export type SnapshotBenchmarkSource = z.infer<
 // a source fetched from a git repository at two revisions. the object is strict
 export const gitBenchmarkSourceSchema = z.strictObject({
   kind: z.literal('git'),
-  repoUrl: z.url(),
+  repositoryUrl: z.url(),
   baseSha: z.string(),
   headSha: z.string(),
 })
@@ -48,7 +48,7 @@ export const expectedFindingSchema = z.object({
   detector: detectorKindSchema,
   packageName: z.string().optional(),
   advisoryId: z.string().optional(),
-  cwe: z.string().optional(),
+  vulnerabilityType: z.string().optional(),
   file: z.string().optional(),
   startLine: z.number().int().positive().optional(),
   endLine: z.number().int().positive().optional(),

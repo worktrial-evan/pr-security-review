@@ -6,7 +6,7 @@
   "description": "The head adds src/server.test.ts, which checks the redirect guard and the public file download against hostile targets. No app code changes.",
   "source": {
     "kind": "snapshot",
-    "dir": "benchmark/cases/clean-07-tests-only"
+    "directory": "benchmark/cases/clean-07-tests-only"
   },
   "expected": []
 }

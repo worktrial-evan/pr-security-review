@@ -87,7 +87,10 @@ async function collectAdvisoriesById({
 
   // find the advisory that names the finding's id among its package's advisories
   for (const finding of findings) {
-    if (finding.detector !== 'sca' || advisoriesById.has(finding.advisoryId)) {
+    if (
+      finding.detector !== 'dependency' ||
+      advisoriesById.has(finding.advisoryId)
+    ) {
       continue
     }
     const packageAdvisories = await advisoryStore.getByPackage(

@@ -6,13 +6,13 @@ The per-run JSONL audit log: every event of a review run is redacted and appende
 
 ## Public API
 
-- `JsonlAuditSinkOptions`: `runId` and an optional `runsDir`, default `runs`
-- `JsonlAuditSink`: implements `AuditSink`. The constructor creates `<runsDir>/<runId>/` and opens `audit.jsonl` there once in append mode, `write(event)` redacts the event, appends it as one JSON line and fsyncs before resolving, `dispose()` closes the descriptor and is safe to call twice, and `filePath` holds the path of the log
+- `JsonlAuditSinkOptions`: `runId` and an optional `runsDirectory`, default `runs`
+- `JsonlAuditSink`: implements `AuditSink`. The constructor creates `<runsDirectory>/<runId>/` and opens `audit.jsonl` there once in append mode, `write(event)` redacts the event, appends it as one JSON line and fsyncs before resolving, `dispose()` closes the descriptor and is safe to call twice, and `filePath` holds the path of the log
 - `redact<T>(value: T): T`: returns a deep copy of any value in which every secret-like string is replaced by `sha256:` plus the first 16 lowercase hex characters of the SHA-256 of the original string. A string is secret-like when it starts with a token shape (`ghp_`, `gho_`, `github_pat_`, `sk-ant-`, `sk-`, `AKIA` plus 16 uppercase alphanumerics, `xoxb-`, `xoxp-`, `xoxa-`, or `Bearer ` followed by a token) or when any key on its path matches `/token|secret|password|passwd|api[-_]?key|authorization|credential/i`
 
 ## Inputs and outputs
 
-`JsonlAuditSink.write` takes an `AuditEvent` from `@/shared/audit` and writes it to `<runsDir>/<runId>/audit.jsonl`, one JSON object per line. `redact` takes any JSON-shaped value and returns a redacted copy of the same shape. Nothing is read back: replaying a log is another module's job.
+`JsonlAuditSink.write` takes an `AuditEvent` from `@/shared/audit` and writes it to `<runsDirectory>/<runId>/audit.jsonl`, one JSON object per line. `redact` takes any JSON-shaped value and returns a redacted copy of the same shape. Nothing is read back: replaying a log is another module's job.
 
 ## Allowed imports
 
@@ -41,7 +41,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## How to test
 
-`bun test src/audit` runs the redaction and sink tests. The sink tests write to a temporary directory from `mkdtempSync` under the OS temp directory and remove it afterwards, so the repo `runs/` directory is never touched. `bun check src/audit/jsonl-audit-sink.ts src/audit/redact.ts` type-checks the module and `bunx biome check src/audit` lints and format-checks it.
+`bun test src/audit` runs the redaction and sink tests. The sink tests write to a temporary directory from `mkdtempSync` under the OS temp directory and remove it afterwards, so the repository `runs/` directory is never touched. `bun check src/audit/jsonl-audit-sink.ts src/audit/redact.ts` type-checks the module and `bunx biome check src/audit` lints and format-checks it.
 
 ## Known gaps
 

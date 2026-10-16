@@ -1,9 +1,9 @@
-// tests the reachability step. nothing is scanned without matches and a match becomes a classified sca finding
+// tests the reachability step. nothing is scanned without matches and a match becomes a classified dependency finding
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { join } from 'node:path'
-import type { DependencyFinding } from '@/matcher/dependency-finding'
+import type { DependencyFinding as MatchedDependency } from '@/matcher/dependency-finding'
 import { SnapshotPullRequestSource } from '@/pull-request-source/snapshot-pull-request-source'
-import { scaFindingSchema } from '@/shared/finding'
+import { dependencyFindingSchema } from '@/shared/finding'
 import { parseLockfiles } from './lockfile-step'
 import {
   createMemoryAuditSink,
@@ -11,10 +11,13 @@ import {
   type SnapshotPullRequest,
   writeSnapshotPullRequest,
 } from './pipeline-fixtures'
-import { classifyDependencyFindings, toScaFinding } from './reachability-step'
+import {
+  classifyDependencyFindings,
+  toDependencyFinding,
+} from './reachability-step'
 
 // a matcher finding for the package the snapshot adds
-const deltaKitFinding: DependencyFinding = {
+const deltaKitFinding: MatchedDependency = {
   packageName: 'delta-kit',
   installedPackageName: 'delta-kit',
   version: '1.0.0',
@@ -23,7 +26,7 @@ const deltaKitFinding: DependencyFinding = {
   severity: 'high',
   confidence: 0.9,
   isGithubReviewed: true,
-  dependencyScope: 'prod',
+  dependencyScope: 'production',
   isVersionUnparseable: false,
   isIntroducedByPullRequest: true,
   fixedVersions: ['1.0.1'],
@@ -37,8 +40,8 @@ let pullRequestSource: SnapshotPullRequestSource
 beforeEach(async () => {
   snapshotPullRequest = await writeSnapshotPullRequest()
   pullRequestSource = new SnapshotPullRequestSource({
-    baseDir: snapshotPullRequest.baseDir,
-    headDir: snapshotPullRequest.headDir,
+    baseDirectory: snapshotPullRequest.baseDirectory,
+    headDirectory: snapshotPullRequest.headDirectory,
   })
 })
 
@@ -51,23 +54,23 @@ describe('classifyDependencyFindings', () => {
     let checkoutCount = 0
     pullRequestSource.checkoutHead = async () => {
       checkoutCount += 1
-      return snapshotPullRequest.headDir
+      return snapshotPullRequest.headDirectory
     }
-    const scaFindings = await classifyDependencyFindings({
+    const dependencyFindings = await classifyDependencyFindings({
       lockfileMatches: [],
       pullRequestSource,
       auditSink: createMemoryAuditSink(),
       runId: 'test-run',
     })
 
-    expect(scaFindings).toEqual([])
+    expect(dependencyFindings).toEqual([])
     expect(checkoutCount).toBe(0)
   })
 
   test('classifies a match the head code imports as direct-imported', async () => {
     // import the added package from a head source file
     await Bun.write(
-      join(snapshotPullRequest.headDir, 'src', 'use-delta.ts'),
+      join(snapshotPullRequest.headDirectory, 'src', 'use-delta.ts'),
       "import { delta } from 'delta-kit'\nexport const value = delta\n",
     )
     const changedFiles = await pullRequestSource.listChangedFiles()
@@ -78,7 +81,7 @@ describe('classifyDependencyFindings', () => {
     const auditSink = createMemoryAuditSink()
 
     // classify one match against the bumped lockfile
-    const [scaFinding] = await classifyDependencyFindings({
+    const [dependencyFinding] = await classifyDependencyFindings({
       lockfileMatches: lockfileChanges.map((lockfileChange) => ({
         lockfileChange,
         dependencyFindings: [deltaKitFinding],
@@ -89,38 +92,40 @@ describe('classifyDependencyFindings', () => {
     })
 
     // the finding is direct-imported from the new file and the scan wrote its note
-    expect(scaFinding?.reachability).toBe('direct-imported')
-    expect(scaFinding?.importedBy).toEqual(['src/use-delta.ts'])
-    expect(scaFinding?.file).toBe('bun.lock')
+    expect(dependencyFinding?.reachability).toBe('direct-imported')
+    expect(dependencyFinding?.importedBy).toEqual(['src/use-delta.ts'])
+    expect(dependencyFinding?.file).toBe('bun.lock')
     expect(auditSink.events.map((event) => event.step)).toEqual([
       'reachability',
     ])
   })
 })
 
-describe('toScaFinding', () => {
-  test('builds a valid sca finding with a stable id', () => {
+describe('toDependencyFinding', () => {
+  test('builds a valid dependency finding with a stable id', () => {
     const reachabilityClassification = {
       reachability: 'transitive' as const,
       importedBy: [],
       dependencyPath: ['alpha-kit@1.0.0', 'delta-kit@1.0.0'],
     }
-    const scaFinding = toScaFinding({
+    const dependencyFinding = toDependencyFinding({
       dependencyFinding: deltaKitFinding,
       lockfilePath: 'bun.lock',
       reachabilityClassification,
     })
-    const sameScaFinding = toScaFinding({
+    const sameDependencyFinding = toDependencyFinding({
       dependencyFinding: deltaKitFinding,
       lockfilePath: 'bun.lock',
       reachabilityClassification,
     })
 
-    expect(scaFindingSchema.parse(scaFinding)).toEqual(scaFinding)
-    expect(scaFinding.title).toBe(
+    expect(dependencyFindingSchema.parse(dependencyFinding)).toEqual(
+      dependencyFinding,
+    )
+    expect(dependencyFinding.title).toBe(
       'delta-kit@1.0.0 is affected by GHSA-aaaa-bbbb-cccc',
     )
-    expect(scaFinding.id).toBe(sameScaFinding.id)
-    expect(scaFinding).not.toHaveProperty('installedPackageName')
+    expect(dependencyFinding.id).toBe(sameDependencyFinding.id)
+    expect(dependencyFinding).not.toHaveProperty('installedPackageName')
   })
 })

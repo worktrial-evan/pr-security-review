@@ -34,17 +34,17 @@ export async function openPullRequestSource({
     return {
       kind: 'opened',
       pullRequestSource: new SnapshotPullRequestSource({
-        baseDir: join(caseDirectory, 'base'),
-        headDir: join(caseDirectory, 'head'),
+        baseDirectory: join(caseDirectory, 'base'),
+        headDirectory: join(caseDirectory, 'head'),
       }),
     }
   }
 
   // a git case clones into the cache. an unreachable repository skips the case, any other failure fails it
-  const { repoUrl, baseSha, headSha } = benchmarkCase.source
+  const { repositoryUrl, baseSha, headSha } = benchmarkCase.source
   try {
     const pullRequestSource = await openBenchmarkRepository({
-      repoUrl,
+      repositoryUrl,
       baseSha,
       headSha,
       cacheDirectory,

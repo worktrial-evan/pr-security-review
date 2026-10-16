@@ -27,14 +27,14 @@ Running the entry point with a command it does not recognize SHALL print an erro
 - **THEN** stderr names `frobnicate`, the usage text is printed and the exit status is non-zero
 
 ### Requirement: Review command
-`review <pull request>` SHALL review a GitHub pull request given as a url or `owner/repo#number`, write the report and the audit log under `<out>/<runId>/`, print the report path as a `file://` link and a one-line count summary, and accept `--format html|json` (default html), `--out` (default `runs`), `--fail-on critical|high|medium|low`, `--no-llm`, `--no-cache`, `--offline`, `--model-review`, `--model-summarize` and `--review-prompt-version`.
+`review <pull request>` SHALL review a GitHub pull request given as a url or `owner/repository#number`, write the report and the audit log under `<out>/<runId>/`, print the report path as a `file://` link and a one-line count summary, and accept `--format html|json` (default html), `--out` (default `runs`), `--fail-on critical|high|medium|low`, `--no-llm`, `--no-cache`, `--offline`, `--model-review`, `--model-summarize` and `--review-prompt-version`.
 
 #### Scenario: Options parse
-- **WHEN** `review owner/repo#1 --format json --fail-on high --no-llm --review-prompt-version 2` is parsed
+- **WHEN** `review owner/repository#1 --format json --fail-on high --no-llm --review-prompt-version 2` is parsed
 - **THEN** the review runs with json output, fail-on high, the model off and prompt version 2
 
 #### Scenario: Invalid format
-- **WHEN** `review owner/repo#1 --format pdf` is parsed
+- **WHEN** `review owner/repository#1 --format pdf` is parsed
 - **THEN** the command exits non-zero naming the allowed formats
 
 ### Requirement: Review exit status

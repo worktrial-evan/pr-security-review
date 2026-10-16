@@ -173,7 +173,7 @@ function createOracleOnlyFinding(oracleMatch: OracleMatch): DependencyFinding {
     severity: 'medium',
     confidence: 0.5,
     isGithubReviewed: false,
-    dependencyScope: 'prod',
+    dependencyScope: 'production',
     isVersionUnparseable: isVersionUnparseable(oracleMatch.version),
     isIntroducedByPullRequest: false,
     fixedVersions: [],

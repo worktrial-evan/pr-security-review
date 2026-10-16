@@ -6,7 +6,7 @@
   "description": "The path-to-regexp package at the parent of the fix commit for GHSA-rhx6-c78j-4q9w, so the head reverses the fix and reintroduces the vulnerability.",
   "source": {
     "kind": "git",
-    "repoUrl": "https://github.com/pillarjs/path-to-regexp.git",
+    "repositoryUrl": "https://github.com/pillarjs/path-to-regexp.git",
     "baseSha": "f01c26a013b1889f0c217c643964513acf17f6a4",
     "headSha": "0c7119248b7cb528a0aea3ba45ed4e2db007cba4"
   },
@@ -14,7 +14,7 @@
     {
       "detector": "code-review",
       "advisoryId": "GHSA-rhx6-c78j-4q9w",
-      "cwe": "CWE-1333",
+      "vulnerabilityType": "CWE-1333",
       "file": "index.js",
       "startLine": 75,
       "endLine": 88

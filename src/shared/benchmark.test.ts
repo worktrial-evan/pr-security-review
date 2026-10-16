@@ -9,15 +9,18 @@ import {
 
 // a checked-in case with a vulnerable dependency
 const snapshotCaseSample: BenchmarkCase = {
-  id: 'sca-lodash-template',
+  id: 'dependency-lodash-template',
   split: 'dev',
-  category: 'sca',
+  category: 'dependency',
   isClean: false,
   description: 'Adds lodash 4.17.20, which has a known command injection.',
-  source: { kind: 'snapshot', dir: 'benchmark/cases/sca-lodash-template' },
+  source: {
+    kind: 'snapshot',
+    directory: 'benchmark/cases/dependency-lodash-template',
+  },
   expected: [
     {
-      detector: 'sca',
+      detector: 'dependency',
       packageName: 'lodash',
       advisoryId: 'GHSA-35jh-r3h4-6jhm',
       severity: 'high',
@@ -34,14 +37,14 @@ const gitCaseSample: BenchmarkCase = {
   description: 'Pull request 42 of octocat/hello-world.',
   source: {
     kind: 'git',
-    repoUrl: 'https://github.com/octocat/hello-world',
+    repositoryUrl: 'https://github.com/octocat/hello-world',
     baseSha: '0a1b2c3d4e5f60718293a4b5c6d7e8f901234567',
     headSha: '76543210f9e8d7c6b5a4938271605f4e3d2c1b0a',
   },
   expected: [
     {
       detector: 'code-review',
-      cwe: 'CWE-89',
+      vulnerabilityType: 'CWE-89',
       file: 'src/users.ts',
       startLine: 42,
       endLine: 44,
@@ -55,11 +58,11 @@ const benchmarkScoreSample: BenchmarkScore = {
   recall: 1,
   f1: 0.857,
   byDetector: {
-    sca: { precision: 1, recall: 1, f1: 1 },
+    dependency: { precision: 1, recall: 1, f1: 1 },
     'code-review': { precision: 0.5, recall: 1, f1: 0.667 },
   },
   byCategory: {
-    sca: { precision: 1, recall: 1, f1: 1 },
+    dependency: { precision: 1, recall: 1, f1: 1 },
     'real-world': { precision: 0.5, recall: 1, f1: 0.667 },
   },
   falsePositivesOnClean: 0,
@@ -67,7 +70,7 @@ const benchmarkScoreSample: BenchmarkScore = {
   totalDurationMs: 123456,
   caseResults: [
     {
-      caseId: 'sca-lodash-template',
+      caseId: 'dependency-lodash-template',
       truePositives: 1,
       falsePositives: 0,
       falseNegatives: 0,
@@ -106,7 +109,9 @@ describe('benchmarkCaseSchema', () => {
         kind: 'snapshot',
       },
     }
-    expect(() => benchmarkCaseSchema.parse(mixedSourceCase)).toThrow(/repoUrl/)
+    expect(() => benchmarkCaseSchema.parse(mixedSourceCase)).toThrow(
+      /repositoryUrl/,
+    )
   })
 })
 
