@@ -1,11 +1,11 @@
 // assembles the review packet: validates the input, sorts and filters the changed files, caps hunk context, renders hunks into numbered lines, packs them into chunks and hashes the chunk texts
+import { compareStrings } from '@/shared/compare-strings'
 import type {
   ChangedFile,
   Hunk,
   HunkLine,
   HunkLineKind,
 } from '@/shared/pull-request-source'
-import { compareStrings } from './compare-strings'
 import { findSkipReason, type SkipReason } from './skip-rules'
 
 // the rendered hunk lines a chunk is filled up to. a single hunk larger than that is still one chunk

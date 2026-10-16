@@ -1,5 +1,6 @@
 // the deterministic order of dependency versions: by name, then semver ascending, then versions that are not semver in string order
 import semver from 'semver'
+import { compareStrings } from '@/shared/compare-strings'
 import type { DependencySet, DependencyVersion } from '@/shared/dependency'
 
 // the two dependency versions to order
@@ -71,21 +72,4 @@ function compareVersionStrings({
     return isFirstVersionUnparseable ? 1 : -1
   }
   return compareStrings({ first: firstVersion, second: secondVersion })
-}
-
-// the two strings to order
-interface CompareStringsOptions {
-  first: string
-  second: string
-}
-
-// compare by code unit so the order never depends on the locale
-function compareStrings({ first, second }: CompareStringsOptions): number {
-  if (first < second) {
-    return -1
-  }
-  if (first > second) {
-    return 1
-  }
-  return 0
 }

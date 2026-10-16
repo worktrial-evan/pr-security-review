@@ -62,7 +62,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - An alias keeps the installed name as `name` and the aliased package as `realPackageName`, which is set only on an alias.
 - A workspace version is `workspace:<path>` in both formats and has `isWorkspace` true. A git, file, link or tarball dependency keeps its specifier as the version. `isVersionUnparseable` is true for every version that is not valid semver.
 - A dependency that resolves nowhere, such as a missing optional peer, is left out of `dependencyKeys`.
-- The same input always gives the same output: names in code unit order, versions in the order of `compareDependencyVersions`, dependency keys sorted. No result depends on the locale, the clock or object key order in the lockfile.
+- The same input always gives the same output: names in code unit order, through `compareStrings` from shared in `compareDependencyVersions` and through the default sort elsewhere, versions in the order of `compareDependencyVersions`, dependency keys sorted. No result depends on the locale, the clock or object key order in the lockfile.
 - `detectLockfiles` never throws. `parseLockfile` throws only `LockfileParseError`.
 
 ## How to test

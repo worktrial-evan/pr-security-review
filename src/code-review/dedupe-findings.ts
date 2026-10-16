@@ -1,5 +1,5 @@
 // collapses model findings that share a file and CWE on overlapping line ranges, keeping the higher confidence, and orders the result
-import { compareStrings } from './compare-strings'
+import { compareStrings } from '@/shared/compare-strings'
 import type { ModelFinding } from './model-output'
 
 // two findings to compare

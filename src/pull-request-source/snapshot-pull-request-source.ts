@@ -6,11 +6,7 @@ import type {
   PullRequestDescription,
   PullRequestSource,
 } from '@/shared/pull-request-source'
-import {
-  comparePaths,
-  createChangedFile,
-  sortChangedFiles,
-} from './changed-file'
+import { createChangedFile, sortFilesByPath } from './changed-file'
 import { buildLineDiffHunks } from './line-diff'
 import { collectAddedLines } from './unified-diff'
 
@@ -76,7 +72,7 @@ export class SnapshotPullRequestSource implements PullRequestSource {
     const changedFiles = pairedFileChanges.map((fileChange) =>
       toChangedFile(fileChange, this.contextLines),
     )
-    return sortChangedFiles(changedFiles)
+    return sortFilesByPath(changedFiles)
   }
 
   /** Reads a file's text in the base tree, or null when it is not there. */
@@ -149,8 +145,8 @@ function pairExactRenames(fileChanges: FileChange[]): FileChange[] {
   const addedChanges = fileChanges.filter(
     (fileChange) => fileChange.status === 'added',
   )
-  deletedChanges.sort((first, second) => comparePaths(first.path, second.path))
-  addedChanges.sort((first, second) => comparePaths(first.path, second.path))
+  sortFilesByPath(deletedChanges)
+  sortFilesByPath(addedChanges)
 
   // replace each matched pair with one renamed change at the new path
   const pairedPaths = new Set<string>()

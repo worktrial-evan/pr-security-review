@@ -9,7 +9,7 @@ import type {
   PullRequestReference,
   PullRequestSource,
 } from '@/shared/pull-request-source'
-import { createChangedFile, sortChangedFiles } from './changed-file'
+import { createChangedFile, sortFilesByPath } from './changed-file'
 import { GitCommandError, runGit } from './git-command'
 import { collectAddedLines, parseUnifiedDiffHunks } from './unified-diff'
 
@@ -88,7 +88,7 @@ export class GitPullRequestSource implements PullRequestSource {
         changedFiles.push(changedFile)
       }
     }
-    return sortChangedFiles(changedFiles)
+    return sortFilesByPath(changedFiles)
   }
 
   /** Reads a file's text at the base sha, or null when it is not there. */

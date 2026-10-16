@@ -1,4 +1,4 @@
-// tests the string comparator: equal strings, the sign of each order, uppercase before lowercase, digits by code unit and a prefix first
+// tests the string comparator: equal strings, the sign of each order, uppercase before lowercase, digits by code unit, a prefix first and a non-ASCII letter after z
 import { describe, expect, test } from 'bun:test'
 import { compareStrings } from './compare-strings'
 
@@ -13,9 +13,7 @@ describe('compareStrings', () => {
   })
 
   test('puts uppercase before lowercase, as code units order them', () => {
-    expect(
-      compareStrings({ first: 'src/Zeta.ts', second: 'src/alpha.ts' }),
-    ).toBe(-1)
+    expect(compareStrings({ first: 'B.ts', second: 'a.ts' })).toBe(-1)
   })
 
   test('puts CWE-1321 before CWE-20, comparing code units instead of numbers', () => {
@@ -24,5 +22,9 @@ describe('compareStrings', () => {
 
   test('puts a prefix before the longer string', () => {
     expect(compareStrings({ first: 'src/a', second: 'src/a.ts' })).toBe(-1)
+  })
+
+  test('puts a non-ASCII letter after z, comparing code units instead of the locale', () => {
+    expect(compareStrings({ first: 'é', second: 'z' })).toBe(1)
   })
 })

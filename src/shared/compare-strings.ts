@@ -1,4 +1,4 @@
-// compares two strings by code unit order, the order used for paths and CWE ids
+// the one code unit string comparator. the order never depends on the locale
 
 // the two strings to compare
 export interface CompareStringsOptions {

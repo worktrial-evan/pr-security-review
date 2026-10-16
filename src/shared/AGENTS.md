@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The data contracts every module builds against: one zod schema with its inferred type per concept, so a finding, a pull request, a dependency, an advisory, an audit event, a run, a review and a benchmark case have one shape everywhere.
+The data contracts every module builds against: one zod schema with its inferred type per concept, so a finding, a pull request, a dependency, an advisory, an audit event, a run, a review and a benchmark case have one shape everywhere, plus the small rules every module shares: the cache directory, the npm package name and the string order.
 
 ## Public API
 
@@ -114,6 +114,10 @@ Every contract file exports `<name>Schema` and `type <Name> = z.infer<typeof <na
 
 - `normalizePackageName(packageName)`: returns an npm package name trimmed and lowercased. A module that matches a package name against advisory data compares names through it, so a name from a lockfile and a name from an advisory compare equal
 
+### compare-strings.ts
+
+- `CompareStringsOptions`, `compareStrings({ first, second })`: returns -1, 0 or 1 by code unit order. The lockfile, pull-request-source and code-review modules order names, versions, paths and CWE ids through it instead of keeping a comparator of their own, so those orders never depend on the locale
+
 ## Inputs and outputs
 
 The contract files read nothing and produce nothing at runtime. Other modules parse a value through a schema at their boundary, for example where a detector emits a finding, where the audit sink receives an event, where a benchmark case is loaded from disk or where a model response is validated, and carry the inferred type inside. `createFindingId` takes a detector kind and a stable key and returns a `FindingId`. `resolveCacheDirectory` reads `PULL_REQUEST_REVIEW_CACHE_DIR` from the environment and returns a path outside the repository; the module that owns a cache creates its own subdirectory under it.
@@ -149,6 +153,8 @@ Bun and Node built-ins and npm packages are always allowed.
 - `cache-directory.test.ts`: the variable set returns exactly that path, unset falls back to `.cache/pull-request-review` under the home directory, an empty string falls back the same way. The variable is saved before and restored after each test
 - `package-name.ts`: `normalizePackageName`, the npm package name rule for matching against advisory data
 - `package-name.test.ts`: case, surrounding whitespace, a scoped name and an already normalized name
+- `compare-strings.ts`: `compareStrings`, the code unit order of two strings
+- `compare-strings.test.ts`: equal strings, the sign of each order, uppercase before lowercase, `CWE-1321` before `CWE-20`, a prefix first and a non-ASCII letter after `z`
 - `tsconfig.json`: the module's composite TypeScript project. It references no other module
 - `AGENTS.md`: this file
 
@@ -163,6 +169,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `src/shared/**` is a frozen tree. A field is added, renamed or removed only through a change whose proposal names `src/shared` in its Impact section, never by a module change.
 - `normalizePackageName` is the only npm package name rule in the codebase, and no module keeps its own copy. It applies where a name is matched against advisory data. A module that records installed packages, such as the lockfile parser, keeps each exact name, because npm treats names that differ only in case as different packages.
 - `resolveCacheDirectory` never returns a path inside the repository and never creates a directory. It reads one environment variable and nothing else.
+- `compareStrings` is the one code unit string comparator in the codebase, and no module keeps its own copy: lockfile, pull-request-source and code-review order names, versions, paths and CWE ids through it, so those orders stay the same on every machine. A default sort of a string array is the same order and needs no comparator. The advisories module orders advisory ids and the report module orders table cells with `localeCompare`, outside this rule.
 
 ## How to test
 

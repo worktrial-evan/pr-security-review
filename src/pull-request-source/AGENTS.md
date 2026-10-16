@@ -36,7 +36,7 @@ Reads a pull request from a GitHub pull request, a local repository with two sha
 ### Internal to the module
 
 - `git-command.ts`: `runGit` and `GitCommandError`
-- `changed-file.ts`: `createChangedFile`, `sortChangedFiles` and `comparePaths`
+- `changed-file.ts`: `ChangedFileFields`, `createChangedFile`, `FileWithPath` and `sortFilesByPath`
 - `unified-diff.ts`: `parseUnifiedDiffHunks` and `collectAddedLines`
 - `line-diff.ts`: `buildLineDiffHunks`
 - `test-git-repository.ts`: `createTwoCommitRepository`, for tests only
@@ -67,7 +67,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `github-api.test.ts`: the recorded response with no token, an empty token and a token, a rate limited 403, and a 404
 - `git-command.ts`: runs git with `core.quotepath=false`, literal pathspecs, no terminal prompt, and without the repository variables a git hook exports
 - `git-command.test.ts`: a command targets its own repository while `GIT_DIR`, `GIT_WORK_TREE` and `GIT_INDEX_FILE` point at another, and a failure throws `GitCommandError` with git's stderr
-- `changed-file.ts`: builds changed files without an undefined previousPath and sorts them by path
+- `changed-file.ts`: builds changed files without an undefined previousPath and sorts any files with a path by path through `compareStrings` from shared
 - `unified-diff.ts`: parses git's unified diff text into hunks and collects added lines from hunks
 - `unified-diff.test.ts`: two hunks with a removed line that looks like a file header, a no-newline marker, an empty old side, and added line collection
 - `line-diff.ts`: the longest common subsequence line diff and git's hunk rules, under 150 lines
@@ -88,7 +88,7 @@ The fixtures live in `test/fixtures/pull-request-source/`: `github/` holds the r
 ## Invariants
 
 - The git source and the snapshot source return deep-equal changed files for the same trees. A change to either one's diff rules changes both, and `equivalence.test.ts` checks it.
-- Changed files are sorted by path, comparing code units.
+- Changed files are sorted by path, comparing code units through `compareStrings` from shared, which matches git's byte order for every path without characters outside the basic multilingual plane.
 - A rename is an exact rename only: a file moved with identical bytes. A moved and edited file is a deleted file plus an added file.
 - A removed hunk line has `headLine` 0. Context and added lines have their head line number.
 - Within a run of changes, removed lines come before added lines, and changes merge into one hunk when at most twice the context count of unchanged lines lie between them.

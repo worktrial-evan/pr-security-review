@@ -64,11 +64,6 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 
 - `dedupeFindings(findings)`: drops every model finding that another finding with the same file and CWE overlaps with a higher confidence, or that a kept finding overlaps with an equal confidence, and orders the rest by file, start line, end line and CWE
 
-### compare-strings.ts
-
-- `compareStrings({ first, second })`: -1, 0 or 1 by code unit order, the one string comparator the module uses for paths and CWE ids
-- `CompareStringsOptions`: the options it takes
-
 ### code-review-audit.ts
 
 - `writeCodeReviewNote({ auditSink, runId, payload })`, `writeCodeReviewFinding({ auditSink, runId, finding })`: write one `note` or `finding` event under the step `code-review`
@@ -129,8 +124,6 @@ Bun and Node built-ins and npm packages are always allowed.
 - `grounding.test.ts`: a grounded finding, a fabricated and a trimmed evidence line, a range on context lines only, a reversed range, a range touching one added line, a CWE outside the list and near-miss ids such as `cwe-89`, another file, and the order of the reasons
 - `dedupe-findings.ts`: `dedupeFindings`, the position and confidence comparators and the pairwise beat check
 - `dedupe-findings.test.ts`: the higher confidence kept whatever the input order, a tie keeping the earlier position, identical findings keeping the one reported first, a different CWE or file or a non-overlapping range kept, ranges sharing an end line overlapping, a broad finding beaten by a narrower one, a chain with a weak bridge, a chain of equal confidence keeping both ends, CWE ids in code unit order, the output order, an empty input and the input left as it was
-- `compare-strings.ts`: `compareStrings`
-- `compare-strings.test.ts`: equal strings, the order of two strings, uppercase before lowercase, CWE-1321 before CWE-20, and a prefix before the longer string
 - `code-review-audit.ts`: `writeCodeReviewNote`, `writeCodeReviewFinding` and the event stamp
 - `code-review-audit.test.ts`: the memory sink keeping write order, `codeReviewStep` as `code-review`, both events parsing through `auditEventSchema` under the step with their kind and payload, and the note timestamp between the write start and now
 - `fixtures/changed-files.ts`: the sample changed files, one per skip rule, one weakness, one wide context, one rename, their ordered list, the large file builder, the added lines helper and the test context lines
@@ -148,7 +141,7 @@ Bun and Node built-ins and npm packages are always allowed.
 ### Packet format
 
 - The packet rejects malformed input with an error instead of rendering it: a context count that is not a nonnegative integer, a chunk limit that is not an integer of at least 1, an empty path, a path or previous path holding a carriage return or newline, a hunk line text holding a newline, and a path named twice. The disabled path returns before the packet is built, so it validates nothing.
-- Files are sorted by path in code unit order through `compareStrings`, the order the pull request source uses. Binary files, deleted files, lockfiles by file name, generated files by path segment or file name, and files with no added lines are skipped in that order of checks, and each skipped path is recorded with its reason. A file has added lines only when `addedLines` is non-empty and some hunk line is added.
+- Files are sorted by path in code unit order through `compareStrings` from shared, the order the pull request source uses. Binary files, deleted files, lockfiles by file name, generated files by path segment or file name, and files with no added lines are skipped in that order of checks, and each skipped path is recorded with its reason. A file has added lines only when `addedLines` is non-empty and some hunk line is added.
 - Each hunk keeps at most `contextLines` context lines before its first added or removed line and after its last one. A hunk with no change is left whole. The packet never reads file content, so it cannot add context the source did not produce.
 - A chunk's text is `file: <path>`, `status: <status>`, `renamed from: <previousPath>` only when `previousPath` is set, `chunk: <n> of <count>`, then per hunk the header `@@ +<head line of the first shown added or context line, or 0 when there is none>,<count of shown added and context lines> @@` and one line per hunk line as `<headLine> <marker> <text>`, with `+` for added, `-` for removed and a space for context. Lines are joined by `\n` with no trailing newline. A removed line shows the head line number the source stores, which is 0.
 - A file whose rendered hunk lines exceed `maxChunkLines` is split into chunks of whole hunks filled in order. A hunk larger than the limit is a chunk on its own, and a hunk with no lines gets no chunk. Headers do not count toward the limit.
@@ -186,4 +179,3 @@ Bun and Node built-ins and npm packages are always allowed.
 - The model is told that a chunk may be part of a larger file, but a chunk never carries lines from another chunk, so a weakness that spans two chunks can be missed.
 - Weaknesses with no untrusted input, such as hard-coded credentials, weak algorithms, cleartext storage and weak randomness, are outside the allowlist. The secrets detector covers credentials.
 - On the llm client's one validation retry, the correction it appends sits after the fence's close tag in the user turn.
-- `compareStrings` is a module-local copy of the code unit comparator the pull-request-source and lockfile modules each keep. Lifting it into `src/shared` needs its own change.

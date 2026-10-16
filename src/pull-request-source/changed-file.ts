@@ -1,4 +1,5 @@
-// builds and orders the changed file values both pull request sources return
+// builds the changed file values both pull request sources return and orders files by path
+import { compareStrings } from '@/shared/compare-strings'
 import type { ChangedFile } from '@/shared/pull-request-source'
 
 // a changed file whose previous path may be undefined
@@ -19,21 +20,16 @@ export function createChangedFile({
   return { ...changedFileFields, previousPath }
 }
 
-/**
- * Sorts changed files in place by path.
- */
-export function sortChangedFiles(changedFiles: ChangedFile[]): ChangedFile[] {
-  return changedFiles.sort((first, second) =>
-    comparePaths(first.path, second.path),
-  )
+// a file the sources order: anything with a path
+export interface FileWithPath {
+  path: string
 }
 
 /**
- * Compares two paths by code unit, the way git orders paths.
+ * Sorts files in place by path, comparing code units.
  */
-export function comparePaths(firstPath: string, secondPath: string): number {
-  if (firstPath === secondPath) {
-    return 0
-  }
-  return firstPath < secondPath ? -1 : 1
+export function sortFilesByPath<T extends FileWithPath>(files: T[]): T[] {
+  return files.sort((first, second) =>
+    compareStrings({ first: first.path, second: second.path }),
+  )
 }
