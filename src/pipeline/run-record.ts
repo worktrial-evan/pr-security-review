@@ -5,7 +5,7 @@ import type { StepError } from '@/shared/review'
 import type { RunState } from '@/shared/run-state'
 import type { CostMeter } from './metered-llm-client'
 
-// everything the steps of one run add to as they go
+// everything the steps of one run add to as they go. cancelledBy is the signal once the run was cancelled
 export interface RunRecord {
   runId: string
   startedAt: string
@@ -20,6 +20,7 @@ export interface RunRecord {
   groundingRejectionCount: number
   suspectedPromptInjectionCount: number
   costMeter: CostMeter
+  cancelledBy?: string
 }
 
 // the run id and audit sink and clock a record starts with

@@ -45,6 +45,7 @@ export interface RunReviewOptions {
   reviewModelId?: string
   promptVersion?: number
   promptsDirectory?: string
+  isStopError?: (error: unknown) => boolean
 }
 
 // the review result with the provider that answered it and the audit sink it wrote to
@@ -79,6 +80,7 @@ export async function runReview({
   reviewModelId = defaultReviewModelId,
   promptVersion,
   promptsDirectory,
+  isStopError,
 }: RunReviewOptions): Promise<ReviewRun> {
   // wire the fake provider, the zero-priced models and the memory audit sink
   const provider = createFakeLlmProvider({ [codeReviewPromptId]: replies })
@@ -107,6 +109,7 @@ export async function runReview({
     promptVersion,
     promptsDirectory,
     maxChunkLines,
+    isStopError,
   })
 
   return { codeReviewResult, provider, auditSink }

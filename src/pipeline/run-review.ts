@@ -36,13 +36,18 @@ import {
 import { classifyDependencyFindings } from './reachability-step'
 import { loadReviewSettings, type RunSettings } from './review-settings'
 import {
+  cancelReviewRun,
+  createClosableAuditSink,
+  type RunCancellation,
+} from './run-cancellation'
+import {
   addDegradedStep,
   createRunId,
   createRunRecord,
   type RunRecord,
   writeRunNote,
 } from './run-record'
-import { ReviewAbortedError, runStep } from './run-step'
+import { ReviewAbortedError, ReviewCancelledError, runStep } from './run-step'
 import { type DetectSecrets, runSecretsDetector } from './secrets-step'
 import { summarizeReviewFindings } from './summarize-step'
 
@@ -69,6 +74,7 @@ export interface RunReviewOptions extends ReviewPipelineOptions {
   llmCacheDirectory?: string
   refreshAdvisoryCache?: RefreshAdvisoryCache
   detectors?: Partial<ReviewDetectors>
+  cancellation?: RunCancellation
 }
 
 // everything the steps of one run share
@@ -92,14 +98,19 @@ interface DetectorOutcome {
 export async function runReview(
   options: RunReviewOptions,
 ): Promise<ReviewResult> {
-  // start the run record. resolve the settings and detectors and model clients
+  // start the run record over a sink a cancel can close. resolve the settings and detectors and model clients
   const now = options.now ?? (() => new Date())
   const runId = options.runId ?? createRunId(now())
-  const runRecord = createRunRecord({
-    runId,
-    auditSink: options.auditSink,
-    now,
-  })
+  const runAuditSink = createClosableAuditSink(options.auditSink)
+  const runRecord = createRunRecord({ runId, auditSink: runAuditSink, now })
+  options.cancellation?.onCancel((signal) =>
+    cancelReviewRun({
+      runRecord,
+      signal,
+      runAuditSink,
+      auditSink: options.auditSink,
+    }),
+  )
   const runSettings = options.runSettings ?? (await loadRunSettings())
   const reviewRun: ReviewRun = {
     options,
@@ -500,8 +511,11 @@ async function writeFindingEvents({
   }
 }
 
-// move the run to done and note how it ended
+// move the run to done and note how it ended. a cancelled run is already failed with its note written
 async function finishRun(runRecord: RunRecord): Promise<void> {
+  if (runRecord.cancelledBy !== undefined) {
+    return
+  }
   runRecord.runState = advanceRunState({
     state: runRecord.runState,
     to: 'done',
@@ -525,22 +539,45 @@ interface AbortRunOptions {
   pullRequestDescription: PullRequestDescription | undefined
 }
 
-// fail the run on an aborted step and return a result holding only the fatal error. anything else is rethrown
+// return the failed result of an aborted or cancelled run with no findings. anything else is rethrown
 async function abortRun({
   runRecord,
   error,
   pullRequestDescription,
 }: AbortRunOptions): Promise<ReviewResult> {
-  if (!(error instanceof ReviewAbortedError)) {
+  const isAborted = error instanceof ReviewAbortedError
+  if (!isAborted && !(error instanceof ReviewCancelledError)) {
     throw error
   }
 
-  // record the fatal error and move the run to failed
+  // record the fatal error of an aborted step. a cancelled run is already failed with its note written
+  if (error instanceof ReviewAbortedError) {
+    await failRun({ runRecord, error })
+  }
+  return assembleReviewResult({
+    runRecord,
+    pullRequestDescription,
+    findings: [],
+    advisorySnapshot: undefined,
+  })
+}
+
+// the record and the fatal step error that aborted it
+interface FailRunOptions {
+  runRecord: RunRecord
+  error: ReviewAbortedError
+}
+
+// record the fatal error. then move the run to failed and note it, unless a cancel already did
+async function failRun({ runRecord, error }: FailRunOptions): Promise<void> {
   runRecord.errors.push({
     step: error.step,
     message: error.message,
     isFatal: true,
   })
+  if (runRecord.cancelledBy !== undefined) {
+    return
+  }
   runRecord.runState = advanceRunState({
     state: runRecord.runState,
     to: 'failed',
@@ -555,12 +592,5 @@ async function abortRun({
       stage: 'failed',
       failedStep: error.step,
     },
-  })
-
-  return assembleReviewResult({
-    runRecord,
-    pullRequestDescription,
-    findings: [],
-    advisorySnapshot: undefined,
   })
 }

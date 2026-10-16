@@ -15,10 +15,11 @@ export type PullRequestSourceOpen =
   | { kind: 'skipped'; reason: string }
   | { kind: 'failed'; errorMessage: string }
 
-// the case to open a source for and where git cases clone to
+// the case to open a source for and where git cases clone to. also the token their clones use
 export interface OpenPullRequestSourceOptions {
   loadedCase: LoadedBenchmarkCase
   cacheDirectory: string
+  token?: string
 }
 
 /**
@@ -27,6 +28,7 @@ export interface OpenPullRequestSourceOptions {
 export async function openPullRequestSource({
   loadedCase,
   cacheDirectory,
+  token,
 }: OpenPullRequestSourceOptions): Promise<PullRequestSourceOpen> {
   // a snapshot case holds its two trees beside its case.json
   const { benchmarkCase, caseDirectory } = loadedCase
@@ -48,6 +50,7 @@ export async function openPullRequestSource({
       baseSha,
       headSha,
       cacheDirectory,
+      token,
     })
     return { kind: 'opened', pullRequestSource }
   } catch (error) {

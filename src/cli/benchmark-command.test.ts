@@ -1,9 +1,16 @@
-// tests benchmark show over missing and valid and broken results. also tests the per-case pipeline and a review against the corpus advisories
+// tests benchmark show over missing and valid and broken results. also tests the per-case pipeline, a review against the corpus advisories and a cancelled run
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
+import { EventEmitter } from 'node:events'
+import { existsSync } from 'node:fs'
 import { mkdtemp, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { BenchmarkRunResults } from '@/benchmark/run-results'
+import {
+  makeSnapshotCase,
+  snapshotFilesWithChange,
+  writeCase,
+} from '@/benchmark/temporary-corpus'
 import { isOracleAvailable } from '@/matcher/oracle'
 import { createLockfileMatcher, type RunOracle } from '@/pipeline/matching-step'
 import {
@@ -17,6 +24,8 @@ import type { PullRequestSource } from '@/shared/pull-request-source'
 import {
   createBenchmarkPipeline,
   formatMetricsLine,
+  type RunBenchmarkCommandOptions,
+  runBenchmarkCommand,
   runBenchmarkShowCommand,
   writeCorpusAdvisoryCache,
 } from './benchmark-command'
@@ -235,4 +244,83 @@ describe('the pipeline over the corpus advisory cache', () => {
       ).toEqual([])
     },
   )
+})
+
+describe('runBenchmarkCommand cancellation', () => {
+  test('cancels the running case on SIGTERM, exits 143 and writes no results file', async () => {
+    // a one-case corpus whose head changes one source line. every output of the run lands in the temporary directory
+    const casesDirectory = join(temporaryDirectory, 'cases')
+    const resultsDirectory = join(temporaryDirectory, 'results')
+    const runsDirectory = join(temporaryDirectory, 'runs')
+    await writeCase({
+      casesDirectory,
+      directoryName: 'code-01-cancelled',
+      benchmarkCase: makeSnapshotCase({
+        id: 'code-01-cancelled',
+        split: 'dev',
+      }),
+      files: snapshotFilesWithChange(),
+    })
+
+    // a model provider that sends SIGTERM from its first call and answers with no findings
+    const signalSource = new EventEmitter()
+    const llmProvider: NonNullable<RunBenchmarkCommandOptions['llmProvider']> =
+      {
+        async generate() {
+          signalSource.emit('SIGTERM')
+          return {
+            rawOutput: { findings: [], injectionAttempts: [] },
+            usage: { inputTokens: 0, outputTokens: 0 },
+          }
+        },
+      }
+
+    // run the dev split with the llm on and a recording exit
+    const exitCodes: number[] = []
+    const output = createRecordingOutput()
+    const exitCode = await runBenchmarkCommand({
+      commandOptions: {
+        split: 'dev',
+        label: 'cancelled',
+        isLlmEnabled: true,
+        isCacheEnabled: false,
+        reviewPromptVersion: undefined,
+      },
+      environment: { ANTHROPIC_API_KEY: 'not-a-real-key' },
+      output,
+      casesDirectory,
+      resultsDirectory,
+      runsDirectory,
+      llmProvider,
+      signalSource,
+      exit: (code) => {
+        exitCodes.push(code)
+      },
+    })
+
+    // the command and the exit both carry 143 and no metrics line was printed
+    expect(exitCode).toBe(143)
+    expect(exitCodes).toEqual([143])
+    expect(output.standardOutput()).toBe('')
+    expect(signalSource.listenerCount('SIGTERM')).toBe(0)
+
+    // no results file exists and the case's log ends with the cancelled note
+    expect(existsSync(resultsDirectory)).toBe(false)
+    const runIds = await readdir(runsDirectory)
+    expect(runIds).toHaveLength(1)
+    const auditText = await Bun.file(
+      join(runsDirectory, runIds[0] ?? '', 'audit.jsonl'),
+    ).text()
+    const auditLines = auditText.trim().split('\n')
+    expect(JSON.parse(auditLines.at(-1) ?? '')).toMatchObject({
+      kind: 'note',
+      step: 'run',
+      payload: {
+        message: 'run cancelled',
+        status: 'cancelled',
+        signal: 'SIGTERM',
+        stage: 'code-review',
+      },
+    })
+  })
 })

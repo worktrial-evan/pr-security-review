@@ -30,6 +30,7 @@ import {
 import { type BenchmarkCaseOutcome, scoreBenchmark } from './score'
 
 // where a run reads and writes, and what it may override. each field has a default
+// abortSignal stops the run before its next case and before the results. warn prints a skipped case. token reaches every clone
 export interface RunBenchmarkRunOptions {
   casesDirectory?: string
   resultsDirectory?: string
@@ -38,6 +39,9 @@ export interface RunBenchmarkRunOptions {
   auditSink?: AuditSink
   now?: () => Date
   gitSha?: string
+  abortSignal?: AbortSignal
+  warn?: (message: string) => void
+  token?: string
 }
 
 // what runBenchmark needs: the pipeline, the split, a label for the results files and the run options
@@ -78,7 +82,7 @@ type BenchmarkCaseRun =
   | { status: 'skipped'; caseOutcome: BenchmarkCaseOutcome; warning: string }
 
 /**
- * Runs the pipeline over every case of the split, scores the outcomes and writes the results files and page.
+ * Runs the pipeline over every case of the split, scores the outcomes and writes the results files and page. An aborted run throws the abort reason and writes nothing.
  */
 export async function runBenchmark({
   pipeline,
@@ -93,6 +97,9 @@ export async function runBenchmark({
     cacheDirectory = resolveCacheDirectory(),
     auditSink = discardingAuditSink,
     now = () => new Date(),
+    abortSignal,
+    warn = (message) => console.error(message),
+    token,
   } = options
   const reviewOptions: ReviewOptions = {
     ...defaultReviewOptions,
@@ -100,11 +107,12 @@ export async function runBenchmark({
     isOffline: true,
   }
 
-  // run every case of the split in id order
+  // run every case of the split in id order. an abort stops the run before its next case
   const startedAt = now()
   const loadedCases = await loadBenchmarkCases({ casesDirectory, split })
   const caseRuns: BenchmarkCaseRun[] = []
   for (const loadedCase of loadedCases) {
+    abortSignal?.throwIfAborted()
     const caseRun = await runBenchmarkCase({
       loadedCase,
       pipeline,
@@ -112,9 +120,14 @@ export async function runBenchmark({
       auditSink,
       cacheDirectory,
       now,
+      warn,
+      token,
     })
     caseRuns.push(caseRun)
   }
+
+  // write no results once the run was aborted
+  abortSignal?.throwIfAborted()
 
   // gather the provenance, score the run and write the results beside the page
   const provenance = await collectRunProvenance({
@@ -143,6 +156,8 @@ interface RunBenchmarkCaseOptions {
   auditSink: AuditSink
   cacheDirectory: string
   now: () => Date
+  warn: (message: string) => void
+  token: string | undefined
 }
 
 // run the pipeline on one case and turn the result into an outcome the scorer takes
@@ -153,12 +168,18 @@ async function runBenchmarkCase({
   auditSink,
   cacheDirectory,
   now,
+  warn,
+  token,
 }: RunBenchmarkCaseOptions): Promise<BenchmarkCaseRun> {
   // open the pull request source, skipping or failing the case when that is not possible
   const { benchmarkCase } = loadedCase
-  const sourceOpen = await openPullRequestSource({ loadedCase, cacheDirectory })
+  const sourceOpen = await openPullRequestSource({
+    loadedCase,
+    cacheDirectory,
+    token,
+  })
   if (sourceOpen.kind !== 'opened') {
-    return toUnrunCaseRun({ benchmarkCase, sourceOpen })
+    return toUnrunCaseRun({ benchmarkCase, sourceOpen, warn })
   }
 
   // review the pull request, always releasing the source afterwards
@@ -198,16 +219,18 @@ async function runBenchmarkCase({
   }
 }
 
-// a case and the open of its source that did not produce one
+// a case and the open of its source that did not produce one. also where a skip warning goes
 interface ToUnrunCaseRunOptions {
   benchmarkCase: LoadedBenchmarkCase['benchmarkCase']
   sourceOpen: Exclude<PullRequestSourceOpen, { kind: 'opened' }>
+  warn: (message: string) => void
 }
 
-// the run of a case the pipeline never saw: failed with its error, or skipped with a warning printed on stderr
+// the run of a case the pipeline never saw: failed with its error, or skipped with a warning through the writer
 function toUnrunCaseRun({
   benchmarkCase,
   sourceOpen,
+  warn,
 }: ToUnrunCaseRunOptions): BenchmarkCaseRun {
   // a failed open fails the case with no cost and no findings
   if (sourceOpen.kind === 'failed') {
@@ -224,9 +247,9 @@ function toUnrunCaseRun({
     }
   }
 
-  // a skipped open warns on stderr and records the reason
+  // a skipped open warns through the writer and records the reason
   const warning = `${benchmarkCase.id}: skipped, ${sourceOpen.reason}`
-  console.error(`warning: ${warning}`)
+  warn(`warning: ${warning}`)
   return {
     status: 'skipped',
     warning,

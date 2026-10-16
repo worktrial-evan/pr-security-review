@@ -80,11 +80,17 @@ The boundary fixtures carry their own small `tsconfig.json` with the `@/*` alias
 
 ## 2026-10-15: Caches live outside the repository
 
-Every cache (the advisory snapshot, LLM responses, cloned benchmark repositories) is written under the directory `resolveCacheDirectory()` in `src/shared/cache-directory.ts` returns: `PULL_REQUEST_REVIEW_CACHE_DIR` when the variable is set and non-empty, else `~/.cache/pull-request-review`. There is no `cache/` directory in the tree and `.gitignore` does not list one (design D16 of `add-foundation`).
+Every cache (the advisory snapshot, LLM responses, cloned benchmark repositories) is written under the directory `resolveCacheDirectory()` in `src/shared/cache-directory.ts` returns: `PULL_REQUEST_REVIEW_CACHE_DIR` when the variable is set and non-empty, else `~/.cache/pull-request-review`. Locally the variable points at the gitignored `cache/` folder of the main checkout, as the next entry says. Design D16 of `add-foundation` had kept `cache/` out of the tree and out of `.gitignore`.
 
 Later changes are built in parallel worktrees. A gitignored `cache/` inside the tree would be fetched once per worktree and thrown away with it, and a worktree created from a clean branch would start cold every time. One directory under the home folder is shared by every worktree on the machine. The environment variable exists for CI and tests, which point it at a temporary directory so a run never reads or writes the developer's cache. The function creates nothing; the module that owns a cache creates its own subdirectory. It lives in `src/shared` because the three caching modules (`advisories`, `llm`, `benchmark`) may import `shared` and nothing else in common.
 
 Next to it, `.worktreeinclude` at the repository root lists `.env` and `.env.local`, so the desktop app copies those gitignored files into every worktree it creates and a review run in a fresh worktree has its credentials (design D17).
+
+## 2026-10-15: The shared cache is the gitignored `cache/` folder of the main checkout
+
+`.gitignore` lists `cache/`, and `.env.example` documents `PULL_REQUEST_REVIEW_CACHE_DIR` as the absolute path of that folder in the main checkout, such as `/Users/<you>/Projects/pr-review/cache`. `resolveCacheDirectory()` is unchanged: it returns the variable when set and non-empty, else `~/.cache/pull-request-review`. Tests and CI still point the variable at a temporary directory. This supersedes the rule of the entry above that no `cache/` directory may exist in the tree or in `.gitignore`.
+
+The desktop app copies `.env` into every worktree under `.claude/worktrees`, so every worktree reads the same absolute path and the machine has one cache folder instead of one per worktree. One folder per worktree would fetch the advisory snapshot and clone the benchmark repositories again for every change and throw them away with it. Keeping that one folder beside the checkout instead of under the home directory makes it visible next to the project it serves, and the ignore entry keeps a run from ever committing it.
 
 ## 2026-10-15: Pull request is never abbreviated in a name
 
@@ -119,4 +125,20 @@ The matcher marks a finding introduced when the pull request adds or changes the
 ## 2026-10-15: Anthropic requests send no temperature
 
 Current Claude models, Sonnet 5.5 and Haiku 5.5 among them, return a 400 for a non-default temperature. The llm provider sends temperature 0 only to fireworks models and leaves anthropic models on their default. A rerun is reproduced by the response cache, whose key holds the prompt, the model and the output schema. A run with `--no-cache` can differ from the run before it, and the variance runs measure by how much.
+
+## 2026-10-15: A signal cancels a run through an awaitable cancellation, not only an AbortSignal
+
+On SIGINT or SIGTERM the CLI awaits `cancel(signal)` on a `RunCancellation` it handed to `runReview`. The pipeline answers by moving the run state to failed with `cancelled by <signal>`, writing one note with `status: cancelled`, the signal and the stage reached, and closing its own audit sink so nothing lands after the note. Only then does the CLI dispose the audit log and the pull request source and exit with 128 plus the signal number. An `AbortSignal` alone would give the CLI no way to wait for the note to reach disk before exiting. A log that ends without a `run finished`, `run aborted` or `run cancelled` note means the process was killed outright.
+
+## 2026-10-15: `--out` names the run directory
+
+`review --out <directory>` writes `report.html` and `audit.jsonl` directly into that directory, and the default is `runs/<runId>`, as the brief reads. The JSONL audit sink takes a run directory beside its runs directory and run id for this. The benchmark keeps `runs/<runId>` per case.
+
+## 2026-10-15: The reviewer stops on a predicate instead of being called per file
+
+When the cost limit stops code review, the findings of the chunks already paid for are kept and the files not reviewed are listed under the degraded steps. `reviewCode` takes `isStopError` and reports `unreviewedFiles`, so the stop happens inside the chunk loop. Calling the reviewer once per file from the pipeline would have changed how files pack into chunks, and with it every prompt and every response cache key.
+
+## 2026-10-15: An error that escapes a command exits 2
+
+`runCli` prints an error a handler lets through as one sanitized line and returns 2, the status the brief gives a run that could not finish. Before, a model id without a provider prefix ended in a stack trace and status 1.
 

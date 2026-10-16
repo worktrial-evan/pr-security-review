@@ -1,4 +1,4 @@
-// tests the review pipeline end to end over a snapshot pull request. also tests a throwing detector and an aborted run and a run without the llm
+// tests the review pipeline end to end over a snapshot pull request. also tests a throwing detector and an aborted run and a run without the llm and a cancelled run
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import {
   createFakeLlmProvider,
@@ -20,6 +20,8 @@ import {
   testRunSettings,
   writeSnapshotPullRequest,
 } from './pipeline-fixtures'
+import { createRunCancellation } from './run-cancellation'
+import type { RunRecord } from './run-record'
 import { type RunReviewOptions, runReview } from './run-review'
 import { reviewSteps } from './run-step'
 
@@ -223,7 +225,10 @@ describe('runReview', () => {
 })
 
 // the options a test may change from the defaults
-type TestReviewOptions = Pick<RunReviewOptions, 'llmProvider' | 'detectors'> &
+type TestReviewOptions = Pick<
+  RunReviewOptions,
+  'llmProvider' | 'detectors' | 'cancellation'
+> &
   Partial<Pick<RunReviewOptions, 'reviewOptions'>>
 
 // run the pipeline over the current snapshot with the test settings
@@ -233,6 +238,7 @@ async function runTestReview({
     matchDependencies: createLockfileMatcher({ runOracle: runEmptyOracle }),
   },
   reviewOptions = testReviewOptions,
+  cancellation,
 }: TestReviewOptions) {
   return runReview({
     pullRequestSource,
@@ -243,6 +249,7 @@ async function runTestReview({
     runSettings: testRunSettings,
     llmProvider,
     detectors,
+    cancellation,
   })
 }
 
@@ -304,3 +311,113 @@ function findNotes(step: string): Record<string, unknown>[] {
     .filter((event) => event.kind === 'note' && event.step === step)
     .map((event) => event.payload)
 }
+
+describe('runReview cost limit', () => {
+  test('keeps the findings the reviewer returned and lists the unreviewed files under the degraded steps', async () => {
+    // a reviewer that found one thing and then hit the cost limit before two files
+    const reviewFindingId = 'a1b2c3d4e5f60718' as FindingId
+    const reviewResult = await runTestReview({
+      llmProvider: createSummarizeProvider('none'),
+      detectors: {
+        matchDependencies: createLockfileMatcher({ runOracle: runEmptyOracle }),
+        reviewCode: async () => ({
+          findings: [
+            {
+              id: reviewFindingId,
+              detector: 'code-review',
+              severity: 'high',
+              confidence: 0.8,
+              title: 'Query text built from a constant',
+              file: 'src/config.ts',
+              startLine: 2,
+              endLine: 2,
+              isIntroducedByPullRequest: true,
+              remediation: 'Use a bound parameter.',
+              vulnerabilityType: 'CWE-89',
+              evidence: [`export const token = '${testGithubToken}'`],
+              sourceToSink: 'The constant reaches the query.',
+              promptVersion: '1',
+              model: testReviewOptions.reviewModelId,
+            },
+          ],
+          groundingRejectionCount: 0,
+          injectionAttemptCount: 0,
+          promptVersion: '1',
+          degradedReasons: [],
+          unreviewedFiles: ['package.json', 'public/app.min.js'],
+        }),
+      },
+    })
+
+    // the finding is in the result and the degraded steps name the two files
+    expect(reviewResult.findings.map((finding) => finding.id)).toContain(
+      reviewFindingId,
+    )
+    expect(reviewResult.metadata.degradedSteps).toContain(
+      'code-review: cost limit reached, 2 files not reviewed: package.json, public/app.min.js',
+    )
+    expect(reviewResultSchema.safeParse(reviewResult).success).toBe(true)
+  })
+})
+
+describe('runReview cancellation', () => {
+  test('ends with the cancel note and starts no later step when cancelled during secrets', async () => {
+    // a secrets detector that cancels the run from inside the step. the matcher stub keeps the record for the checks
+    const cancellation = createRunCancellation()
+    let cancelPromise: Promise<void> | undefined
+    let capturedRunRecord: RunRecord | undefined
+    const reviewResult = await runTestReview({
+      llmProvider: createSummarizeProvider('none'),
+      cancellation,
+      detectors: {
+        matchDependencies: async ({ runRecord }) => {
+          capturedRunRecord = runRecord
+          return { lockfileMatches: [], degradedReasons: [] }
+        },
+        detectSecrets: () => {
+          cancelPromise = cancellation.cancel('SIGINT')
+          return []
+        },
+      },
+    })
+    await cancelPromise
+
+    // the last event is the cancel note naming the signal and the stage reached
+    expect(auditSink.events.at(-1)).toMatchObject({
+      kind: 'note',
+      step: 'run',
+      payload: {
+        message: 'run cancelled',
+        status: 'cancelled',
+        signal: 'SIGINT',
+        stage: 'secrets',
+      },
+    })
+
+    // the run failed with the signal and code review never started
+    expect(capturedRunRecord?.runState).toMatchObject({
+      stage: 'failed',
+      error: { message: 'cancelled by SIGINT' },
+    })
+    expect(listStepEvents('step-start')).not.toContain('code-review')
+    expect(listStepEvents('step-start').at(-1)).toBe('secrets')
+    expect(reviewResultSchema.safeParse(reviewResult).success).toBe(true)
+  })
+
+  test('writes nothing more when cancelled after the run finished', async () => {
+    // a run that finished before the cancel
+    const cancellation = createRunCancellation()
+    await runTestReview({
+      llmProvider: createSummarizeProvider('none'),
+      cancellation,
+    })
+    const eventCountAtFinish = auditSink.events.length
+    expect(auditSink.events.at(-1)?.payload.message).toBe('run finished')
+
+    // the cancel adds no event
+    await cancellation.cancel('SIGTERM')
+    expect(auditSink.events).toHaveLength(eventCountAtFinish)
+    expect(auditSink.events.at(-1)?.payload.message).toBe('run finished')
+    expect(cancellation.cancelledBy).toBe('SIGTERM')
+  })
+})

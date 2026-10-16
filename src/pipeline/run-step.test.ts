@@ -1,4 +1,4 @@
-// tests runStep over the audited success path and both failure paths. also tests the stage moves
+// tests runStep over the audited success path and both failure paths and a cancelled run. also tests the stage moves
 import { describe, expect, test } from 'bun:test'
 import {
   createMemoryAuditSink,
@@ -6,7 +6,12 @@ import {
   makeTestClock,
 } from './pipeline-fixtures'
 import { createRunRecord, type RunRecord } from './run-record'
-import { advanceToStage, ReviewAbortedError, runStep } from './run-step'
+import {
+  advanceToStage,
+  ReviewAbortedError,
+  ReviewCancelledError,
+  runStep,
+} from './run-step'
 import { hashValue } from './stable-hash'
 
 // a fresh run record over an in-memory sink
@@ -103,6 +108,34 @@ describe('runStep', () => {
       message: 'no such pull request',
     })
     expect(runRecord.degradedSteps).toEqual([])
+  })
+
+  test('throws ReviewCancelledError before a step on a cancelled run', async () => {
+    // a record cancelled by SIGINT at its first stage
+    const { runRecord, auditSink } = createTestRunRecord()
+    runRecord.cancelledBy = 'SIGINT'
+    let runCount = 0
+    const stepRun = runStep({
+      runRecord,
+      step: 'collect-files',
+      input: {},
+      run: async () => {
+        runCount += 1
+        return []
+      },
+      isFatal: true,
+    })
+
+    // the error names the step and the signal. nothing ran or was written and the stage stayed put
+    await expect(stepRun).rejects.toBeInstanceOf(ReviewCancelledError)
+    await expect(stepRun).rejects.toMatchObject({
+      step: 'collect-files',
+      signal: 'SIGINT',
+      message: 'cancelled by SIGINT before collect-files',
+    })
+    expect(runCount).toBe(0)
+    expect(auditSink.events).toEqual([])
+    expect(runRecord.runState.stage).toBe('resolving-pull-request')
   })
 })
 

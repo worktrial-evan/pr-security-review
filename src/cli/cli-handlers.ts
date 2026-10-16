@@ -24,7 +24,9 @@ export function createCliHandlers(output: CliOutput): CliHandlers {
     validateMatcher: () => runValidateMatcherCommand({ output }),
     async refreshAdvisories() {
       try {
-        await runRefreshAdvisoriesCommand()
+        await runRefreshAdvisoriesCommand({
+          writeLine: (line) => output.writeOut(`${line}\n`),
+        })
         return 0
       } catch (error) {
         output.writeErr(`${describeError(error)}\n`)

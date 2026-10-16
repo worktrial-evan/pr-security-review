@@ -144,7 +144,7 @@ bun index.ts benchmark run --split all --label <name>
 bun index.ts benchmark show
 ```
 
-`benchmark run` matches dependencies against `benchmark/fixtures/advisories/advisories.json`, written into a temporary advisory cache for the run. Each case writes its audit log under `runs/<runId>/audit.jsonl`.
+`benchmark run` matches dependencies against `benchmark/fixtures/advisories/advisories.json`, written into a temporary advisory cache for the run. Each case writes its audit log under `runs/<runId>/audit.jsonl`. `GITHUB_TOKEN`, when set, is passed to the clones of the git-backed cases; `GITHUB_TOKEN= bun index.ts benchmark run --split dev --label <name>` runs without it. A run cancelled with Control-C or SIGTERM writes no results file.
 
 ## Baseline
 

@@ -17,7 +17,7 @@ Builds a local cache of the OSV npm advisories from the bulk export and serves i
 - `computeCvss3BaseScore(vector)` in `cvss.ts`: the CVSS 3.x base score of a vector, or undefined for anything else.
 - `advisoryEcosystems`, `AdvisoryEcosystem`, `resolveAdvisoryCachePaths({ cacheDirectory, ecosystem })` and `resolveOsvArchiveUrl(ecosystem)` in `cache-layout.ts`: where the files live and where the export comes from.
 - `writeAdvisorySubset({ sourceCacheDirectory, targetCacheDirectory, packageNames })`, `benchmarkAdvisoryPackageNames` and `benchmarkAdvisoryCacheDirectory` in `write-advisory-subset.ts`: regenerate the committed benchmark subset.
-- `runRefreshAdvisoriesCommand()` in `refresh-advisories-command.ts`: the body of `bun run refresh-advisories`.
+- `runRefreshAdvisoriesCommand({ writeLine })` in `refresh-advisories-command.ts`: the body of `bun run refresh-advisories`. `writeLine` receives each summary line and defaults to the console, so the CLI passes its sanitized output.
 
 ## Inputs and outputs
 

@@ -21,6 +21,13 @@ Runs one pull request review end to end: eleven steps in order, each under a run
 - `stagesByStep`: the run-state stage each step runs under
 - `advanceToStage({ runRecord, stage })`: moves the run state forward one stage at a time to the given stage
 - `ReviewAbortedError`, `ReviewAbortedErrorOptions`: the error a fatal step throws, holding the step
+- `ReviewCancelledError`: the error `runStep` throws before starting a step on a cancelled record, holding the step and the signal
+
+### run-cancellation.ts
+
+- `createRunCancellation()`, `RunCancellation`, `CancelListener`: the cancellation the CLI hands a run. `cancel(signal)` runs the listeners in registration order once and resolves when all have, and `cancelledBy` is the signal afterwards
+- `cancelReviewRun({ runRecord, signal, runAuditSink, auditSink })`: fails a running record with `cancelled by <signal>`, writes the note `{ message: 'run cancelled', status: 'cancelled', signal, stage }` through the caller's sink and closes the run's own sink so nothing lands after it. A run that already ended writes nothing
+- `createClosableAuditSink(auditSink)`, `ClosableAuditSink`: the sink a run writes through, which drops every event once closed
 
 ### run-record.ts
 
@@ -44,7 +51,7 @@ Runs one pull request review end to end: eleven steps in order, each under a run
 
 ### run-audit-log.ts
 
-- `openRunAuditLog({ runId, runsDirectory })`, `RunAuditLog`, `OpenRunAuditLogOptions`: the redacting JSONL audit log of a run at `<runsDirectory>/<runId>/audit.jsonl`, for the CLI, which may not import `audit`
+- `openRunAuditLog({ runId, runsDirectory })` or `openRunAuditLog({ runId, runDirectory })`, `RunAuditLog`, `OpenRunAuditLogOptions`: the redacting JSONL audit log of a run at `<runsDirectory>/<runId>/audit.jsonl` or directly at `<runDirectory>/audit.jsonl`, for the CLI, which may not import `audit`
 
 ### metered-llm-client.ts
 
@@ -64,7 +71,7 @@ Runs one pull request review end to end: eleven steps in order, each under a run
 - `matching-step.ts`: `createLockfileMatcher({ runOracle })` returns the `MatchDependencies` the pipeline runs. Per changed lockfile it runs the matcher module's `matchDependencies` on the head set, sets aside a finding whose advisory or an alias of it already affected the same package at base, writes the advisories of every installed package into a temporary osv-scanner database, runs the oracle on the head copy of the lockfile and reconciles the two with `reconcileMatches`. An unavailable oracle degrades the step once per lockfile. `runOracle` defaults to the matcher's osv-scanner runner. Also `LockfileMatches`, `MatchDependenciesOptions`, `DependencyMatching`, `RunOracle` and `CreateLockfileMatcherOptions`
 - `reachability-step.ts`: `classifyDependencyFindings(options)` scans the head checkout once when the matcher found anything and classifies each finding, and `toDependencyFinding(options)` builds the dependency finding from the matcher's `DependencyFinding` with an id over the lockfile path, installed name, version and advisory id
 - `secrets-step.ts`: `runSecretsDetector(options)`, `DetectSecrets`. Notes every added line too long to scan, then runs the detector over the reviewed files
-- `code-review-step.ts`: `runCodeReview(options)` skips the review with a note when the llm is off and otherwise calls the reviewer. `reviewCodeWithReviewer(options)` runs the code-review module's `reviewCode` at the live prompt version and degrades the step when a chunk's answer failed validation twice. Also `ReviewCode`, `ReviewCodeOptions`, `CodeReviewOutput` and `emptyCodeReviewOutput`
+- `code-review-step.ts`: `runCodeReview(options)` skips the review with a note when the llm is off and otherwise calls the reviewer, and lists the files the cost limit left unreviewed under the degraded steps while keeping the findings of the files already reviewed. `reviewCodeWithReviewer(options)` runs the code-review module's `reviewCode` at the live prompt version with `ReviewCostLimitError` as its stop error and degrades the step when a chunk's answer failed validation twice. Also `ReviewCode`, `ReviewCodeOptions`, `CodeReviewOutput` and `emptyCodeReviewOutput`
 - `dedupe-step.ts`: `dedupeFindings(findings)`, `DedupedFindings`, `DroppedFinding`, `dedupeReasons`, `hardcodedCredentialVulnerabilityTypes`. Drops a repeated id, a dependency finding for a package, version and advisory a second lockfile already reported, a code-review finding in a manifest or lockfile that names a package a dependency finding reports, and a hardcoded credential finding over a line a secrets finding reports
 - `summarize-step.ts`: `summarizeReviewFindings(options)`, `SummarizeStepOutput`. Looks up each dependency finding's advisory by id or alias, then summarizes with the model or, with the llm off, from the summarize module's templates
 - `assemble-step.ts`: `assembleReviewResult(options)`, the metadata copied from the run record and the result parsed through `reviewResultSchema`
@@ -97,10 +104,12 @@ Bun and Node built-ins and npm packages are always allowed.
 - `review-settings.ts`: the review config schema and reader, and the settings builder
 - `review-settings.test.ts`: the eight checked-in keys, a rejected unknown key, the defaults, every override and the api key check
 - `api-keys.ts`: the api key variables by provider and the missing key check
-- `run-audit-log.ts`: the JSONL audit log of a run
+- `run-cancellation.ts`: the cancellation a run listens to, the closable sink and the cancel that fails the run with its last note
+- `run-cancellation.test.ts`: listeners run once in order, a cancel during a step, a cancel after the run ended, and the closed sink dropping events
+- `run-audit-log.ts`: the JSONL audit log of a run, under a runs directory or at a run directory
 - `stable-hash.ts`: `hashValue` and `toStableJson`, sha256 over JSON with sorted keys, maps as entries and sets as values
 - `stable-hash.test.ts`: key order, maps and sets, undefined and functions
-- `metered-llm-client.ts`: the cost meter, the metered client and the cost limit error
+- `metered-llm-client.ts`: the cost meter, the metered client that also prices the usage of a call that ended in a validation error, and the cost limit error
 - `metered-llm-client.test.ts`: costs added to the shared meter, a missing price as zero, and a refused call that never reaches the model
 - `llm-clients.ts`: the review and summarize clients of a run
 - `describe-step.ts`, `collect-files-step.ts`, `lockfile-step.ts`, `advisory-step.ts`, `matching-step.ts`, `reachability-step.ts`, `secrets-step.ts`, `code-review-step.ts`, `dedupe-step.ts`, `summarize-step.ts`, `assemble-step.ts`: one file per step
@@ -120,10 +129,11 @@ Bun and Node built-ins and npm packages are always allowed.
 - Only this module composes the detectors. A detector receives data and never imports another detector.
 - Steps run in the order of `reviewSteps`, and the run state only moves forward through `advanceRunState`. A finished run ends at `done` and an aborted run at `failed`.
 - Every step that starts writes exactly one step-end or one step-error event.
+- A cancelled run ends at `failed` with the error `cancelled by <signal>`, its last event is the note with `status: cancelled`, the signal and the stage reached, and no later step starts. The AuditEvent contract is unchanged. A log that ends without a `run finished`, `run aborted` or `run cancelled` note means the process was killed outright.
 - Only describing the pull request, collecting its files and assembling the result are fatal. Every other failure becomes a non-fatal `StepError` and a degraded step, and the run continues with the step's fallback.
 - Every returned result parses against `reviewResultSchema`, including an aborted one.
 - The secrets and code-review detectors read only the reviewed files. Lockfiles are parsed whatever the limits say.
-- No review model call starts once the run's metered cost reaches `maxReviewCostUsd`.
+- No review model call starts once the run's metered cost reaches `maxReviewCostUsd`. A call that ends in a validation error still adds its usage to the meter. When the limit stops the review, the findings of the files already reviewed are kept and the files not reviewed are listed under the degraded steps.
 - The advisory store is only loaded when a lockfile changed.
 
 ## How to test

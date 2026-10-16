@@ -90,6 +90,17 @@ describe('JsonlAuditSink', () => {
     expect(existsSync(sink.filePath)).toBe(true)
   })
 
+  test('a run directory is used as given with no run id appended', () => {
+    // open a sink over a run directory that does not exist yet
+    const runDirectory = join(temporaryRunsDirectory, 'reports', 'one')
+    const sink = new JsonlAuditSink({ runDirectory })
+    sink.dispose()
+
+    // expect the log directly inside that directory
+    expect(sink.filePath).toBe(join(runDirectory, 'audit.jsonl'))
+    expect(existsSync(sink.filePath)).toBe(true)
+  })
+
   test('a fake token is redacted on disk', async () => {
     // write an event whose payload holds the token under an authorization header
     const sink = new JsonlAuditSink({

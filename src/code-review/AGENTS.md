@@ -10,7 +10,8 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 
 - `reviewCode({ changedFiles, llmClient, auditSink, runId, isLlmEnabled, contextLines, modelId, promptVersion, promptsDirectory, maxChunkLines })`: reviews the changed files and returns a `CodeReviewResult`. `promptVersion` picks the prompt file and defaults to the highest version present. `promptsDirectory` defaults to the repository's `prompts/`, `maxChunkLines` to `defaultMaxChunkLines`
 - `ReviewCodeOptions`: the options `reviewCode` takes
-- `CodeReviewResult`: `findings` as `CodeReviewFinding[]`, `groundingRejectionCount`, `injectionAttemptCount`, `failedChunkCount` and `promptVersion`
+- `CodeReviewResult`: `findings` as `CodeReviewFinding[]`, `groundingRejectionCount`, `injectionAttemptCount`, `failedChunkCount`, `promptVersion` and `unreviewedFiles`, the files with a chunk the review stopped before
+- `ReviewCodeOptions.isStopError`: the predicate naming the chunk error the review stops on instead of propagating. The stop is noted and the findings of the finished chunks are kept
 
 ### review-chunk.ts
 
@@ -164,7 +165,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ### Failure handling
 
-- A chunk whose answer fails the schema on the attempt and the retry is noted and counted in `failedChunkCount`, and the review goes on with the next chunk. Any other error from the llm client propagates.
+- A chunk whose answer fails the schema on the attempt and the retry is noted and counted in `failedChunkCount`, and the review goes on with the next chunk. An error `isStopError` accepts ends the review with the files of that chunk and the later ones in `unreviewedFiles`. Any other error from the llm client propagates.
 - With the llm disabled the prompt is still loaded, so the result reports the prompt version, and then nothing runs but the skip note.
 
 ## How to test

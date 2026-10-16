@@ -1,11 +1,21 @@
-// tests the metered llm client: costs add to the shared meter and calls stop at the limit
+// tests the metered llm client: costs add to the shared meter, calls stop at the limit and a validation error still adds its usage
 import { describe, expect, test } from 'bun:test'
 import { z } from 'zod'
+import { LlmOutputValidationError } from '@/llm/llm-errors'
 import type { LlmClient, LlmGenerateOptions } from '@/shared/llm'
 import {
   createMeteredLlmClient,
   ReviewCostLimitError,
 } from './metered-llm-client'
+
+// the model the tests price and its price per million tokens
+const testModelId = 'anthropic/test-model'
+const testModelPrices = {
+  [testModelId]: {
+    inputUsdPerMillionTokens: 3,
+    outputUsdPerMillionTokens: 15,
+  },
+}
 
 // a client that answers every call with the given cost and counts its calls
 function createCostingClient(
@@ -27,6 +37,21 @@ function createCostingClient(
   return costingClient
 }
 
+// a client whose every call ends in a validation error that reports the usage of both attempts
+function createValidationFailingClient(): LlmClient {
+  return {
+    async generate(): Promise<never> {
+      throw new LlmOutputValidationError({
+        promptId: 'code-review',
+        modelId: testModelId,
+        validationMessage: 'findings must be an array',
+        rawOutput: { findings: 'none' },
+        usage: { inputTokens: 1_000_000, outputTokens: 100_000 },
+      })
+    },
+  }
+}
+
 // the options of one generate call
 const generateOptions: LlmGenerateOptions<Record<string, never>> = {
   promptId: 'code-review',
@@ -43,10 +68,12 @@ describe('createMeteredLlmClient', () => {
     const pricedClient = createMeteredLlmClient({
       llmClient: createCostingClient(0.25),
       costMeter,
+      modelPrices: testModelPrices,
     })
     const unpricedClient = createMeteredLlmClient({
       llmClient: createCostingClient(null),
       costMeter,
+      modelPrices: testModelPrices,
     })
 
     await pricedClient.generate(generateOptions)
@@ -63,6 +90,7 @@ describe('createMeteredLlmClient', () => {
     const meteredClient = createMeteredLlmClient({
       llmClient: costingClient,
       costMeter,
+      modelPrices: testModelPrices,
       maxCostUsd: 2,
     })
     await meteredClient.generate(generateOptions)
@@ -73,5 +101,20 @@ describe('createMeteredLlmClient', () => {
       meteredClient.generate(generateOptions),
     ).rejects.toBeInstanceOf(ReviewCostLimitError)
     expect(costingClient.callCount).toBe(2)
+  })
+
+  test('adds the priced usage of a validation error to the meter and rethrows it', async () => {
+    const costMeter = { totalCostUsd: 0 }
+    const meteredClient = createMeteredLlmClient({
+      llmClient: createValidationFailingClient(),
+      costMeter,
+      modelPrices: testModelPrices,
+    })
+
+    // the error propagates and a million input tokens plus a hundred thousand output tokens are paid for
+    await expect(
+      meteredClient.generate(generateOptions),
+    ).rejects.toBeInstanceOf(LlmOutputValidationError)
+    expect(costMeter.totalCostUsd).toBeCloseTo(4.5)
   })
 })

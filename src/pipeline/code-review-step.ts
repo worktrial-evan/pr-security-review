@@ -5,7 +5,8 @@ import type { CodeReviewFinding } from '@/shared/finding'
 import type { LlmClient } from '@/shared/llm'
 import type { ChangedFile } from '@/shared/pull-request-source'
 import type { ReviewOptions } from '@/shared/review'
-import { type RunRecord, writeRunNote } from './run-record'
+import { ReviewCostLimitError } from './metered-llm-client'
+import { addDegradedStep, type RunRecord, writeRunNote } from './run-record'
 
 // what the reviewer is given for one run
 export interface ReviewCodeOptions {
@@ -18,13 +19,14 @@ export interface ReviewCodeOptions {
   promptVersion: string
 }
 
-// what the reviewer returns. promptVersion is undefined when no prompt was loaded
+// what the reviewer returns. promptVersion is undefined when no prompt was loaded. unreviewedFiles lists the files the cost limit stopped the review before
 export interface CodeReviewOutput {
   findings: CodeReviewFinding[]
   groundingRejectionCount: number
   injectionAttemptCount: number
   promptVersion: string | undefined
   degradedReasons: string[]
+  unreviewedFiles: string[]
 }
 
 // a function that reviews changed files for security issues
@@ -39,10 +41,11 @@ export const emptyCodeReviewOutput: CodeReviewOutput = {
   injectionAttemptCount: 0,
   promptVersion: undefined,
   degradedReasons: [],
+  unreviewedFiles: [],
 }
 
 /**
- * Reviews the changed files with the code-review module at the given prompt version. Chunks whose answer failed validation degrade the step.
+ * Reviews the changed files with the code-review module at the given prompt version. Chunks whose answer failed validation degrade the step and the cost limit stops it.
  */
 export async function reviewCodeWithReviewer({
   changedFiles,
@@ -62,6 +65,7 @@ export async function reviewCodeWithReviewer({
     contextLines,
     modelId,
     promptVersion: Number(promptVersion),
+    isStopError: (error) => error instanceof ReviewCostLimitError,
   })
   const { failedChunkCount } = codeReviewResult
   return {
@@ -75,6 +79,7 @@ export async function reviewCodeWithReviewer({
             `${failedChunkCount} chunks skipped after their answer failed validation twice`,
           ]
         : [],
+    unreviewedFiles: codeReviewResult.unreviewedFiles,
   }
 }
 
@@ -89,7 +94,7 @@ export interface RunCodeReviewOptions {
 }
 
 /**
- * Runs the reviewer over the reviewed files, or notes the skip and returns nothing when the llm is off.
+ * Runs the reviewer over the reviewed files, or notes the skip and returns nothing when the llm is off. Files the cost limit left unreviewed degrade the step.
  */
 export async function runCodeReview({
   reviewedFiles,
@@ -109,7 +114,8 @@ export async function runCodeReview({
     return emptyCodeReviewOutput
   }
 
-  return reviewCode({
+  // review the files and list the ones the cost limit left unreviewed
+  const codeReviewOutput = await reviewCode({
     changedFiles: reviewedFiles,
     llmClient: reviewLlmClient,
     auditSink: runRecord.auditSink,
@@ -117,5 +123,31 @@ export async function runCodeReview({
     contextLines: reviewOptions.contextLines,
     modelId: reviewOptions.reviewModelId,
     promptVersion: reviewPromptVersion,
+  })
+  addUnreviewedFilesDegradedStep({
+    runRecord,
+    unreviewedFiles: codeReviewOutput.unreviewedFiles,
+  })
+  return codeReviewOutput
+}
+
+// the record to degrade and the files the cost limit left unreviewed
+interface AddUnreviewedFilesDegradedStepOptions {
+  runRecord: RunRecord
+  unreviewedFiles: string[]
+}
+
+// list the files the cost limit left unreviewed under the degraded steps. no file leaves the record as it is
+function addUnreviewedFilesDegradedStep({
+  runRecord,
+  unreviewedFiles,
+}: AddUnreviewedFilesDegradedStepOptions): void {
+  if (unreviewedFiles.length === 0) {
+    return
+  }
+  addDegradedStep({
+    runRecord,
+    step: 'code-review',
+    reason: `cost limit reached, ${unreviewedFiles.length} files not reviewed: ${unreviewedFiles.join(', ')}`,
   })
 }

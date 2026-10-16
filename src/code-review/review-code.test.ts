@@ -1,4 +1,4 @@
-// tests the review orchestration against the fake provider: the disabled run, one request per chunk in packet order with the chunk fenced, the fence described in the system turn, a provider error rethrown, the finding shape with its provenance and the audit trail
+// tests the review orchestration against the fake provider: the disabled run, one request per chunk in packet order with the chunk fenced, the fence described in the system turn, a provider error rethrown, a stop error keeping the finished chunks and listing the files left, the finding shape with its provenance and the audit trail
 
 import { describe, expect, test } from 'bun:test'
 import type { FakeLlmProvider } from '@/llm/fake-llm-provider'
@@ -74,6 +74,7 @@ describe('reviewCode when the llm is disabled', () => {
       groundingRejectionCount: 0,
       injectionAttemptCount: 0,
       failedChunkCount: 0,
+      unreviewedFiles: [],
       promptVersion: '1',
     })
     expect(provider.requests).toHaveLength(0)
@@ -171,6 +172,62 @@ describe('reviewCode requests', () => {
     })
 
     await expect(reviewRun).rejects.toBeInstanceOf(LlmHttpError)
+  })
+
+  test('stops at an error the predicate accepts, keeps the finished chunks and lists the files left', async () => {
+    // the route file packs into two chunks before the users file. its first chunk answers with a finding and its second chunk fails
+    const largeChangedFile = buildLargeChangedFile({
+      hunkCount: 8,
+      linesPerHunk: 100,
+    })
+    const routeFinding = {
+      ...sqlInjectionModelFinding,
+      vulnerabilityType: 'CWE-862',
+      file: largeChangedFile.path,
+      startLine: 1,
+      endLine: 1,
+      evidence: [readAddedLineText(largeChangedFile, 0)],
+    }
+    const { codeReviewResult, provider, auditSink } = await runReview({
+      changedFiles: [largeChangedFile, sqlInjectionChangedFile],
+      replies: [
+        buildOutputReply({ findings: [routeFinding] }),
+        { kind: 'http-error', statusCode: 400 },
+      ],
+      isStopError: (error) => error instanceof LlmHttpError,
+    })
+
+    // the users file was never asked. the route file's finding is kept and both files are listed once
+    expect(provider.requests).toHaveLength(2)
+    expect(codeReviewResult.findings).toHaveLength(1)
+    expect(codeReviewResult.findings[0]).toMatchObject({
+      file: largeChangedFile.path,
+      vulnerabilityType: 'CWE-862',
+    })
+    expect(codeReviewResult.unreviewedFiles).toEqual([
+      largeChangedFile.path,
+      sqlInjectionChangedFile.path,
+    ])
+    expect(
+      findNotePayloads(auditSink, 'review stopped before the chunk'),
+    ).toEqual([
+      {
+        message: 'review stopped before the chunk',
+        file: largeChangedFile.path,
+        chunkNumber: 2,
+        error: 'llm provider answered 400: fake provider error',
+      },
+    ])
+  })
+
+  test('lists no unreviewed file when every chunk was asked', async () => {
+    const { codeReviewResult } = await runReview({
+      changedFiles: [sqlInjectionChangedFile],
+      replies: [emptyOutputReply],
+      isStopError: (error) => error instanceof LlmHttpError,
+    })
+
+    expect(codeReviewResult.unreviewedFiles).toEqual([])
   })
 })
 

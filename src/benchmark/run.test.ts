@@ -1,4 +1,4 @@
-// tests for the benchmark runner over a stub pipeline and a three-case corpus built in a temporary directory
+// tests for the benchmark runner over a stub pipeline and a three-case corpus built in a temporary directory. also an aborted run and the warning writer
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { mkdir, mkdtemp, readdir, rm } from 'node:fs/promises'
@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import type { BenchmarkCase } from '@/shared/benchmark'
 import { cacheDirectoryEnvironmentVariable } from '@/shared/cache-directory'
-import type { ReviewOptions } from '@/shared/review'
+import type { ReviewOptions, ReviewPipeline } from '@/shared/review'
 import { offlineEnvironmentVariable } from './benchmark-repository'
 import { benchmarkAdvisoryCacheDirectory } from './cases'
 import { runBenchmark } from './run'
@@ -345,6 +345,93 @@ describe('runBenchmark', () => {
     expect(results.warnings[0]).toContain(unreachableRepositoryUrl)
     expect(results.warnings[0]).not.toContain(offlineEnvironmentVariable)
     expect(stubPipeline.calls).toHaveLength(3)
+  })
+
+  test('prints the skip warning through the warning writer', async () => {
+    // add the git case and forbid the network. collect the warnings instead of printing them
+    await writeCaseFile(gitCase)
+    process.env[offlineEnvironmentVariable] = '1'
+    const warnings: string[] = []
+    const results = await runBenchmark({
+      pipeline: makeStubPipeline().pipeline,
+      split: 'dev',
+      label: runLabel,
+      options: {
+        casesDirectory,
+        resultsDirectory,
+        reviewOptions: { advisoryCacheDirectory },
+        now: makeClock(),
+        gitSha: fakeGitSha,
+        warn: (message) => {
+          warnings.push(message)
+        },
+      },
+    })
+
+    // the one warning names the case and matches the results
+    expect(warnings).toEqual([`warning: ${results.warnings[0]}`])
+    expect(warnings[0]).toContain(gitCaseId)
+  })
+
+  test('starts no further case and writes no results once aborted', async () => {
+    // a pipeline that aborts the run from inside the first case
+    const abortController = new AbortController()
+    const stubPipeline = makeStubPipeline()
+    const abortingPipeline: ReviewPipeline = async (pipelineOptions) => {
+      const reviewResult = await stubPipeline.pipeline(pipelineOptions)
+      abortController.abort(new Error('cancelled by SIGTERM'))
+      return reviewResult
+    }
+    const benchmarkRun = runBenchmark({
+      pipeline: abortingPipeline,
+      split: 'dev',
+      label: runLabel,
+      options: {
+        casesDirectory,
+        resultsDirectory,
+        reviewOptions: { advisoryCacheDirectory },
+        now: makeClock(),
+        gitSha: fakeGitSha,
+        abortSignal: abortController.signal,
+      },
+    })
+
+    // the run ends with the abort reason after the first case and the results directory stays empty
+    await expect(benchmarkRun).rejects.toThrow('cancelled by SIGTERM')
+    expect(stubPipeline.calls.map((call) => call.caseId)).toEqual([
+      dependencyCaseId,
+    ])
+    expect(await readdir(resultsDirectory)).toEqual([])
+  })
+
+  test('writes no results when aborted after the last case', async () => {
+    // an abort that lands once every case ran
+    const abortController = new AbortController()
+    const stubPipeline = makeStubPipeline()
+    const abortingPipeline: ReviewPipeline = async (pipelineOptions) => {
+      const reviewResult = await stubPipeline.pipeline(pipelineOptions)
+      if (stubPipeline.calls.length === 3) {
+        abortController.abort(new Error('cancelled by SIGINT'))
+      }
+      return reviewResult
+    }
+    const benchmarkRun = runBenchmark({
+      pipeline: abortingPipeline,
+      split: 'dev',
+      label: runLabel,
+      options: {
+        casesDirectory,
+        resultsDirectory,
+        reviewOptions: { advisoryCacheDirectory },
+        now: makeClock(),
+        gitSha: fakeGitSha,
+        abortSignal: abortController.signal,
+      },
+    })
+
+    await expect(benchmarkRun).rejects.toThrow('cancelled by SIGINT')
+    expect(stubPipeline.calls).toHaveLength(3)
+    expect(await readdir(resultsDirectory)).toEqual([])
   })
 })
 

@@ -60,11 +60,13 @@ export function createReviewLlmClients({
     reviewLlmClient: createMeteredLlmClient({
       llmClient: reviewModelClient,
       costMeter: runRecord.costMeter,
+      modelPrices: runSettings.modelPrices,
       maxCostUsd: runSettings.limits.maxReviewCostUsd,
     }),
     summarizeLlmClient: createMeteredLlmClient({
       llmClient: summarizeModelClient,
       costMeter: runRecord.costMeter,
+      modelPrices: runSettings.modelPrices,
     }),
   }
 }

@@ -3,10 +3,17 @@ import { resolveCacheDirectory } from '@/shared/cache-directory'
 import { loadAdvisoryStore } from './advisory-store'
 import { refreshAdvisories } from './refresh-advisories'
 
+// where the report lines go. the default prints them to the console
+export interface RunRefreshAdvisoriesCommandOptions {
+  writeLine?: (line: string) => void
+}
+
 /**
  * Refreshes the npm advisories under the shared cache directory and prints what was written and the store load time.
  */
-export async function runRefreshAdvisoriesCommand(): Promise<void> {
+export async function runRefreshAdvisoriesCommand({
+  writeLine = (line) => console.log(line),
+}: RunRefreshAdvisoriesCommandOptions = {}): Promise<void> {
   // refresh the cache
   const cacheDirectory = resolveCacheDirectory()
   const refreshStartedAt = performance.now()
@@ -23,13 +30,13 @@ export async function runRefreshAdvisoriesCommand(): Promise<void> {
 
   // report the result
   const { snapshot, indexPath, packageCount } = refreshAdvisoriesResult
-  console.log(
+  writeLine(
     `refreshed ${snapshot.entryCount} advisories for ${packageCount} packages`,
   )
-  console.log(`index: ${indexPath}`)
-  console.log(`snapshot sha256: ${snapshot.sha256}`)
-  console.log(`refresh took ${Math.round(refreshMilliseconds)} ms`)
-  console.log(`store load took ${Math.round(loadMilliseconds)} ms`)
+  writeLine(`index: ${indexPath}`)
+  writeLine(`snapshot sha256: ${snapshot.sha256}`)
+  writeLine(`refresh took ${Math.round(refreshMilliseconds)} ms`)
+  writeLine(`store load took ${Math.round(loadMilliseconds)} ms`)
 }
 
 // run when invoked as a script and exit non-zero on any failure

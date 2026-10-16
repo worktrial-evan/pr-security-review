@@ -1,12 +1,14 @@
-// tests for openBenchmarkRepository over a local repository with two commits reached through a file url
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
+// tests for openBenchmarkRepository over a local repository with two commits reached through a file url. also the token in git's environment
+import { afterEach, beforeEach, describe, expect, spyOn, test } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { mkdtemp, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
+import * as gitCommand from '@/pull-request-source/git-command'
 import { runGit } from '@/pull-request-source/git-command'
 import { cacheDirectoryEnvironmentVariable } from '@/shared/cache-directory'
 import {
+  buildGitAuthEnvironment,
   isGitSourceOffline,
   OfflineCloneError,
   offlineEnvironmentVariable,
@@ -23,6 +25,9 @@ const headAppText = 'const first = 1\nconst second = 22\nconst third = 3\n'
 
 // the file only the second commit holds
 const newFileText = 'const added = 1\n'
+
+// a token built inside the test so no realistic credential is committed
+const githubToken = `ghp_${'Ab3dE5gH'.repeat(4)}Ab3d`
 
 // the temporary repository, its file url and the shas of its two commits
 let repositoryDirectory: string
@@ -242,6 +247,55 @@ describe('openBenchmarkRepository', () => {
     const openError = await openPromise.catch((error: unknown) => error)
     expect(openError).toBeInstanceOf(Error)
     expect(openError).not.toBeInstanceOf(OfflineCloneError)
+  })
+
+  test('hands the token to the clone and the fetch through the environment and never on the command line', async () => {
+    // watch every git call the open makes
+    const runGitSpy = spyOn(gitCommand, 'runGit')
+    try {
+      const source = await openBenchmarkRepository({
+        repositoryUrl,
+        baseSha,
+        headSha,
+        token: githubToken,
+      })
+      expect(await source.describe()).toEqual({ baseSha, headSha })
+      await source.dispose()
+
+      // the clone carries the header environment and no argument holds the token
+      const gitCalls = runGitSpy.mock.calls.map(
+        ([runGitOptions]) => runGitOptions,
+      )
+      const cloneCall = gitCalls.find(
+        (runGitOptions) => runGitOptions.gitArguments[0] === 'clone',
+      )
+      expect(cloneCall?.environment).toEqual(
+        buildGitAuthEnvironment(githubToken),
+      )
+      for (const runGitOptions of gitCalls) {
+        expect(runGitOptions.gitArguments.join(' ')).not.toContain(githubToken)
+      }
+    } finally {
+      runGitSpy.mockRestore()
+    }
+  })
+})
+
+describe('buildGitAuthEnvironment', () => {
+  test('passes the token as a github.com header through the git config variables', () => {
+    const basicCredentials = Buffer.from(
+      `x-access-token:${githubToken}`,
+    ).toString('base64')
+    expect(buildGitAuthEnvironment(githubToken)).toEqual({
+      GIT_CONFIG_COUNT: '1',
+      GIT_CONFIG_KEY_0: 'http.https://github.com/.extraheader',
+      GIT_CONFIG_VALUE_0: `Authorization: Basic ${basicCredentials}`,
+    })
+  })
+
+  test('is empty without a token', () => {
+    expect(buildGitAuthEnvironment(undefined)).toEqual({})
+    expect(buildGitAuthEnvironment('')).toEqual({})
   })
 })
 

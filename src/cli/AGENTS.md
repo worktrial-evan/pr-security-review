@@ -8,7 +8,8 @@ The command-line interface: parses `review`, `benchmark run`, `benchmark show`, 
 
 ### program.ts
 
-- `runCli({ commandArguments, handlers, output })`: parses the arguments, runs the matching handler and returns the exit status. No arguments prints the help to stdout with status 0, and an unknown command prints `unknown command '<name>'` and the help to stderr with status 1
+- `runCli({ commandArguments, handlers, output })`: parses the arguments, runs the matching handler and returns the exit status. No arguments prints the help to stdout with status 0, and an unknown command prints `unknown command '<name>'` and the help to stderr with status 1. An error a handler lets escape is printed as one line `error: <message>` through the output and the status is 2
+- `ReviewTarget`: what review reads, a GitHub pull request by url or `owner/repository#number`, or a local repository by `--repo <path> --base <sha> --head <sha>`. The three options are accepted only together and only without the argument
 - `CliHandlers`: `review`, `benchmarkRun`, `benchmarkShow`, `refreshAdvisories` and `validateMatcher`, each returning the exit status
 - `ReviewCommandOptions`, `BenchmarkRunCommandOptions`, `RunCliOptions`: the parsed options and the runner options
 - `reportFormats`, `ReportFormat`, `failOnSeverities`, `benchmarkRunSplits`, `BenchmarkRunSplit`: the values the flags accept
@@ -19,7 +20,7 @@ The command-line interface: parses `review`, `benchmark run`, `benchmark show`, 
 
 ### review-command.ts
 
-- `runReviewCommand({ commandOptions, environment, output, openPullRequestSource })`: loads the settings with the flags applied, fails with status 2 naming the missing api key before any network call, opens the pull request, runs `runReview` with the run's audit log, writes `<out>/<runId>/report.html` or `report.json`, prints the report as a `file://` link and the count line, and returns the exit status
+- `runReviewCommand({ commandOptions, environment, output, openPullRequestSource, signalSource, exit })`: loads the settings with the flags applied, fails with status 2 naming the missing api key before any network call, opens the pull request or builds a git source over the local repository, runs `runReview` with the run's audit log under the signal watch, writes `report.html` or `report.json` beside `audit.jsonl` in the run directory (`--out`, default `runs/<runId>`), prints the report as a `file://` link and the count line, and returns the exit status. On SIGINT or SIGTERM it cancels the run, disposes the log and the source, writes no report and returns 128 plus the signal number
 - `OpenPullRequestSource`, `OpenPullRequestSourceOptions`, `RunReviewCommandOptions`: the opener tests replace and the command options. The default opener clones the pull request into `<cache>/pull-request-repositories` with `GITHUB_TOKEN` when it is set
 
 ### benchmark-command.ts
@@ -42,6 +43,10 @@ The command-line interface: parses `review`, `benchmark run`, `benchmark show`, 
 - `hasFindingAtOrAbove({ findings, failOnSeverity })`, `HasFindingAtOrAboveOptions`: the fail-on check. Pre-existing findings never count
 - `formatReviewSummary(reviewResult)`: introduced findings by severity, pre-existing findings, errors and degraded steps on one line
 - `reviewExitCodes`: passed 0, fail-on met 1, aborted 2
+
+### signal-cancellation.ts
+
+- `runUntilSignal({ run, cancel, signalSource, exit, signals })`, `RunOutcome`, `SignalSource`: races the work against the first SIGINT or SIGTERM. On a signal it awaits `cancel(signal)`, calls `exit` with 128 plus the signal number (130, 143) and resolves `{ kind: 'cancelled', exitCode }`; otherwise `{ kind: 'finished', value }`. The listeners are removed either way. Tests pass an event emitter and a recording exit
 
 ### terminal-text.ts
 
@@ -73,6 +78,8 @@ Bun and Node built-ins and npm packages are always allowed.
 - `validate-matcher-command.test.ts`: a stand-in script's two streams and exit status passed through
 - `review-outcome.ts`: the exit status, the fail-on check and the summary line
 - `review-outcome.test.ts`: fail-on with introduced and pre-existing findings, the aborted status and the summary line
+- `signal-cancellation.ts`: the signal watch that cancels the work and exits with 128 plus the signal number
+- `signal-cancellation.test.ts`: 130 on SIGINT, 143 on SIGTERM, a second signal ignored, listeners removed after a normal end
 - `terminal-text.ts`: the sanitizer and the process output
 - `terminal-text.test.ts`: an ANSI escape, other control characters, and newlines and tabs kept
 - `tsconfig.json`: the module's composite TypeScript project, referencing its row of the matrix
@@ -82,7 +89,8 @@ The root `index.ts` runs `runCli` with `createCliHandlers` and `createProcessOut
 
 ## Invariants
 
-- Every byte the cli writes passes through `toTerminalText`, commander's own help and errors included.
+- Every byte the cli writes passes through `toTerminalText`, commander's own help and errors, escaped errors, the refresh-advisories summary and the benchmark's skip warnings included.
+- On SIGINT or SIGTERM, review and benchmark run cancel the current run so its log ends with the cancelled note, dispose the pull request source, write no report and no results file, and exit with 128 plus the signal number.
 - A missing api key for a configured model stops the command before any network call. `--no-llm` needs no key. `GITHUB_TOKEN` is used when set and never required.
 - The code-review prompt version of a run is the flag when given and `reviewPromptVersion` in `config/review.json` otherwise. The flag never writes the config.
 - Only introduced findings decide the fail-on exit status.

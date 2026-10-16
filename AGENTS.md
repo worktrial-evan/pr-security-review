@@ -86,7 +86,7 @@ Never abbreviate pull request in any name: `PullRequest` in types, `pullRequest`
 
 ## Caches and worktrees
 
-Caches live outside the repository: every module that caches (advisories, LLM responses, cloned benchmark repositories) writes under the directory `resolveCacheDirectory()` from `src/shared/cache-directory.ts` returns, which is `PULL_REQUEST_REVIEW_CACHE_DIR` when set and non-empty, else `~/.cache/pull-request-review`. There is no `cache/` directory in the tree and `.gitignore` does not list one, so every worktree shares the one cache. Tests and CI point the variable at a temporary directory.
+Caches live outside the repository: every module that caches (advisories, LLM responses, cloned benchmark repositories) writes under the directory `resolveCacheDirectory()` from `src/shared/cache-directory.ts` returns, which is `PULL_REQUEST_REVIEW_CACHE_DIR` when set and non-empty, else `~/.cache/pull-request-review`. Locally the variable points at the gitignored `cache/` folder in the main checkout, shared by every worktree, and the resolver falls back to `~/.cache/pull-request-review` when it is unset. Tests and CI point the variable at a temporary directory.
 
 `.worktreeinclude` at the root lists `.env` and `.env.local`, the gitignored files the desktop app copies into every new worktree.
 

@@ -150,7 +150,7 @@ flowchart LR
 
 ## How to run
 
-Install the dependencies and copy the environment file. `ANTHROPIC_API_KEY` or `FIREWORKS_API_KEY` is needed for whichever provider the model ids in `config/models.json` name. `GITHUB_TOKEN` is optional: without it public pull requests work under GitHub's limit of 60 API requests an hour.
+Install the dependencies and copy the environment file. `ANTHROPIC_API_KEY` or `FIREWORKS_API_KEY` is needed for whichever provider the model ids in `config/models.json` name. `GITHUB_TOKEN` is optional: without it public pull requests work under GitHub's limit of 60 API requests an hour. `PULL_REQUEST_REVIEW_CACHE_DIR` is the absolute path of the cache folder in the main checkout, such as `/Users/<you>/Projects/pr-review/cache`: the folder is gitignored, every worktree under `.claude/worktrees` shares it, and when the variable is unset the cache falls back to `~/.cache/pull-request-review`.
 
 ```bash
 bun install
@@ -163,26 +163,28 @@ Download the OSV npm advisories once. A review refreshes them on its own when th
 bun index.ts refresh-advisories
 ```
 
-Review a pull request by url or by `owner/repo#number`:
+Review a pull request by url or by `owner/repo#number`, or two commits of a local repository:
 
 ```bash
 bun index.ts review https://github.com/owner/repo/pull/123
 bun index.ts review owner/repo#123 --format json --fail-on high
 GITHUB_TOKEN= bun index.ts review owner/repo#123
 bun index.ts review owner/repo#123 --no-llm
+bun index.ts review --repo ../project --base <sha> --head <sha>
 ```
 
-A review writes `runs/<runId>/report.html` (or `report.json`) next to `runs/<runId>/audit.jsonl`, prints the report as a `file://` link and one line of counts. It exits 1 when an introduced finding is at or above `--fail-on`, and 2 when the run could not finish. `--no-llm` needs no key: code review is skipped and summaries come from templates. `--no-cache` skips the model response cache, `--offline` uses the cached advisories as they are, and `--model-review`, `--model-summarize` and `--review-prompt-version` change one run without touching the config.
+A review writes `report.html` (or `report.json`) next to `audit.jsonl` in the run directory, `runs/<runId>` unless `--out` names another, and prints the report as a `file://` link and one line of counts. It exits 1 when an introduced finding is at or above `--fail-on`, 2 when the run could not finish or an error stopped the command, and 128 plus the signal number on Control-C or SIGTERM (130 and 143): the log then ends with a cancelled note and the temporary worktree is removed. The local form makes no GitHub call and needs no token. `--no-llm` needs no key: code review is skipped and summaries come from templates. `--no-cache` skips the model response cache, `--offline` uses the cached advisories as they are, and `--model-review`, `--model-summarize` and `--review-prompt-version` change one run without touching the config.
 
 Run the benchmark over the dev split, the test split or both, and print the latest metrics:
 
 ```bash
 bun index.ts benchmark run --split all --label baseline
 bun index.ts benchmark run --split dev --label trial --review-prompt-version 2
+GITHUB_TOKEN= bun index.ts benchmark run --split dev --label trial
 bun index.ts benchmark show
 ```
 
-The live code-review prompt version is `reviewPromptVersion` in `config/review.json`. `--review-prompt-version` overrides it for one run, so a new version is measured before it goes live.
+`GITHUB_TOKEN` from `.env` is passed to the clones of the git-backed cases and raises GitHub's limit; the third form runs without it. Control-C ends a benchmark run the same way as a review and writes no results file. The live code-review prompt version is `reviewPromptVersion` in `config/review.json`. `--review-prompt-version` overrides it for one run, so a new version is measured before it goes live.
 
 The dependency matcher cross-checks every changed lockfile with [osv-scanner](https://github.com/google/osv-scanner) when it is on PATH (`brew install osv-scanner`). Without it the hand-written matcher still runs and the step is listed as degraded. Compare the two matchers over every committed lockfile with:
 

@@ -22,7 +22,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## Files
 
-- `jsonl-audit-sink.ts`: `JsonlAuditSinkOptions` and `JsonlAuditSink`, the append-and-fsync sink built on `node:fs`
+- `jsonl-audit-sink.ts`: `JsonlAuditSinkOptions` and `JsonlAuditSink`, the append-and-fsync sink built on `node:fs`. The log is `<runsDirectory>/<runId>/audit.jsonl`, or `<runDirectory>/audit.jsonl` when `runDirectory` is given
 - `jsonl-audit-sink.test.ts`: three events become three lines that pass `auditEventSchema`, the run directory is created, a fake token is redacted on disk, each line is on disk as soon as `write` resolves, a second sink appends instead of truncating, and `dispose` closes the descriptor
 - `redact.ts`: `redact`, the token-shape and key-name rules and the sha256 fingerprint
 - `redact.test.ts`: a `ghp_` token under `authorization` is fingerprinted with neither the token nor `Bearer` left, equal secrets give equal fingerprints, secret-like keys and token shapes are each caught on their own, ordinary values come back equal and the input is not mutated

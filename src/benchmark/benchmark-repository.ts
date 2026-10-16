@@ -11,6 +11,9 @@ export const offlineEnvironmentVariable = 'PULL_REQUEST_REVIEW_OFFLINE'
 // the directory under the cache that holds every clone
 const clonesDirectoryName = 'benchmark-repositories'
 
+// the git config key that adds a header to requests to github.com only
+const githubExtraHeaderKey = 'http.https://github.com/.extraheader'
+
 // the stderr fragments that mean git could not resolve or connect to the host. a refused url with any other error stays an error
 const networkFailurePatterns = [
   /could not resolve host/i,
@@ -21,12 +24,13 @@ const networkFailurePatterns = [
   /timed out/i,
 ]
 
-// what open needs: the repository, the two shas and where to keep the clone
+// what open needs: the repository, the two shas and where to keep the clone. also the token the clone and fetch use
 export interface OpenBenchmarkRepositoryOptions {
   repositoryUrl: string
   baseSha: string
   headSha: string
   cacheDirectory?: string
+  token?: string
 }
 
 /**
@@ -37,6 +41,7 @@ export async function openBenchmarkRepository({
   baseSha,
   headSha,
   cacheDirectory = resolveCacheDirectory(),
+  token,
 }: OpenBenchmarkRepositoryOptions): Promise<GitPullRequestSource> {
   // place the clone by host, owner and repository under the cache
   const cloneDirectory = join(
@@ -45,12 +50,19 @@ export async function openBenchmarkRepository({
     ...resolveClonePathSegments(repositoryUrl),
   )
 
-  // clone once and make sure both shas are in the clone
-  await ensureClone({ repositoryUrl, cloneDirectory, cacheDirectory })
+  // clone once and make sure both shas are in the clone. the token goes to git through the environment
+  const environment = buildGitAuthEnvironment(token)
+  await ensureClone({
+    repositoryUrl,
+    cloneDirectory,
+    cacheDirectory,
+    environment,
+  })
   await ensureShasPresent({
     repositoryUrl,
     cloneDirectory,
     shas: [baseSha, headSha],
+    environment,
   })
 
   return new GitPullRequestSource({
@@ -88,6 +100,25 @@ export function isGitSourceOffline(): boolean {
   return offlineValue !== undefined && offlineValue !== ''
 }
 
+/**
+ * Builds the git environment that passes a token as a github.com-only authorization header, never through argv or the config file. Empty without a token.
+ */
+export function buildGitAuthEnvironment(
+  token: string | undefined,
+): Record<string, string> {
+  if (token === undefined || token === '') {
+    return {}
+  }
+  const basicCredentials = Buffer.from(`x-access-token:${token}`).toString(
+    'base64',
+  )
+  return {
+    GIT_CONFIG_COUNT: '1',
+    GIT_CONFIG_KEY_0: githubExtraHeaderKey,
+    GIT_CONFIG_VALUE_0: `Authorization: Basic ${basicCredentials}`,
+  }
+}
+
 // the path segments under benchmark-repositories a repository url clones into
 function resolveClonePathSegments(repositoryUrl: string): string[] {
   // read the host and the path from the url
@@ -107,11 +138,12 @@ function resolveClonePathSegments(repositoryUrl: string): string[] {
   return [url.hostname, ...lastTwoSegments]
 }
 
-// the repository, the directory ensureClone fills and the cache directory it sits under
+// the repository, the directory ensureClone fills and the cache directory it sits under. also git's extra environment
 interface EnsureCloneOptions {
   repositoryUrl: string
   cloneDirectory: string
   cacheDirectory: string
+  environment: Record<string, string>
 }
 
 // clone the repository without a checkout, or reuse the clone already there
@@ -119,6 +151,7 @@ async function ensureClone({
   repositoryUrl,
   cloneDirectory,
   cacheDirectory,
+  environment,
 }: EnsureCloneOptions): Promise<void> {
   // reuse an existing clone
   if (await Bun.file(join(cloneDirectory, '.git', 'HEAD')).exists()) {
@@ -146,6 +179,7 @@ async function ensureClone({
         repositoryUrl,
         cloneDirectory,
       ],
+      environment,
     }),
   )
   if (cloneStderr === null) {
@@ -190,11 +224,12 @@ async function removeEmptyParentDirectories({
   }
 }
 
-// the clone and the shas ensureShasPresent checks
+// the clone and the shas ensureShasPresent checks. also git's extra environment for the fetch
 interface EnsureShasPresentOptions {
   repositoryUrl: string
   cloneDirectory: string
   shas: string[]
+  environment: Record<string, string>
 }
 
 // fetch when a sha is missing from the clone, and fail when it is still missing afterwards
@@ -202,6 +237,7 @@ async function ensureShasPresent({
   repositoryUrl,
   cloneDirectory,
   shas,
+  environment,
 }: EnsureShasPresentOptions): Promise<void> {
   // skip the fetch when every sha is already in the clone
   const missingShas = await listMissingShas({ cloneDirectory, shas })
@@ -222,6 +258,7 @@ async function ensureShasPresent({
     runGit({
       repositoryPath: cloneDirectory,
       gitArguments: ['fetch', '--quiet', 'origin'],
+      environment,
     }),
   )
   if (fetchStderr !== null) {

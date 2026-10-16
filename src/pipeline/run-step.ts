@@ -52,6 +52,25 @@ export interface ReviewAbortedErrorOptions {
   message: string
 }
 
+// the error runStep throws instead of starting a step on a cancelled run
+export class ReviewCancelledError extends Error {
+  override readonly name = 'ReviewCancelledError'
+  readonly step: ReviewStep
+  readonly signal: string
+
+  constructor({ step, signal }: ReviewCancelledErrorOptions) {
+    super(`cancelled by ${signal} before ${step}`)
+    this.step = step
+    this.signal = signal
+  }
+}
+
+// the step that did not start and the signal that cancelled the run
+export interface ReviewCancelledErrorOptions {
+  step: ReviewStep
+  signal: string
+}
+
 // what every step run needs. that is the record and the step and its input and the work itself
 interface RunStepBaseOptions<TInput, TOutput> {
   runRecord: RunRecord
@@ -68,12 +87,17 @@ export type RunStepOptions<TInput, TOutput> = RunStepBaseOptions<
   ({ isFatal: true } | { isFatal: false; fallback: TOutput })
 
 /**
- * Runs one step under its stage with step-start and step-end or step-error events, and returns its output or fallback.
+ * Runs one step under its stage with step-start and step-end or step-error events, and returns its output or fallback. A cancelled run throws ReviewCancelledError before the step starts.
  */
 export async function runStep<TInput, TOutput>(
   options: RunStepOptions<TInput, TOutput>,
 ): Promise<TOutput> {
   const { runRecord, step, input, run } = options
+
+  // start no step on a cancelled run
+  if (runRecord.cancelledBy !== undefined) {
+    throw new ReviewCancelledError({ step, signal: runRecord.cancelledBy })
+  }
 
   // move to the step's stage and announce the step with its input hash
   const stage = stagesByStep[step]

@@ -16,7 +16,7 @@ context: |
 
   These files are frozen: package.json, bun.lock, tsconfig.json, biome.json, .dependency-cruiser.cjs, lefthook.yml, .github/workflows/ci.yml, openspec/config.yaml, src/shared/**, docs/agents-template.md, README.md. Only a change whose proposal names them under Impact edits them, so a module change never adds a dependency, a shared contract field or a README section.
 
-  Caches live outside the repo. Every cache (advisories, LLM responses, cloned benchmark repositories) is written under the directory resolveCacheDirectory() from src/shared/cache-directory.ts returns: PULL_REQUEST_REVIEW_CACHE_DIR when set and non-empty, else ~/.cache/pull-request-review. Never add a cache/ directory to the tree or to .gitignore. Tests and CI point the variable at a temporary directory.
+  Every cache is written under resolveCacheDirectory() from src/shared/cache-directory.ts, which reads PULL_REQUEST_REVIEW_CACHE_DIR. Locally that points at the gitignored cache/ folder in the main checkout, shared by every worktree; never commit anything under it. Tests and CI point the variable at a temporary directory.
 
   bun run verify runs bun check, biome check, check:boundaries, check:headers and bun test, and must pass before a change is done. The pre-commit hook and CI run the same command.
 

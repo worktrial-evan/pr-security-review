@@ -1,18 +1,20 @@
-// the JSONL audit sink: appends one redacted audit event per line to <runsDirectory>/<runId>/audit.jsonl and fsyncs every write.
+// the JSONL audit sink: appends one redacted audit event per line to <runDirectory>/audit.jsonl and fsyncs every write.
 // appending goes through node:fs on purpose. Bun.file(path).writer() has no append mode and would truncate an existing log
 import { closeSync, fsyncSync, mkdirSync, openSync, writeSync } from 'node:fs'
 import { join } from 'node:path'
 import type { AuditEvent, AuditSink } from '@/shared/audit'
 import { redact } from './redact'
 
-// the run the sink writes for and the directory the run directories live in
-export interface JsonlAuditSinkOptions {
-  runId: string
-  runsDirectory?: string
-}
+// where the log goes: the run directory itself, or the run's directory under the runs directory
+export type JsonlAuditSinkOptions =
+  | { runDirectory: string }
+  | { runId: string; runsDirectory?: string }
 
 // the name of the audit log inside a run directory
 const auditLogFileName = 'audit.jsonl'
+
+// the runs directory when the caller names none
+const defaultRunsDirectory = 'runs'
 
 /**
  * Appends redacted audit events as JSON lines to the audit log of one run, flushed to disk on every write.
@@ -25,9 +27,9 @@ export class JsonlAuditSink implements AuditSink {
   private readonly fileDescriptor: number
   private isDisposed = false
 
-  constructor({ runId, runsDirectory = 'runs' }: JsonlAuditSinkOptions) {
+  constructor(options: JsonlAuditSinkOptions) {
     // create the run directory and open the log once for appending
-    const runDirectory = join(runsDirectory, runId)
+    const runDirectory = resolveRunDirectory(options)
     mkdirSync(runDirectory, { recursive: true })
     this.filePath = join(runDirectory, auditLogFileName)
     this.fileDescriptor = openSync(this.filePath, 'a')
@@ -59,4 +61,12 @@ export class JsonlAuditSink implements AuditSink {
     closeSync(this.fileDescriptor)
     this.isDisposed = true
   }
+}
+
+// the run directory the options name, or <runsDirectory>/<runId>
+function resolveRunDirectory(options: JsonlAuditSinkOptions): string {
+  if ('runDirectory' in options) {
+    return options.runDirectory
+  }
+  return join(options.runsDirectory ?? defaultRunsDirectory, options.runId)
 }
