@@ -1,4 +1,4 @@
-// tests the review prompt: the fenced chunk as the user turn, the shipped rubric rendered with the fence description and the whole allowlist, a rubric missing a variable rejected, every shipped version loading, and the credential exception in v2
+// tests the review prompt: the fenced chunk as the user turn, the shipped rubric rendered with the fence description and the whole allowlist, a rubric missing a variable rejected, every shipped version loading, the credential exception in v2, and only allowed ids in a CWE choice section
 import { describe, expect, test } from 'bun:test'
 import { describeFence } from '@/prompts/fence-untrusted'
 import { loadPrompt } from '@/prompts/prompt-loader'
@@ -15,6 +15,7 @@ import {
 } from './review-prompt'
 import {
   allowedVulnerabilityTypes,
+  isAllowedVulnerabilityType,
   renderVulnerabilityTypeAllowlist,
 } from './vulnerability-type-allowlist'
 
@@ -161,6 +162,38 @@ describe('the shipped code review prompt versions', () => {
     expect(shippedPromptVersions[0]?.template.hash).toBe(shippedVersionOneHash)
   })
 
+  test('name only allowed ids in a CWE choice section, and every hinted pair in v4', () => {
+    // read the CWE choice section of every version that has one
+    const cweChoiceSections = shippedPromptVersions.flatMap(
+      (shippedPromptVersion) =>
+        readCweChoiceSection(shippedPromptVersion.fileText),
+    )
+    expect(cweChoiceSections.length).toBeGreaterThan(0)
+
+    // check that every id a section names is on the allowlist
+    for (const cweChoiceSection of cweChoiceSections) {
+      const namedIds = cweChoiceSection.match(/CWE-[0-9]+/g) ?? []
+      for (const namedId of namedIds) {
+        expect(isAllowedVulnerabilityType(namedId)).toBe(true)
+      }
+    }
+
+    // check that v4 names both ids of each hinted pair
+    const versionFourSection = readCweChoiceSection(
+      shippedPromptVersions[3]?.fileText ?? '',
+    ).join('')
+    for (const hintedId of [
+      'CWE-347',
+      'CWE-287',
+      'CWE-95',
+      'CWE-94',
+      'CWE-1333',
+      'CWE-400',
+    ]) {
+      expect(versionFourSection).toContain(`\`${hintedId}\``)
+    }
+  })
+
   test('admit a hard-coded credential as CWE-798 in v2', () => {
     // read the raw rubric of v2 and look for the credential exception
     const versionTwoFileText = shippedPromptVersions[1]?.fileText
@@ -170,3 +203,14 @@ describe('the shipped code review prompt versions', () => {
     expect(versionTwoFileText).toContain('`CWE-798`')
   })
 })
+
+// return the CWE choice section of a rubric as a one-item list. the list is empty when the rubric has none
+function readCweChoiceSection(promptFileText: string): string[] {
+  // cut from the section heading to the next top-level heading
+  const sectionStart = promptFileText.indexOf('\n# CWE choice\n')
+  if (sectionStart === -1) {
+    return []
+  }
+  const sectionEnd = promptFileText.indexOf('\n# ', sectionStart + 1)
+  return [promptFileText.slice(sectionStart, sectionEnd)]
+}

@@ -3,7 +3,7 @@
   "isLlmEnabled": true,
   "isCacheEnabled": true,
   "advisoryStaleHours": 24,
-  "reviewPromptVersion": "3",
+  "reviewPromptVersion": "4",
   "maxChangedFiles": 200,
   "maxFileBytes": 1000000,
   "maxReviewCostUsd": 2

@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark run final-v4 (test)</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --background: #ffffff;
+  --text: #1c2128;
+  --muted-text: #59636e;
+  --border: #d1d9e0;
+  --surface: #f6f8fa;
+  --link: #0969da;
+  --critical: #a40e26;
+  --high: #c2410c;
+  --medium: #9a6700;
+  --low: #1a7f37;
+  --info: #57606a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1117;
+    --text: #e6edf3;
+    --muted-text: #9198a1;
+    --border: #3d444d;
+    --surface: #151b23;
+    --link: #4493f8;
+    --critical: #ff7b72;
+    --high: #ffa657;
+    --medium: #e3b341;
+    --low: #56d364;
+    --info: #9198a1;
+  }
+}
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  padding: 16px;
+  background: var(--background);
+  color: var(--text);
+  font: 14px/1.5 system-ui, sans-serif;
+}
+a { color: var(--link); }
+code { font: 12px ui-monospace, monospace; word-break: break-all; }
+h1 { margin: 0 0 12px; font-size: 20px; }
+.run-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 16px;
+  margin: 0 0 12px;
+}
+.run-details dt { color: var(--muted-text); }
+.run-details dd { margin: 0; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 8px; }
+.counts ul { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
+.counts strong { font-size: 18px; }
+.counts .severity-critical strong { color: var(--critical); }
+.counts .severity-high strong { color: var(--high); }
+.counts .severity-medium strong { color: var(--medium); }
+.counts .severity-low strong { color: var(--low); }
+.origin-line { margin: 0 0 16px; color: var(--muted-text); }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.filter { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.filter summary { padding: 4px 10px; cursor: pointer; user-select: none; }
+.filter-values { display: flex; flex-direction: column; padding: 4px 10px 8px; }
+.row-count { margin: 6px 0 0 auto; color: var(--muted-text); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--surface); white-space: nowrap; }
+th button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+th[aria-sort="ascending"] button::after { content: " \25B2"; }
+th[aria-sort="descending"] button::after { content: " \25BC"; }
+tr.finding { cursor: pointer; }
+tr.finding:hover { background: var(--surface); }
+tr.finding.muted { opacity: 0.55; }
+td.empty { color: var(--muted-text); }
+.badge { padding: 1px 8px; border: 1px solid currentColor; border-radius: 999px; font-size: 12px; }
+.badge.severity-critical { color: var(--critical); }
+.badge.severity-high { color: var(--high); }
+.badge.severity-medium { color: var(--medium); }
+.badge.severity-low { color: var(--low); }
+.badge.severity-info { color: var(--info); }
+tr.detail td { background: var(--surface); }
+.detail-list { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; }
+.detail-list dt { color: var(--muted-text); }
+.detail-list dd { margin: 0; }
+.detail-list ol, .detail-list ul { margin: 0; padding-left: 20px; }
+
+  table { border-collapse: collapse; margin-bottom: 2rem; }
+  th, td { border: 1px solid var(--border); padding: 0.3rem 0.6rem; text-align: left; }
+  th { background: var(--surface); }
+  td.number { text-align: right; font-variant-numeric: tabular-nums; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+  .filters { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .warning { color: var(--critical); }
+</style>
+</head>
+<body>
+<h1>Benchmark run final-v4 (test)</h1>
+<dl><dt>Label</dt><dd>final-v4</dd><dt>Split</dt><dd>test</dd><dt>Started at</dt><dd>2026-10-16T04:05:37.006Z</dd><dt>Finished at</dt><dd>2026-10-16T04:06:41.742Z</dd><dt>Git sha</dt><dd>4cb3cede1984b5d686f32348f81c9338cec73dfe</dd><dt>Prompt versions</dt><dd>code-review=4, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>true</dd></dl>
+
+<h2>Metrics</h2>
+<table>
+<thead><tr><th>Scope</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+<tbody><tr>
+<td>overall</td>
+<td class="number">0.778</td>
+<td class="number">0.636</td>
+<td class="number">0.700</td>
+</tr><tr>
+<td>detector: dependency</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>detector: code-review</td>
+<td class="number">0.600</td>
+<td class="number">0.429</td>
+<td class="number">0.500</td>
+</tr><tr>
+<td>detector: secrets</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>category: dependency</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>category: code</td>
+<td class="number">0.600</td>
+<td class="number">0.600</td>
+<td class="number">0.600</td>
+</tr><tr>
+<td>category: secrets</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>category: clean</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+</tr><tr>
+<td>category: real-world</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+</tr></tbody>
+</table>
+<h2>Totals</h2>
+<dl>
+<dt>False positives on clean cases</dt><dd>0</dd>
+<dt>Total cost</dt><dd>$0.2195</dd>
+<dt>Total duration</dt><dd>64644 ms</dd>
+</dl>
+<h2>Cases</h2>
+<div class="filters"><label>Category
+<select data-filter="category">
+<option value="all">all</option>
+<option value="dependency">dependency</option>
+<option value="code">code</option>
+<option value="secrets">secrets</option>
+<option value="clean">clean</option>
+<option value="real-world">real-world</option>
+</select>
+</label>
+<label>Split
+<select data-filter="split">
+<option value="all">all</option>
+<option value="dev">dev</option>
+<option value="test">test</option>
+</select>
+</label>
+<label>Status
+<select data-filter="status">
+<option value="all">all</option>
+<option value="completed">completed</option>
+<option value="failed">failed</option>
+<option value="skipped">skipped</option>
+</select>
+</label></div>
+<table>
+<thead><tr><th>Id</th><th>Category</th><th>Split</th><th>Status</th><th>TP</th><th>FP</th><th>FN</th><th>Cost</th><th>Duration</th><th>Error</th></tr></thead>
+<tbody><tr data-case="clean-11-add-type-annotations" data-category="clean" data-split="test" data-status="completed">
+<td>clean-11-add-type-annotations</td>
+<td>clean</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0105</td>
+<td class="number">1407 ms</td>
+<td></td>
+</tr><tr data-case="clean-12-config-default-changed" data-category="clean" data-split="test" data-status="completed">
+<td>clean-12-config-default-changed</td>
+<td>clean</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1618 ms</td>
+<td></td>
+</tr><tr data-case="clean-13-error-handling-added" data-category="clean" data-split="test" data-status="completed">
+<td>clean-13-error-handling-added</td>
+<td>clean</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0103</td>
+<td class="number">1581 ms</td>
+<td></td>
+</tr><tr data-case="clean-14-comment-only-change" data-category="clean" data-split="test" data-status="completed">
+<td>clean-14-comment-only-change</td>
+<td>clean</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0102</td>
+<td class="number">1311 ms</td>
+<td></td>
+</tr><tr data-case="clean-15-safe-redirect-allowlist" data-category="clean" data-split="test" data-status="completed">
+<td>clean-15-safe-redirect-allowlist</td>
+<td>clean</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0226</td>
+<td class="number">5757 ms</td>
+<td></td>
+</tr><tr data-case="code-11-open-redirect" data-category="code" data-split="test" data-status="completed">
+<td>code-11-open-redirect</td>
+<td>code</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0136</td>
+<td class="number">9219 ms</td>
+<td></td>
+</tr><tr data-case="code-12-missing-authorization-admin" data-category="code" data-split="test" data-status="completed">
+<td>code-12-missing-authorization-admin</td>
+<td>code</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0195</td>
+<td class="number">11567 ms</td>
+<td></td>
+</tr><tr data-case="code-13-redos-user-input" data-category="code" data-split="test" data-status="completed">
+<td>code-13-redos-user-input</td>
+<td>code</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0141</td>
+<td class="number">6141 ms</td>
+<td></td>
+</tr><tr data-case="code-14-insecure-deserialization" data-category="code" data-split="test" data-status="completed">
+<td>code-14-insecure-deserialization</td>
+<td>code</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">1</td>
+<td class="number">$0.0135</td>
+<td class="number">5125 ms</td>
+<td></td>
+</tr><tr data-case="code-15-directory-listing-uploads" data-category="code" data-split="test" data-status="completed">
+<td>code-15-directory-listing-uploads</td>
+<td>code</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">1</td>
+<td class="number">$0.0137</td>
+<td class="number">5361 ms</td>
+<td></td>
+</tr><tr data-case="dependency-09-imported-through-subpath" data-category="dependency" data-split="test" data-status="completed">
+<td>dependency-09-imported-through-subpath</td>
+<td>dependency</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1712 ms</td>
+<td></td>
+</tr><tr data-case="dependency-10-bun-lock-only" data-category="dependency" data-split="test" data-status="completed">
+<td>dependency-10-bun-lock-only</td>
+<td>dependency</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0000</td>
+<td class="number">64 ms</td>
+<td></td>
+</tr><tr data-case="dependency-11-package-lock-only" data-category="dependency" data-split="test" data-status="completed">
+<td>dependency-11-package-lock-only</td>
+<td>dependency</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0000</td>
+<td class="number">69 ms</td>
+<td></td>
+</tr><tr data-case="dependency-12-bump-to-fixed-version" data-category="dependency" data-split="test" data-status="completed">
+<td>dependency-12-bump-to-fixed-version</td>
+<td>dependency</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">1392 ms</td>
+<td></td>
+</tr><tr data-case="real-world-03-qs" data-category="real-world" data-split="test" data-status="completed">
+<td>real-world-03-qs</td>
+<td>real-world</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0292</td>
+<td class="number">7920 ms</td>
+<td></td>
+</tr><tr data-case="real-world-06-express" data-category="real-world" data-split="test" data-status="completed">
+<td>real-world-06-express</td>
+<td>real-world</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0217</td>
+<td class="number">2874 ms</td>
+<td></td>
+</tr><tr data-case="secrets-04-generic-high-entropy-token" data-category="secrets" data-split="test" data-status="completed">
+<td>secrets-04-generic-high-entropy-token</td>
+<td>secrets</td>
+<td>test</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0105</td>
+<td class="number">1526 ms</td>
+<td></td>
+</tr></tbody>
+</table>
+<script>
+  // read every filter select and every case row once
+  const filterSelects = Array.from(document.querySelectorAll('select[data-filter]'))
+  const caseRows = Array.from(document.querySelectorAll('tr[data-case]'))
+
+  // show a row only when every select is on all or on the row's value
+  function applyFilters() {
+    for (const caseRow of caseRows) {
+      const isShown = filterSelects.every((filterSelect) => {
+        const attribute = filterSelect.dataset.filter
+        return filterSelect.value === 'all' || caseRow.dataset[attribute] === filterSelect.value
+      })
+      caseRow.hidden = !isShown
+    }
+  }
+
+  // filter again whenever a select changes
+  for (const filterSelect of filterSelects) {
+    filterSelect.addEventListener('change', applyFilters)
+  }
+</script>
+</body>
+</html>

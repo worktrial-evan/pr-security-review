@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Benchmark run moved-code-rubric (dev)</title>
+<title>Benchmark run cwe-family-hints-rerun (dev)</title>
 <style>
 :root {
   color-scheme: light dark;
@@ -100,17 +100,17 @@ tr.detail td { background: var(--surface); }
 </style>
 </head>
 <body>
-<h1>Benchmark run moved-code-rubric (dev)</h1>
-<dl><dt>Label</dt><dd>moved-code-rubric</dd><dt>Split</dt><dd>dev</dd><dt>Started at</dt><dd>2026-10-16T03:42:34.552Z</dd><dt>Finished at</dt><dd>2026-10-16T03:44:49.396Z</dd><dt>Git sha</dt><dd>795f30d33fc07c92df739e3e507113d81c25d4b6</dd><dt>Prompt versions</dt><dd>code-review=3, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>true</dd></dl>
+<h1>Benchmark run cwe-family-hints-rerun (dev)</h1>
+<dl><dt>Label</dt><dd>cwe-family-hints-rerun</dd><dt>Split</dt><dd>dev</dd><dt>Started at</dt><dd>2026-10-16T04:02:46.282Z</dd><dt>Finished at</dt><dd>2026-10-16T04:05:22.357Z</dd><dt>Git sha</dt><dd>4cb3cede1984b5d686f32348f81c9338cec73dfe</dd><dt>Prompt versions</dt><dd>code-review=4, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>false</dd></dl>
 
 <h2>Metrics</h2>
 <table>
 <thead><tr><th>Scope</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
 <tbody><tr>
 <td>overall</td>
-<td class="number">0.857</td>
-<td class="number">0.692</td>
-<td class="number">0.766</td>
+<td class="number">0.952</td>
+<td class="number">0.769</td>
+<td class="number">0.851</td>
 </tr><tr>
 <td>detector: dependency</td>
 <td class="number">1.000</td>
@@ -118,9 +118,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">1.000</td>
 </tr><tr>
 <td>detector: code-review</td>
-<td class="number">0.750</td>
-<td class="number">0.563</td>
-<td class="number">0.643</td>
+<td class="number">0.917</td>
+<td class="number">0.688</td>
+<td class="number">0.786</td>
 </tr><tr>
 <td>detector: secrets</td>
 <td class="number">1.000</td>
@@ -133,9 +133,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">1.000</td>
 </tr><tr>
 <td>category: code</td>
-<td class="number">0.750</td>
-<td class="number">0.600</td>
-<td class="number">0.667</td>
+<td class="number">1.000</td>
+<td class="number">0.800</td>
+<td class="number">0.889</td>
 </tr><tr>
 <td>category: secrets</td>
 <td class="number">1.000</td>
@@ -156,8 +156,8 @@ tr.detail td { background: var(--surface); }
 <h2>Totals</h2>
 <dl>
 <dt>False positives on clean cases</dt><dd>1</dd>
-<dt>Total cost</dt><dd>$0.4468</dd>
-<dt>Total duration</dt><dd>134623 ms</dd>
+<dt>Total cost</dt><dd>$0.4654</dd>
+<dt>Total duration</dt><dd>155849 ms</dd>
 </dl>
 <h2>Cases</h2>
 <div class="filters"><label>Category
@@ -195,8 +195,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0096</td>
-<td class="number">1609 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">1517 ms</td>
 <td></td>
 </tr><tr data-case="clean-02-textcontent-not-innerhtml" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-02-textcontent-not-innerhtml</td>
@@ -206,8 +206,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0095</td>
-<td class="number">1589 ms</td>
+<td class="number">$0.0101</td>
+<td class="number">8279 ms</td>
 <td></td>
 </tr><tr data-case="clean-03-exec-constant-command" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-03-exec-constant-command</td>
@@ -217,8 +217,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0097</td>
-<td class="number">1191 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">1707 ms</td>
 <td></td>
 </tr><tr data-case="clean-04-safe-dependency-bump" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-04-safe-dependency-bump</td>
@@ -228,8 +228,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0095</td>
-<td class="number">1802 ms</td>
+<td class="number">$0.0101</td>
+<td class="number">2726 ms</td>
 <td></td>
 </tr><tr data-case="clean-05-refactor-moves-vulnerable-code" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-05-refactor-moves-vulnerable-code</td>
@@ -239,8 +239,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">1</td>
 <td class="number">0</td>
-<td class="number">$0.0128</td>
-<td class="number">5016 ms</td>
+<td class="number">$0.0132</td>
+<td class="number">4853 ms</td>
 <td></td>
 </tr><tr data-case="clean-06-docs-only" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-06-docs-only</td>
@@ -250,8 +250,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0100</td>
-<td class="number">1625 ms</td>
+<td class="number">$0.0107</td>
+<td class="number">1285 ms</td>
 <td></td>
 </tr><tr data-case="clean-07-tests-only" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-07-tests-only</td>
@@ -261,8 +261,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0111</td>
-<td class="number">1711 ms</td>
+<td class="number">$0.0117</td>
+<td class="number">1271 ms</td>
 <td></td>
 </tr><tr data-case="clean-08-validated-feature" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-08-validated-feature</td>
@@ -272,8 +272,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0197</td>
-<td class="number">4454 ms</td>
+<td class="number">$0.0210</td>
+<td class="number">3690 ms</td>
 <td></td>
 </tr><tr data-case="clean-09-logging-added" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-09-logging-added</td>
@@ -283,8 +283,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1329 ms</td>
+<td class="number">$0.0101</td>
+<td class="number">1680 ms</td>
 <td></td>
 </tr><tr data-case="clean-10-rename-variable" data-category="clean" data-split="dev" data-status="completed">
 <td>clean-10-rename-variable</td>
@@ -294,8 +294,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0097</td>
-<td class="number">1741 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">1490 ms</td>
 <td></td>
 </tr><tr data-case="code-01-sql-injection-concatenation" data-category="code" data-split="dev" data-status="completed">
 <td>code-01-sql-injection-concatenation</td>
@@ -305,8 +305,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0124</td>
-<td class="number">5636 ms</td>
+<td class="number">$0.0127</td>
+<td class="number">6539 ms</td>
 <td></td>
 </tr><tr data-case="code-02-xss-innerhtml" data-category="code" data-split="dev" data-status="completed">
 <td>code-02-xss-innerhtml</td>
@@ -316,8 +316,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0121</td>
-<td class="number">4649 ms</td>
+<td class="number">$0.0127</td>
+<td class="number">5213 ms</td>
 <td></td>
 </tr><tr data-case="code-03-command-injection-exec" data-category="code" data-split="dev" data-status="completed">
 <td>code-03-command-injection-exec</td>
@@ -327,8 +327,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0125</td>
-<td class="number">4444 ms</td>
+<td class="number">$0.0130</td>
+<td class="number">4499 ms</td>
 <td></td>
 </tr><tr data-case="code-04-path-traversal-download" data-category="code" data-split="dev" data-status="completed">
 <td>code-04-path-traversal-download</td>
@@ -338,8 +338,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0128</td>
-<td class="number">5649 ms</td>
+<td class="number">$0.0135</td>
+<td class="number">5252 ms</td>
 <td></td>
 </tr><tr data-case="code-05-hardcoded-credential" data-category="code" data-split="dev" data-status="completed">
 <td>code-05-hardcoded-credential</td>
@@ -349,19 +349,19 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0097</td>
-<td class="number">909 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">1502 ms</td>
 <td></td>
 </tr><tr data-case="code-06-jwt-verification-disabled" data-category="code" data-split="dev" data-status="completed">
 <td>code-06-jwt-verification-disabled</td>
 <td>code</td>
 <td>dev</td>
 <td>completed</td>
+<td class="number">1</td>
 <td class="number">0</td>
-<td class="number">1</td>
-<td class="number">1</td>
-<td class="number">$0.0126</td>
-<td class="number">4623 ms</td>
+<td class="number">0</td>
+<td class="number">$0.0134</td>
+<td class="number">5156 ms</td>
 <td></td>
 </tr><tr data-case="code-07-ssrf-user-url" data-category="code" data-split="dev" data-status="completed">
 <td>code-07-ssrf-user-url</td>
@@ -371,8 +371,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0128</td>
-<td class="number">5288 ms</td>
+<td class="number">$0.0135</td>
+<td class="number">6450 ms</td>
 <td></td>
 </tr><tr data-case="code-08-prototype-pollution-merge" data-category="code" data-split="dev" data-status="completed">
 <td>code-08-prototype-pollution-merge</td>
@@ -382,8 +382,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0200</td>
-<td class="number">10956 ms</td>
+<td class="number">$0.0212</td>
+<td class="number">10158 ms</td>
 <td></td>
 </tr><tr data-case="code-09-md5-password-hashing" data-category="code" data-split="dev" data-status="completed">
 <td>code-09-md5-password-hashing</td>
@@ -393,19 +393,19 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0103</td>
-<td class="number">1752 ms</td>
+<td class="number">$0.0109</td>
+<td class="number">2009 ms</td>
 <td></td>
 </tr><tr data-case="code-10-eval-request-input" data-category="code" data-split="dev" data-status="completed">
 <td>code-10-eval-request-input</td>
 <td>code</td>
 <td>dev</td>
 <td>completed</td>
+<td class="number">1</td>
 <td class="number">0</td>
-<td class="number">1</td>
-<td class="number">1</td>
-<td class="number">$0.0121</td>
-<td class="number">4761 ms</td>
+<td class="number">0</td>
+<td class="number">$0.0127</td>
+<td class="number">5035 ms</td>
 <td></td>
 </tr><tr data-case="dependency-01-direct-production-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-01-direct-production-vulnerable</td>
@@ -415,8 +415,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1922 ms</td>
+<td class="number">$0.0115</td>
+<td class="number">4255 ms</td>
 <td></td>
 </tr><tr data-case="dependency-02-development-dependency-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-02-development-dependency-vulnerable</td>
@@ -426,8 +426,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1440 ms</td>
+<td class="number">$0.0102</td>
+<td class="number">4143 ms</td>
 <td></td>
 </tr><tr data-case="dependency-03-transitive-only" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-03-transitive-only</td>
@@ -437,8 +437,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1429 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">4305 ms</td>
 <td></td>
 </tr><tr data-case="dependency-04-last-affected-range" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-04-last-affected-range</td>
@@ -448,8 +448,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0093</td>
-<td class="number">1538 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">4833 ms</td>
 <td></td>
 </tr><tr data-case="dependency-05-versions-only-listing" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-05-versions-only-listing</td>
@@ -459,8 +459,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1939 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">3664 ms</td>
 <td></td>
 </tr><tr data-case="dependency-06-withdrawn-advisory" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-06-withdrawn-advisory</td>
@@ -470,8 +470,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1948 ms</td>
+<td class="number">$0.0100</td>
+<td class="number">1750 ms</td>
 <td></td>
 </tr><tr data-case="dependency-07-unreviewed-advisory" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-07-unreviewed-advisory</td>
@@ -481,8 +481,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1695 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">3356 ms</td>
 <td></td>
 </tr><tr data-case="dependency-08-added-never-imported" data-category="dependency" data-split="dev" data-status="completed">
 <td>dependency-08-added-never-imported</td>
@@ -492,8 +492,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0095</td>
-<td class="number">1838 ms</td>
+<td class="number">$0.0104</td>
+<td class="number">4006 ms</td>
 <td></td>
 </tr><tr data-case="real-world-01-ms" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-01-ms</td>
@@ -503,8 +503,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0174</td>
-<td class="number">9397 ms</td>
+<td class="number">$0.0171</td>
+<td class="number">8465 ms</td>
 <td></td>
 </tr><tr data-case="real-world-02-node-fetch" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-02-node-fetch</td>
@@ -514,8 +514,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0164</td>
-<td class="number">10555 ms</td>
+<td class="number">$0.0172</td>
+<td class="number">8362 ms</td>
 <td></td>
 </tr><tr data-case="real-world-04-tar" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-04-tar</td>
@@ -525,8 +525,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0230</td>
-<td class="number">4690 ms</td>
+<td class="number">$0.0261</td>
+<td class="number">7699 ms</td>
 <td></td>
 </tr><tr data-case="real-world-05-path-to-regexp" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-05-path-to-regexp</td>
@@ -536,8 +536,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0123</td>
-<td class="number">3337 ms</td>
+<td class="number">$0.0106</td>
+<td class="number">1533 ms</td>
 <td></td>
 </tr><tr data-case="real-world-07-ws" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-07-ws</td>
@@ -547,8 +547,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0216</td>
-<td class="number">11750 ms</td>
+<td class="number">$0.0140</td>
+<td class="number">4482 ms</td>
 <td></td>
 </tr><tr data-case="real-world-08-moment" data-category="real-world" data-split="dev" data-status="completed">
 <td>real-world-08-moment</td>
@@ -558,8 +558,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0122</td>
-<td class="number">5807 ms</td>
+<td class="number">$0.0126</td>
+<td class="number">4697 ms</td>
 <td></td>
 </tr><tr data-case="secrets-01-aws-key-in-config" data-category="secrets" data-split="dev" data-status="completed">
 <td>secrets-01-aws-key-in-config</td>
@@ -569,8 +569,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0098</td>
-<td class="number">1731 ms</td>
+<td class="number">$0.0104</td>
+<td class="number">1587 ms</td>
 <td></td>
 </tr><tr data-case="secrets-02-github-token-in-workflow" data-category="secrets" data-split="dev" data-status="completed">
 <td>secrets-02-github-token-in-workflow</td>
@@ -580,8 +580,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0096</td>
-<td class="number">1649 ms</td>
+<td class="number">$0.0105</td>
+<td class="number">5092 ms</td>
 <td></td>
 </tr><tr data-case="secrets-03-committed-private-key" data-category="secrets" data-split="dev" data-status="completed">
 <td>secrets-03-committed-private-key</td>
@@ -591,8 +591,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0110</td>
-<td class="number">1224 ms</td>
+<td class="number">$0.0118</td>
+<td class="number">3309 ms</td>
 <td></td>
 </tr></tbody>
 </table>

@@ -1,11 +1,11 @@
 {
-  "label": "moved-code-rubric",
+  "label": "cwe-family-hints-rerun",
   "split": "dev",
-  "startedAt": "2026-10-16T03:42:34.552Z",
-  "finishedAt": "2026-10-16T03:44:49.396Z",
-  "gitSha": "795f30d33fc07c92df739e3e507113d81c25d4b6",
+  "startedAt": "2026-10-16T04:02:46.282Z",
+  "finishedAt": "2026-10-16T04:05:22.357Z",
+  "gitSha": "4cb3cede1984b5d686f32348f81c9338cec73dfe",
   "promptVersions": {
-    "code-review": "3",
+    "code-review": "4",
     "summarize": "1"
   },
   "modelIds": {
@@ -13,16 +13,16 @@
     "summarize": "anthropic/claude-haiku-5-5"
   },
   "advisorySnapshotDate": "2026-10-15T21:47:35.942Z",
-  "isLlmCacheUsed": true,
+  "isLlmCacheUsed": false,
   "score": {
-    "precision": 0.8571428571428571,
-    "recall": 0.6923076923076923,
-    "f1": 0.7659574468085107,
+    "precision": 0.9523809523809523,
+    "recall": 0.7692307692307693,
+    "f1": 0.8510638297872339,
     "byDetector": {
       "code-review": {
-        "precision": 0.75,
-        "recall": 0.5625,
-        "f1": 0.6428571428571429
+        "precision": 0.9166666666666666,
+        "recall": 0.6875,
+        "f1": 0.7857142857142857
       },
       "dependency": {
         "precision": 1,
@@ -42,9 +42,9 @@
         "f1": 0
       },
       "code": {
-        "precision": 0.75,
-        "recall": 0.6,
-        "f1": 0.6666666666666665
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
       },
       "dependency": {
         "precision": 1,
@@ -63,8 +63,8 @@
       }
     },
     "falsePositivesOnClean": 1,
-    "totalCostUsd": 0.44678629999999997,
-    "totalDurationMs": 134623,
+    "totalCostUsd": 0.4654319999999998,
+    "totalDurationMs": 155849,
     "caseResults": [
       {
         "caseId": "clean-01-parameterized-query",
@@ -158,9 +158,9 @@
       },
       {
         "caseId": "code-06-jwt-verification-disabled",
-        "truePositives": 0,
-        "falsePositives": 1,
-        "falseNegatives": 1
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
       },
       {
         "caseId": "code-07-ssrf-user-url",
@@ -182,9 +182,9 @@
       },
       {
         "caseId": "code-10-eval-request-input",
-        "truePositives": 0,
-        "falsePositives": 1,
-        "falseNegatives": 1
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
       },
       {
         "caseId": "dependency-01-direct-production-vulnerable",
@@ -302,8 +302,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.009632,
-        "durationMs": 1609
+        "costUsd": 0.010268,
+        "durationMs": 1517
       },
       {
         "caseId": "clean-02-textcontent-not-innerhtml",
@@ -317,8 +317,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.009514,
-        "durationMs": 1589
+        "costUsd": 0.01015,
+        "durationMs": 8279
       },
       {
         "caseId": "clean-03-exec-constant-command",
@@ -332,8 +332,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.00966,
-        "durationMs": 1191
+        "costUsd": 0.010296,
+        "durationMs": 1707
       },
       {
         "caseId": "clean-04-safe-dependency-bump",
@@ -404,8 +404,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009454,
-        "durationMs": 1802
+        "costUsd": 0.01009,
+        "durationMs": 2726
       },
       {
         "caseId": "clean-05-refactor-moves-vulnerable-code",
@@ -418,32 +418,31 @@
         "matchedPairs": [],
         "unmatchedPredictions": [
           {
-            "id": "9f7294f9183f5320",
+            "id": "df22f42c01df9680",
             "detector": "code-review",
             "severity": "high",
             "confidence": 0.8,
             "title": "SQL query built by concatenating the name prefix",
             "file": "src/user-search.ts",
-            "startLine": 13,
-            "endLine": 15,
+            "startLine": 14,
+            "endLine": 14,
             "isIntroducedByPullRequest": true,
-            "summary": "The namePrefix parameter of findUsersByNamePrefix is concatenated directly into the SQL string passed to database.query in src/user-search.ts (lines 13-15). A caller-supplied value containing quote characters can change the structure of the query, which is a SQL injection flaw (CWE-89). Because the query reads user records, an attacker could read data they should not see, and the severity is rated high.",
-            "remediation": "Replace the string concatenation with a parameterized query: keep the LIKE pattern in the SQL text as a placeholder, pass the prefix plus the % wildcard as a bound parameter, and change the generic type arguments so the query is prepared with that parameter instead of the inline string.",
+            "summary": "The name prefix passed to findUsersByNamePrefix is concatenated directly into the SQL text on line 14 of src/user-search.ts instead of being passed as a bound parameter. An attacker who controls namePrefix can inject SQL, which can read, change, or delete data in the users table beyond what the search is meant to return.",
+            "remediation": "Replace the concatenated string on line 14 with a parameterized query that uses a placeholder for the LIKE pattern, such as WHERE name LIKE ? with the value namePrefix plus \"%\" supplied as a bound parameter to database.query, and run it through selectUsers.all() with that parameter.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-89",
             "evidence": [
-              "  const selectUsers = database.query<User, []>(",
               "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\","
             ],
-            "sourceToSink": "The namePrefix parameter of the exported findUsersByNamePrefix function is concatenated into the SQL string that database.query prepares and selectUsers.all() executes.",
-            "promptVersion": "3",
+            "sourceToSink": "The namePrefix parameter of the exported findUsersByNamePrefix function is concatenated into the SQL text that database.query prepares and selectUsers.all() executes.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         ],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.012803499999999999,
-        "durationMs": 5016
+        "costUsd": 0.0132492,
+        "durationMs": 4853
       },
       {
         "caseId": "clean-06-docs-only",
@@ -457,8 +456,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.010032,
-        "durationMs": 1625
+        "costUsd": 0.010668,
+        "durationMs": 1285
       },
       {
         "caseId": "clean-07-tests-only",
@@ -472,8 +471,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.01107,
-        "durationMs": 1711
+        "costUsd": 0.011706,
+        "durationMs": 1271
       },
       {
         "caseId": "clean-08-validated-feature",
@@ -487,8 +486,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.019708000000000003,
-        "durationMs": 4454
+        "costUsd": 0.02098,
+        "durationMs": 3690
       },
       {
         "caseId": "clean-09-logging-added",
@@ -502,8 +501,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.009448,
-        "durationMs": 1329
+        "costUsd": 0.010084000000000001,
+        "durationMs": 1680
       },
       {
         "caseId": "clean-10-rename-variable",
@@ -517,8 +516,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.009656,
-        "durationMs": 1741
+        "costUsd": 0.010292,
+        "durationMs": 1490
       },
       {
         "caseId": "code-01-sql-injection-concatenation",
@@ -538,25 +537,24 @@
               "endLine": 34
             },
             "predictedFinding": {
-              "id": "4d0cd247c15788e3",
+              "id": "cd0a7dc6f76890f3",
               "detector": "code-review",
               "severity": "high",
               "confidence": 0.95,
-              "title": "SQL injection via name query parameter in user search",
+              "title": "SQL injection through the name query parameter in user search",
               "file": "src/server.ts",
-              "startLine": 29,
-              "endLine": 34,
+              "startLine": 32,
+              "endLine": 32,
               "isIntroducedByPullRequest": true,
-              "summary": "The user search handler in src/server.ts takes the name query parameter from the request and places it directly into the SQL string passed to database.query, inside a LIKE clause. An attacker can supply quote characters and SQL syntax in that parameter to change the query, which can expose or alter data in the users table. This is a high severity SQL injection (CWE-89).",
-              "remediation": "Replace the string interpolation with a parameterized query: keep the SQL text fixed, use a placeholder for the value, and pass the wildcard-wrapped name (for example '%' + namePattern + '%') as a bound parameter to database.query. Then add a test that sends a quote character in the name parameter and confirms it is treated as plain text.",
+              "summary": "The user search in src/server.ts (line 32) builds its SQL by inserting the request's name query parameter directly into the query string. An attacker can supply crafted input that changes the structure of the SQL statement, which is a SQL injection flaw (CWE-89). This can expose or modify data in the users table, including roles, and is rated high severity.",
+              "remediation": "Replace the string interpolation on line 32 with a parameterized query, passing the search term as a bound parameter (for example, a placeholder with the value '%' + namePattern + '%' supplied in the parameter array to database.query). Do not concatenate or template user input into SQL text.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-89",
               "evidence": [
-                "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
                 "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
               ],
               "sourceToSink": "The name query parameter of the incoming request is interpolated into the SQL string that database.query executes.",
-              "promptVersion": "3",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -564,8 +562,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.012357300000000002,
-        "durationMs": 5636
+        "costUsd": 0.0127496,
+        "durationMs": 6539
       },
       {
         "caseId": "code-02-xss-innerhtml",
@@ -594,15 +592,15 @@
               "startLine": 10,
               "endLine": 10,
               "isIntroducedByPullRequest": true,
-              "summary": "The name query parameter from the page URL is read into visitorName and placed directly into an HTML template that is assigned to innerHTML at line 10 of public/app.ts. Because the value is never escaped, a crafted link can inject script that runs in the victim's browser, which is a DOM-based cross-site scripting flaw (CWE-79) that can lead to session theft or actions taken as the user.",
-              "remediation": "Stop building HTML from the query parameter. Replace the innerHTML assignment on line 10 with textContent, or create the h1 element with document.createElement and set its text via textContent, so the visitor name is treated as plain text.",
+              "summary": "The name query parameter from the page URL is read from window.location and placed directly into an HTML template string that is assigned to innerHTML at public/app.ts line 10. Because the value is not escaped, an attacker can craft a link containing HTML or script markup in the name parameter, which the browser will run in the context of the victim's page. This is a DOM-based cross-site scripting flaw (CWE-79) and can lead to session theft, actions on behalf of the user, or content spoofing.",
+              "remediation": "In public/app.ts, stop assigning untrusted text to innerHTML. Build the heading with document.createElement('h1') and set its textContent to the visitor name, then append it to the greeting element. If HTML output is truly required, escape the name value first, but prefer textContent.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-79",
               "evidence": [
                 "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
               ],
-              "sourceToSink": "The name query parameter of the page URL is read into visitorName and interpolated into HTML assigned to innerHTML, so a crafted link runs attacker script in the page.",
-              "promptVersion": "3",
+              "sourceToSink": "The name query parameter of the page URL is read from window.location and interpolated into an HTML string assigned to innerHTML.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -610,8 +608,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0121456,
-        "durationMs": 4649
+        "costUsd": 0.012652100000000001,
+        "durationMs": 5213
       },
       {
         "caseId": "code-03-command-injection-exec",
@@ -634,14 +632,14 @@
               "id": "28f78eacd4d2a1b6",
               "detector": "code-review",
               "severity": "critical",
-              "confidence": 0.96,
+              "confidence": 0.97,
               "title": "OS command injection via host query parameter in ping route",
               "file": "src/server.ts",
               "startLine": 104,
               "endLine": 105,
               "isIntroducedByPullRequest": true,
-              "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string passed to execSync. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges. This is an OS command injection (CWE-78) rated critical.",
-              "remediation": "Stop building a shell command from request input. Replace execSync with a call that passes arguments as an array without a shell, such as execFileSync('ping', ['-c', '1', host]), and validate host against a strict allowlist pattern (for example hostname or IP characters only) before using it.",
+              "summary": "The ping route takes the host query parameter from the request and drops it straight into a shell command string passed to execSync. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges, which is a critical OS command injection (CWE-78) risk.",
+              "remediation": "Stop building the shell string in src/server.ts around lines 104-105. Validate host against a strict allowlist such as a hostname or IP address pattern, and call execFileSync('ping', ['-c', '1', host]) so no shell interprets the input.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-78",
               "evidence": [
@@ -649,7 +647,7 @@
                 "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
               ],
               "sourceToSink": "The host query parameter of the incoming request is interpolated into the shell command string that execSync runs.",
-              "promptVersion": "3",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -657,8 +655,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.012543200000000001,
-        "durationMs": 4444
+        "costUsd": 0.0130332,
+        "durationMs": 4499
       },
       {
         "caseId": "code-04-path-traversal-download",
@@ -687,8 +685,8 @@
               "startLine": 81,
               "endLine": 83,
               "isIntroducedByPullRequest": true,
-              "summary": "The download route takes the name query parameter and joins it directly onto the uploads directory before reading the file with Bun.file. Because nothing checks the value, a name containing ../ sequences can point outside the uploads folder, letting an attacker read arbitrary files the server process can access. This is a path traversal flaw (CWE-22) rated high severity.",
-              "remediation": "Resolve the joined path and confirm it still falls inside config.uploadsDirectory before reading it, rejecting the request otherwise. Also reject names that contain path separators or ../ sequences, or restrict name to a plain file name lookup such as an allowlist of stored upload ids.",
+              "summary": "The download route takes the name query parameter and joins it onto the uploads directory without checking it. Because Bun.file streams whatever path results, a name containing ../ sequences can escape the uploads directory and read arbitrary files on the server, such as configuration or credentials. This is a path traversal flaw (CWE-22) rated high severity.",
+              "remediation": "Resolve the joined path and confirm it still sits inside config.uploadsDirectory before serving it, rejecting the request otherwise. Also reject names containing path separators or .. segments, and return an error instead of streaming the file when the check fails.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-22",
               "evidence": [
@@ -696,8 +694,8 @@
                 "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
                 "      return new Response(uploadFile)"
               ],
-              "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file reads and returns that file, so ../ sequences escape the directory.",
-              "promptVersion": "3",
+              "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file streams the resulting file, so ../ sequences read arbitrary files.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -705,8 +703,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0128027,
-        "durationMs": 5649
+        "costUsd": 0.0134604,
+        "durationMs": 5252
       },
       {
         "caseId": "code-05-hardcoded-credential",
@@ -728,54 +726,55 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.009706,
-        "durationMs": 909
+        "costUsd": 0.010342,
+        "durationMs": 1502
       },
       {
         "caseId": "code-06-jwt-verification-disabled",
         "category": "code",
         "split": "dev",
         "status": "completed",
-        "truePositives": 0,
-        "falsePositives": 1,
-        "falseNegatives": 1,
-        "matchedPairs": [],
-        "unmatchedPredictions": [
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
           {
-            "id": "2079ce5749ebeff0",
-            "detector": "code-review",
-            "severity": "critical",
-            "confidence": 0.95,
-            "title": "JWT claims trusted without signature verification",
-            "file": "src/auth.ts",
-            "startLine": 45,
-            "endLine": 49,
-            "isIntroducedByPullRequest": true,
-            "summary": "The authentication code in src/auth.ts (lines 45-49) decodes the bearer token with jsonwebtoken.decode, which reads the claims without checking the signature. The userId and role values from the token are then returned as the authenticated identity. Anyone can forge a token with any userId and role, including admin, and gain access as that user. This is a critical authentication bypass (CWE-287).",
-            "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithm allowlist, and use only the verified payload's userId and role. Reject the request when verification throws.",
-            "summarySource": "model",
-            "vulnerabilityType": "CWE-287",
-            "evidence": [
-              "  const payload = jsonwebtoken.decode(token)",
-              "  return { userId: Number(payload.userId), role: String(payload.role) }"
-            ],
-            "sourceToSink": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as the authenticated identity.",
-            "promptVersion": "3",
-            "model": "anthropic/claude-sonnet-5-5"
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-347",
+              "file": "src/auth.ts",
+              "startLine": 45,
+              "endLine": 46
+            },
+            "predictedFinding": {
+              "id": "dd95bbd5c913d219",
+              "detector": "code-review",
+              "severity": "critical",
+              "confidence": 0.95,
+              "title": "Bearer token decoded without signature verification",
+              "file": "src/auth.ts",
+              "startLine": 45,
+              "endLine": 49,
+              "isIntroducedByPullRequest": true,
+              "summary": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which reads the claims without checking the signature. The userId and role values are then trusted as the session identity, so anyone who can craft a token can impersonate any user or claim any role, including admin. This is a critical authentication bypass (CWE-347).",
+              "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithms allowlist, so the signature and expiry are checked before userId and role are read. Reject the request when verification fails instead of falling back to the decoded payload.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-347",
+              "evidence": [
+                "  const payload = jsonwebtoken.decode(token)",
+                "  return { userId: Number(payload.userId), role: String(payload.role) }"
+              ],
+              "sourceToSink": "The bearer token from the Authorization header is read with jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as trusted session claims.",
+              "promptVersion": "4",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
           }
         ],
-        "missedExpectations": [
-          {
-            "detector": "code-review",
-            "vulnerabilityType": "CWE-347",
-            "file": "src/auth.ts",
-            "startLine": 45,
-            "endLine": 46
-          }
-        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0126133,
-        "durationMs": 4623
+        "costUsd": 0.013388399999999998,
+        "durationMs": 5156
       },
       {
         "caseId": "code-07-ssrf-user-url",
@@ -799,13 +798,13 @@
               "detector": "code-review",
               "severity": "high",
               "confidence": 0.93,
-              "title": "Server-side request forgery in /preview endpoint",
+              "title": "SSRF via user-controlled url parameter in /preview",
               "file": "src/server.ts",
               "startLine": 103,
               "endLine": 106,
               "isIntroducedByPullRequest": true,
-              "summary": "The /preview endpoint takes the url query parameter from the incoming request and passes it straight to fetch with no validation, then returns the first 200 characters of the upstream response to the caller. An attacker can make the server request internal or otherwise restricted addresses on their behalf (server-side request forgery, CWE-918) and read part of the response, which can expose internal services or metadata.",
-              "remediation": "Validate the url parameter before calling fetch: parse it, allow only expected protocols (https) and an explicit allowlist of hosts, reject private, loopback and link-local addresses, and refuse redirects or re-validate each redirect target. Only then call fetch on the validated URL.",
+              "summary": "The /preview handler at src/server.ts (lines 103-106) takes the url query parameter from the incoming request and passes it directly to fetch without any validation. The first 200 characters of whatever the upstream server returns are then sent back to the caller. This is a server-side request forgery (CWE-918): an attacker can make the server send requests to internal hosts, private network addresses, or cloud metadata endpoints and read part of the response, which exposes internal services and data.",
+              "remediation": "Parse the url parameter and reject any target that is not on an explicit allowlist of permitted hosts and schemes (for example only https to approved domains). Resolve the hostname and block private, loopback, link-local, and metadata address ranges before calling fetch, and disable or validate redirects so a permitted host cannot redirect to an internal address.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-918",
               "evidence": [
@@ -814,8 +813,8 @@
                 "      const upstreamBody = await upstreamResponse.text()",
                 "      return new Response(upstreamBody.slice(0, 200))"
               ],
-              "sourceToSink": "The url query parameter of the incoming request is passed to fetch without validation, and the first 200 characters of the response body are returned to the caller.",
-              "promptVersion": "3",
+              "sourceToSink": "The url query parameter of the incoming request is passed to fetch, and the first 200 characters of the response body are returned to the caller.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -823,8 +822,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0128259,
-        "durationMs": 5288
+        "costUsd": 0.0134948,
+        "durationMs": 6450
       },
       {
         "caseId": "code-08-prototype-pollution-merge",
@@ -847,22 +846,22 @@
               "id": "e468f4255126a41d",
               "detector": "code-review",
               "severity": "medium",
-              "confidence": 0.9,
+              "confidence": 0.88,
               "title": "Prototype pollution through recursive merge of request JSON",
               "file": "src/server.ts",
               "startLine": 26,
               "endLine": 27,
               "isIntroducedByPullRequest": true,
-              "summary": "The recursive merge in src/server.ts (around lines 26-27) copies keys from the POST /users/:id/preferences JSON body into the target object without filtering them. An attacker can send an own \"__proto__\" key, which the merge follows into Object.prototype and writes attacker-chosen properties onto it. Polluted prototypes can change application behavior for every object in the process, which can lead to authorization bypass, denial of service, or further code-execution risk depending on how the rest of the code reads properties.",
-              "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\", and \"prototype\" before reading or writing any property, and create merge targets with Object.create(null) or validate the request body against a strict schema that rejects unknown keys. Add a regression test that posts a body containing \"__proto__\" and confirms Object.prototype is unchanged.",
+              "summary": "The recursive merge in src/server.ts (lines 26-27) walks keys from a JSON body posted to /users/:id/preferences without filtering them. A key named \"__proto__\" lets an attacker reach Object.prototype and write properties onto it, which can change behavior for every object in the running process. This is a prototype pollution flaw (CWE-1321) with medium severity.",
+              "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing target[key], and add a test that posts a body containing \"__proto__\" to /users/:id/preferences and confirms Object.prototype is unchanged.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-1321",
               "evidence": [
                 "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
                 "      target[key] = mergeDeep("
               ],
-              "sourceToSink": "The JSON body of the POST /users/:id/preferences request can contain an own \"__proto__\" key, which mergeDeep follows into Object.prototype and writes attacker-chosen properties onto it.",
-              "promptVersion": "3",
+              "sourceToSink": "A JSON body posted to /users/:id/preferences can contain an own \"__proto__\" key, which mergeDeep follows via target[key] to Object.prototype and then writes the submitted properties onto it.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -870,8 +869,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0199598,
-        "durationMs": 10956
+        "costUsd": 0.021192899999999997,
+        "durationMs": 10158
       },
       {
         "caseId": "code-09-md5-password-hashing",
@@ -893,54 +892,55 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.010284,
-        "durationMs": 1752
+        "costUsd": 0.010920000000000001,
+        "durationMs": 2009
       },
       {
         "caseId": "code-10-eval-request-input",
         "category": "code",
         "split": "dev",
         "status": "completed",
-        "truePositives": 0,
-        "falsePositives": 1,
-        "falseNegatives": 1,
-        "matchedPairs": [],
-        "unmatchedPredictions": [
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
           {
-            "id": "c8d7cb38f8f12964",
-            "detector": "code-review",
-            "severity": "critical",
-            "confidence": 0.97,
-            "title": "eval of client-supplied expression in /calculate",
-            "file": "src/server.ts",
-            "startLine": 104,
-            "endLine": 105,
-            "isIntroducedByPullRequest": true,
-            "summary": "The POST /calculate handler in src/server.ts takes the expression field from the request body and passes it directly to eval, so any caller can run arbitrary JavaScript on the server (CWE-94, code injection). This is critical because it can lead to full server compromise, data theft, or denial of service.",
-            "remediation": "Remove the eval call in src/server.ts at lines 104-105 and replace it with a safe expression parser or a fixed set of supported operations that only evaluates arithmetic. Validate that expression is a string of allowed characters before parsing, and return an error for anything else.",
-            "summarySource": "model",
-            "vulnerabilityType": "CWE-94",
-            "evidence": [
-              "        const calculationBody = (await request.json()) as { expression: string }",
-              "        const calculationResult = eval(String(calculationBody.expression))"
-            ],
-            "sourceToSink": "The expression field of the JSON body of the POST /calculate request is passed to eval, which runs it as code on the server.",
-            "promptVersion": "3",
-            "model": "anthropic/claude-sonnet-5-5"
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-95",
+              "file": "src/server.ts",
+              "startLine": 104,
+              "endLine": 105
+            },
+            "predictedFinding": {
+              "id": "596bb2018b3e017f",
+              "detector": "code-review",
+              "severity": "critical",
+              "confidence": 0.96,
+              "title": "eval of expression from request body in /calculate",
+              "file": "src/server.ts",
+              "startLine": 104,
+              "endLine": 105,
+              "isIntroducedByPullRequest": true,
+              "summary": "The POST /calculate handler in src/server.ts takes the expression field from the client's JSON body and passes it straight to eval, so anyone who can reach the endpoint can run arbitrary JavaScript on the server. This is a critical code injection flaw (CWE-95) that could expose data, change files, or take over the server process.",
+              "remediation": "Remove the eval call on line 105 of src/server.ts and replace it with a safe expression parser or a fixed set of allowed arithmetic operations that accepts only numbers and operators. Validate the expression field as a string of allowed characters before using it, and add a test that confirms code such as process or require strings is rejected.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-95",
+              "evidence": [
+                "        const calculationBody = (await request.json()) as { expression: string }",
+                "        const calculationResult = eval(String(calculationBody.expression))"
+              ],
+              "sourceToSink": "The expression field of the JSON body sent by the client to POST /calculate is passed to eval, which runs it as code on the server.",
+              "promptVersion": "4",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
           }
         ],
-        "missedExpectations": [
-          {
-            "detector": "code-review",
-            "vulnerabilityType": "CWE-95",
-            "file": "src/server.ts",
-            "startLine": 104,
-            "endLine": 105
-          }
-        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0120803,
-        "durationMs": 4761
+        "costUsd": 0.012738300000000001,
+        "durationMs": 5035
       },
       {
         "caseId": "dependency-01-direct-production-vulnerable",
@@ -965,8 +965,8 @@
               "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The production dependency ms at version 1.0.0, which is directly imported, is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162), an inefficient regular expression complexity issue in its parse function. A remote attacker can supply a crafted string to the parse function, which can cause excessive CPU use, and a public exploit has been disclosed.",
-              "remediation": "Upgrade ms from 1.0.0 to version 2.0.0 in bun.lock and package.json, then rerun your install and tests to confirm the direct imports of ms still work as expected.",
+              "summary": "The production dependency ms at version 1.0.0, imported directly by this project, is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162). The parse function in index.js handles crafted input with inefficient regular expression complexity, so a remote attacker can cause excessive CPU use, a denial-of-service risk. A public exploit is reported to exist.",
+              "remediation": "Upgrade the ms dependency from 1.0.0 to version 2.0.0 in bun.lock and your package manifest, then rerun your tests to confirm nothing depends on the old behavior.",
               "summarySource": "model",
               "packageName": "ms",
               "version": "1.0.0",
@@ -1043,8 +1043,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009418,
-        "durationMs": 1922
+        "costUsd": 0.0115276,
+        "durationMs": 4255
       },
       {
         "caseId": "dependency-02-development-dependency-vulnerable",
@@ -1069,8 +1069,8 @@
               "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The development dependency semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue. It is triggered when untrusted input is passed as a range to the Range constructor, which can cause excessive CPU use. The dependency is only a development dependency and is listed as direct but unused, so the practical exposure appears limited.",
-              "remediation": "Upgrade semver to version 7.5.2 in the lockfile, or remove the unused direct dependency on semver if it is not needed.",
+              "summary": "The development dependency semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue triggered through new Range when untrusted input is used as a range. The dependency is only a development dependency and is listed as direct but unused, so the practical exposure is low, but the vulnerable version is still present in the lockfile.",
+              "remediation": "Upgrade semver to version 7.5.2 in bun.lock, or remove the unused direct dependency on semver if it is not needed.",
               "summarySource": "model",
               "packageName": "semver",
               "version": "7.5.1",
@@ -1147,8 +1147,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.00935,
-        "durationMs": 1440
+        "costUsd": 0.0102441,
+        "durationMs": 4143
       },
       {
         "caseId": "dependency-03-transitive-only",
@@ -1173,8 +1173,8 @@
               "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
-              "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
+              "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2, a production dependency) is affected by GHSA-869p-cjfg-cm3x / CVE-2025-65945, an improper HMAC signature verification issue. The advisory says exposure requires the application to use jws.createVerify() for HMAC algorithms and to pass user-provided header or payload data into the HMAC secret lookup. Applications that use jws.verify() (which includes jsonwebtoken users), use only asymmetric algorithms, or do not feed user-controlled data into secret lookups are not affected. Whether this project meets those conditions needs to be checked.",
+              "remediation": "Upgrade jws to version 3.2.3 (or 4.0.1 if moving to the 4.x line) so the transitive dependency under jsonwebtoken@9.0.2 is no longer 3.2.2, then regenerate bun.lock. Also confirm that the code does not call jws.createVerify() with HMAC secrets derived from user-supplied token data.",
               "summarySource": "model",
               "packageName": "jws",
               "version": "3.2.2",
@@ -1251,8 +1251,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009358,
-        "durationMs": 1429
+        "costUsd": 0.010346699999999999,
+        "durationMs": 4305
       },
       {
         "caseId": "dependency-04-last-affected-range",
@@ -1277,8 +1277,8 @@
               "title": "semver@7.7.1 is affected by PRR-TEST-0001",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The production dependency semver at installed version 7.7.1 is affected by advisory PRR-TEST-0001, a synthetic benchmark advisory covering semver 7.7.0 through 7.7.1. The package is listed as direct but unused, so exposure in this codebase is likely limited, but the vulnerable version is still locked in bun.lock.",
-              "remediation": "Upgrade semver to 7.7.2 or later, which the advisory range does not affect, update bun.lock accordingly, and confirm the test suite still passes.",
+              "summary": "The lockfile pins semver 7.7.1, which advisory PRR-TEST-0001 marks as affected. The advisory's range runs from an introduced version through 7.7.1 with no fixed version listed. The package is a production dependency declared directly, but the reachability check says it is unused, so the exposure is probably limited to the declared dependency. The finding is still medium severity because the vulnerable version ships in production builds.",
+              "remediation": "Remove semver from the production dependencies if nothing imports it. If it is needed, upgrade semver to a release outside the affected range described in advisory PRR-TEST-0001, then regenerate bun.lock and rerun the dependency scan to confirm the finding is cleared.",
               "summarySource": "model",
               "packageName": "semver",
               "version": "7.7.1",
@@ -1355,8 +1355,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009342,
-        "durationMs": 1538
+        "costUsd": 0.0103256,
+        "durationMs": 4833
       },
       {
         "caseId": "dependency-05-versions-only-listing",
@@ -1381,8 +1381,8 @@
               "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The project uses lodash 4.18.0 in production code, and that exact version is listed as affected by advisory PRR-TEST-0002. The lodash import is direct, so the vulnerable version is actually loaded by the application, which makes the issue more than a theoretical lockfile entry.",
-              "remediation": "Upgrade the direct lodash dependency in bun.lock so the resolved version is no longer 4.18.0, then confirm the new version is not listed as affected in the advisory at https://example.com/benchmark-advisories/PRR-TEST-0002. The advisory does not name a fixed version, so check its references before choosing the target.",
+              "summary": "The production dependency lodash 4.18.0, which is directly imported, is flagged by advisory PRR-TEST-0002 as affected at exactly that version. The advisory lists only 4.18.0 and gives no version ranges, so the installed copy is the affected one. Code that imports lodash therefore runs the vulnerable release.",
+              "remediation": "Upgrade lodash from 4.18.0 in bun.lock and package.json to a release outside the affected list, then rerun the install and tests. The advisory does not name a fixed version, so check the advisory reference at https://example.com/benchmark-advisories/PRR-TEST-0002 for the patched release before choosing one.",
               "summarySource": "model",
               "packageName": "lodash",
               "version": "4.18.0",
@@ -1402,8 +1402,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.00941,
-        "durationMs": 1939
+        "costUsd": 0.0102677,
+        "durationMs": 3664
       },
       {
         "caseId": "dependency-06-withdrawn-advisory",
@@ -1474,8 +1474,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.00935,
-        "durationMs": 1948
+        "costUsd": 0.009986,
+        "durationMs": 1750
       },
       {
         "caseId": "dependency-07-unreviewed-advisory",
@@ -1500,8 +1500,8 @@
               "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The project depends on mustache 4.1.0 in bun.lock, and advisory PRR-TEST-0004 says that version is affected. The dependency is a production dependency and is imported directly, so the flaw can reach running code. The advisory has not been reviewed by GitHub, so its details should be checked against the source before relying on them.",
-              "remediation": "Upgrade mustache to version 4.2.0 in the dependency manifest and regenerate bun.lock, then confirm the lockfile resolves mustache to 4.2.0 and re-run the test suite.",
+              "summary": "The project depends directly on mustache 4.1.0 in production code, and advisory PRR-TEST-0004 reports that this version is affected. The advisory has not been reviewed by GitHub, so its severity and details should be confirmed before relying on it. Because the package is imported directly, the affected code path may be reachable in the application.",
+              "remediation": "Upgrade mustache from 4.1.0 to version 4.2.0 in bun.lock and verify the application still renders templates correctly. Then confirm the PRR-TEST-0004 advisory details against its reference link.",
               "summarySource": "model",
               "packageName": "mustache",
               "version": "4.1.0",
@@ -1578,8 +1578,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009424,
-        "durationMs": 1695
+        "costUsd": 0.0102671,
+        "durationMs": 3356
       },
       {
         "caseId": "dependency-08-added-never-imported",
@@ -1604,8 +1604,8 @@
               "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue. A crafted route pattern can make regex matching backtrack excessively and tie up the process. The dependency is a production dependency, but the scanner marks it as direct and unused, so the practical exposure depends on whether any route path with two parameters in one segment is ever processed.",
-              "remediation": "Upgrade path-to-regexp to version 0.1.12 in the project and regenerate bun.lock so the lockfile records the fixed version. If the upgrade cannot happen right away, avoid defining two parameters within a single path segment when the separator is not '.' (for example, no '/:a-:b' patterns).",
+              "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue caused by catastrophic backtracking in generated regular expressions. The dependency is a production scope dependency, but the advisory report marks it as directly present and currently unused, so exploitation risk depends on whether it is reached at runtime. An attacker able to supply crafted input could still cause excessive CPU use if the vulnerable pattern path is exercised.",
+              "remediation": "Upgrade path-to-regexp to version 0.1.12 in the project and regenerate bun.lock so the lockfile records the fixed version. As an interim mitigation, avoid defining two parameters within a single path segment when the separator is not a dot (for example, avoid /:a-:b).",
               "summarySource": "model",
               "packageName": "path-to-regexp",
               "version": "0.1.11",
@@ -1682,8 +1682,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.009474,
-        "durationMs": 1838
+        "costUsd": 0.010405000000000001,
+        "durationMs": 4006
       },
       {
         "caseId": "real-world-01-ms",
@@ -1708,18 +1708,18 @@
               "detector": "code-review",
               "severity": "medium",
               "confidence": 0.6,
-              "title": "Input length cap raised 100x in front of a backtracking-prone regex",
+              "title": "Input length cap raised 100x in front of a backtracking regex",
               "file": "index.js",
               "startLine": 49,
               "endLine": 49,
               "isIntroducedByPullRequest": true,
-              "summary": "The input length limit in parse() was raised from 100 to 10000 characters, in front of a regular expression with overlapping \\d+ quantifiers. Attacker-controlled text such as a header or query value can now reach that regex at much larger sizes, which can trigger polynomial backtracking (ReDoS, CWE-1333) and tie up CPU for long periods.",
-              "remediation": "Restore the input length cap to its previous value of 100 characters, or rewrite the regex at line 49 so its quantifiers do not overlap (for example, use a single unambiguous \\d+ pattern), and test it with long adversarial inputs before raising the limit again.",
+              "summary": "The input length cap in front of the parse function was raised from 100 to 10000 characters. The value passed in is then matched against a regular expression whose overlapping digit quantifiers can backtrack quadratically on a long run of digits followed by an invalid suffix. A 100x larger input makes that slowdown about 10000x worse, so a single crafted request can tie up the process for a long time (CWE-1333, regular expression denial of service).",
+              "remediation": "Restore the input length cap to its previous lower limit, or rewrite the regex so the digit quantifiers do not overlap (for example, match a single digit run such as \\d*\\.?\\d+ without the optional repeated group) and add a test with a long digit string plus an invalid suffix to confirm parse returns quickly.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-1333",
               "evidence": ["  if (str.length > 10000) {"],
-              "sourceToSink": "The str argument of parse(), which can be attacker-controlled text such as a header or query value, may now be up to 10000 characters long before it reaches the existing regex with overlapping \\d+ quantifiers, causing polynomial backtracking.",
-              "promptVersion": "3",
+              "sourceToSink": "The str argument passed to parse is now allowed up to 10000 characters before reaching the regex `^((?:\\d+)?\\.?\\d+) *(...)?$`, whose overlapping `\\d+` quantifiers backtrack quadratically on a long digit string with an invalid suffix.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -1727,8 +1727,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0174483,
-        "durationMs": 9397
+        "costUsd": 0.0170847,
+        "durationMs": 8465
       },
       {
         "caseId": "real-world-02-node-fetch",
@@ -1752,19 +1752,19 @@
               "id": "693e6397be311396",
               "detector": "code-review",
               "severity": "medium",
-              "confidence": 0.72,
-              "title": "Regex with nested quantifier on URL host allows ReDoS",
+              "confidence": 0.8,
+              "title": "Regex with nested overlapping quantifiers on host causes ReDoS",
               "file": "src/utils/referrer.js",
               "startLine": 122,
               "endLine": 122,
               "isIntroducedByPullRequest": true,
-              "summary": "The check on line 122 of src/utils/referrer.js uses the regex /^(.+\\.)*localhost$/ on the referrer URL host, which can be attacker-supplied. The nested quantifier (.+\\.)* has ambiguous ways to split a dotted host, so on a long dotted host that does not end in localhost the regex engine backtracks exponentially. This is a ReDoS (CWE-1333) risk: a crafted referrer can tie up the CPU and cause a denial of service.",
-              "remediation": "Replace the regex test on line 122 with a plain string check that cannot backtrack, such as host === 'localhost' || (host.endsWith('.localhost') && host.length > '.localhost'.length), which keeps the original behavior for leading-dot hosts. Then add a test with a long dotted host that does not end in localhost to confirm the check returns quickly.",
+              "summary": "On line 122 of src/utils/referrer.js, the URL host from an attacker-controlled referrer is tested with /^(.+\\.)*localhost$/. The group (.+\\.)* has overlapping quantifiers, because the dot-matching part can also match the literal dots. When the host is a long dotted string that does not end in localhost, the regex engine backtracks exponentially. A crafted referrer can then stall the thread that processes it, which is a denial of service (CWE-1333, ReDoS).",
+              "remediation": "Replace the regex test on line 122 with a plain string check that cannot backtrack, such as url.host === 'localhost' || url.host.endsWith('.localhost'), and confirm that the existing localhost behavior is preserved. Then add a test with a long dotted host that does not end in localhost to confirm it returns quickly.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-1333",
               "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
-              "sourceToSink": "The host of the referrer URL, which can be attacker-supplied, is tested against the regex /^(.+\\.)*localhost$/, whose ambiguous nested quantifier (.+\\.)* backtracks exponentially on a long dotted host that does not end in localhost.",
-              "promptVersion": "3",
+              "sourceToSink": "The host of an attacker-controlled referrer URL is tested against the regex /^(.+\\.)*localhost$/, whose (.+\\.)* group has overlapping quantifiers that backtrack exponentially on a long dotted host that does not end in localhost.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -1772,8 +1772,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0164281,
-        "durationMs": 10555
+        "costUsd": 0.017228999999999998,
+        "durationMs": 8362
       },
       {
         "caseId": "real-world-04-tar",
@@ -1796,8 +1796,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.022992,
-        "durationMs": 4690
+        "costUsd": 0.026074,
+        "durationMs": 7699
       },
       {
         "caseId": "real-world-05-path-to-regexp",
@@ -1820,8 +1820,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.012278,
-        "durationMs": 3337
+        "costUsd": 0.010574,
+        "durationMs": 1533
       },
       {
         "caseId": "real-world-07-ws",
@@ -1844,8 +1844,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.021606,
-        "durationMs": 11750
+        "costUsd": 0.014022,
+        "durationMs": 4482
       },
       {
         "caseId": "real-world-08-moment",
@@ -1868,20 +1868,20 @@
             "predictedFinding": {
               "id": "025c34224082f61b",
               "detector": "code-review",
-              "severity": "high",
+              "severity": "medium",
               "confidence": 0.6,
-              "title": "Locale name path check removed before require()",
+              "title": "Locale name path check removed before dynamic require",
               "file": "src/lib/locale/locales.js",
               "startLine": 73,
               "endLine": 73,
               "isIntroducedByPullRequest": true,
-              "summary": "The locale loader in src/lib/locale/locales.js no longer checks locale names for path separators ('/' or '\\') before passing them to require(). A caller-supplied locale name, such as one passed through moment.locale(name), can therefore reach the require-based loader unchecked, allowing path traversal (CWE-22) to load files outside the intended locale directory. The finding is rated high severity.",
-              "remediation": "Restore the check that rejects locale names containing '/' or '\\' before loadLocale calls require(), and reject or sanitize any name that fails it. Add a test that confirms a name such as '../' is refused before merging.",
+              "summary": "A caller-supplied locale name passed to loadLocale is no longer checked for path separators ('/' or '\\') before it is used in a dynamic require of a locale file path. This opens a path traversal risk (CWE-22), where a crafted locale name could point the require at files outside the intended locale directory.",
+              "remediation": "Restore the check that rejects locale names containing '/' or '\\' before the dynamic require in src/lib/locale/locales.js near line 73, and also validate the locale name against an allowlist of known locale identifiers before calling require.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-22",
               "evidence": ["        module.exports"],
-              "sourceToSink": "A caller-supplied locale name passed to loadLocale (for example via moment.locale(name)) now reaches the require-based locale loader without the check that rejected names containing '/' or '\\', allowing path traversal.",
-              "promptVersion": "3",
+              "sourceToSink": "A caller-supplied locale name passed to loadLocale is no longer checked for '/' or '\\' and then reaches the existing dynamic require of a locale file path.",
+              "promptVersion": "4",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -1889,8 +1889,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0122123,
-        "durationMs": 5807
+        "costUsd": 0.0125741,
+        "durationMs": 4697
       },
       {
         "caseId": "secrets-01-aws-key-in-config",
@@ -1910,8 +1910,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.009756,
-        "durationMs": 1731
+        "costUsd": 0.010392,
+        "durationMs": 1587
       },
       {
         "caseId": "secrets-02-github-token-in-workflow",
@@ -1938,8 +1938,8 @@
               "startLine": 13,
               "endLine": 13,
               "isIntroducedByPullRequest": true,
-              "summary": "A GitHub token was hardcoded in the deploy workflow file at .github/workflows/deploy.yml, line 13. The secrets detector flagged it as critical under the github-token rule. Anyone who can read the repository, including through its history, can copy the token and use whatever access it grants, such as altering code or deployments.",
-              "remediation": "Revoke the exposed token in GitHub right away and issue a replacement. Remove the literal value from line 13 of deploy.yml, store the new token as an encrypted repository or organization secret, and have the workflow read it from there. Then remove the old value from the git history so it cannot be recovered from earlier commits.",
+              "summary": "A GitHub token is hardcoded in the workflow file .github/workflows/deploy.yml at line 13. Anyone who can read the repository, or its git history, can copy the token and use it with whatever permissions it grants, which could allow access to code or deployments. Because the value is now in version control, treat it as compromised even if the line is later removed.",
+              "remediation": "Revoke the exposed token in GitHub immediately and issue a replacement with the least permissions needed. Remove the literal value from line 13 of .github/workflows/deploy.yml and reference the new token as a repository or environment secret, such as ${{ secrets.YOUR_SECRET_NAME }}. Then check the repository's git history and purge the old value if your policy requires it.",
               "summarySource": "model",
               "ruleId": "github-token",
               "fingerprint": "c8f04c416e92"
@@ -1949,8 +1949,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.00962,
-        "durationMs": 1649
+        "costUsd": 0.010539999999999999,
+        "durationMs": 5092
       },
       {
         "caseId": "secrets-03-committed-private-key",
@@ -1977,8 +1977,8 @@
               "startLine": 1,
               "endLine": 1,
               "isIntroducedByPullRequest": true,
-              "summary": "A private key block was added in deploy/key.pem. Anyone with access to this repository or its history can read the key, which could let them impersonate the service or decrypt protected data.",
-              "remediation": "Remove the private key from deploy/key.pem, rotate or revoke the key everywhere it is used, and load the replacement from a secrets manager or CI secret store instead of committing it. Then rewrite the git history to purge the key from earlier commits.",
+              "summary": "A private key block was added in deploy/key.pem. Anyone with access to this repository or its history can read the key, which could let them impersonate the service or decrypt data protected by it. This is rated critical because the secret is now exposed in version control.",
+              "remediation": "Remove the private key from deploy/key.pem in this change, then rotate the key so the exposed one is no longer trusted. Load the key at deploy time from a secrets manager or environment variable instead of committing it to the repository.",
               "summarySource": "model",
               "ruleId": "private-key",
               "fingerprint": "8bcac7908eb9"
@@ -1988,8 +1988,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.011024,
-        "durationMs": 1224
+        "costUsd": 0.0118175,
+        "durationMs": 3309
       }
     ]
   },
@@ -2006,8 +2006,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.009632,
-      "durationMs": 1609
+      "costUsd": 0.010268,
+      "durationMs": 1517
     },
     {
       "caseId": "clean-02-textcontent-not-innerhtml",
@@ -2021,8 +2021,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.009514,
-      "durationMs": 1589
+      "costUsd": 0.01015,
+      "durationMs": 8279
     },
     {
       "caseId": "clean-03-exec-constant-command",
@@ -2036,8 +2036,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.00966,
-      "durationMs": 1191
+      "costUsd": 0.010296,
+      "durationMs": 1707
     },
     {
       "caseId": "clean-04-safe-dependency-bump",
@@ -2100,8 +2100,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009454,
-      "durationMs": 1802
+      "costUsd": 0.01009,
+      "durationMs": 2726
     },
     {
       "caseId": "clean-05-refactor-moves-vulnerable-code",
@@ -2114,32 +2114,31 @@
       "matchedPairs": [],
       "unmatchedPredictions": [
         {
-          "id": "9f7294f9183f5320",
+          "id": "df22f42c01df9680",
           "detector": "code-review",
           "severity": "high",
           "confidence": 0.8,
           "title": "SQL query built by concatenating the name prefix",
           "file": "src/user-search.ts",
-          "startLine": 13,
-          "endLine": 15,
+          "startLine": 14,
+          "endLine": 14,
           "isIntroducedByPullRequest": true,
-          "summary": "The namePrefix parameter of findUsersByNamePrefix is concatenated directly into the SQL string passed to database.query in src/user-search.ts (lines 13-15). A caller-supplied value containing quote characters can change the structure of the query, which is a SQL injection flaw (CWE-89). Because the query reads user records, an attacker could read data they should not see, and the severity is rated high.",
-          "remediation": "Replace the string concatenation with a parameterized query: keep the LIKE pattern in the SQL text as a placeholder, pass the prefix plus the % wildcard as a bound parameter, and change the generic type arguments so the query is prepared with that parameter instead of the inline string.",
+          "summary": "The name prefix passed to findUsersByNamePrefix is concatenated directly into the SQL text on line 14 of src/user-search.ts instead of being passed as a bound parameter. An attacker who controls namePrefix can inject SQL, which can read, change, or delete data in the users table beyond what the search is meant to return.",
+          "remediation": "Replace the concatenated string on line 14 with a parameterized query that uses a placeholder for the LIKE pattern, such as WHERE name LIKE ? with the value namePrefix plus \"%\" supplied as a bound parameter to database.query, and run it through selectUsers.all() with that parameter.",
           "summarySource": "model",
           "vulnerabilityType": "CWE-89",
           "evidence": [
-            "  const selectUsers = database.query<User, []>(",
             "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\","
           ],
-          "sourceToSink": "The namePrefix parameter of the exported findUsersByNamePrefix function is concatenated into the SQL string that database.query prepares and selectUsers.all() executes.",
-          "promptVersion": "3",
+          "sourceToSink": "The namePrefix parameter of the exported findUsersByNamePrefix function is concatenated into the SQL text that database.query prepares and selectUsers.all() executes.",
+          "promptVersion": "4",
           "model": "anthropic/claude-sonnet-5-5"
         }
       ],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.012803499999999999,
-      "durationMs": 5016
+      "costUsd": 0.0132492,
+      "durationMs": 4853
     },
     {
       "caseId": "clean-06-docs-only",
@@ -2153,8 +2152,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.010032,
-      "durationMs": 1625
+      "costUsd": 0.010668,
+      "durationMs": 1285
     },
     {
       "caseId": "clean-07-tests-only",
@@ -2168,8 +2167,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.01107,
-      "durationMs": 1711
+      "costUsd": 0.011706,
+      "durationMs": 1271
     },
     {
       "caseId": "clean-08-validated-feature",
@@ -2183,8 +2182,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.019708000000000003,
-      "durationMs": 4454
+      "costUsd": 0.02098,
+      "durationMs": 3690
     },
     {
       "caseId": "clean-09-logging-added",
@@ -2198,8 +2197,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.009448,
-      "durationMs": 1329
+      "costUsd": 0.010084000000000001,
+      "durationMs": 1680
     },
     {
       "caseId": "clean-10-rename-variable",
@@ -2213,8 +2212,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.009656,
-      "durationMs": 1741
+      "costUsd": 0.010292,
+      "durationMs": 1490
     },
     {
       "caseId": "code-01-sql-injection-concatenation",
@@ -2234,25 +2233,24 @@
             "endLine": 34
           },
           "predictedFinding": {
-            "id": "4d0cd247c15788e3",
+            "id": "cd0a7dc6f76890f3",
             "detector": "code-review",
             "severity": "high",
             "confidence": 0.95,
-            "title": "SQL injection via name query parameter in user search",
+            "title": "SQL injection through the name query parameter in user search",
             "file": "src/server.ts",
-            "startLine": 29,
-            "endLine": 34,
+            "startLine": 32,
+            "endLine": 32,
             "isIntroducedByPullRequest": true,
-            "summary": "The user search handler in src/server.ts takes the name query parameter from the request and places it directly into the SQL string passed to database.query, inside a LIKE clause. An attacker can supply quote characters and SQL syntax in that parameter to change the query, which can expose or alter data in the users table. This is a high severity SQL injection (CWE-89).",
-            "remediation": "Replace the string interpolation with a parameterized query: keep the SQL text fixed, use a placeholder for the value, and pass the wildcard-wrapped name (for example '%' + namePattern + '%') as a bound parameter to database.query. Then add a test that sends a quote character in the name parameter and confirms it is treated as plain text.",
+            "summary": "The user search in src/server.ts (line 32) builds its SQL by inserting the request's name query parameter directly into the query string. An attacker can supply crafted input that changes the structure of the SQL statement, which is a SQL injection flaw (CWE-89). This can expose or modify data in the users table, including roles, and is rated high severity.",
+            "remediation": "Replace the string interpolation on line 32 with a parameterized query, passing the search term as a bound parameter (for example, a placeholder with the value '%' + namePattern + '%' supplied in the parameter array to database.query). Do not concatenate or template user input into SQL text.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-89",
             "evidence": [
-              "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
               "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
             ],
             "sourceToSink": "The name query parameter of the incoming request is interpolated into the SQL string that database.query executes.",
-            "promptVersion": "3",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2260,8 +2258,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.012357300000000002,
-      "durationMs": 5636
+      "costUsd": 0.0127496,
+      "durationMs": 6539
     },
     {
       "caseId": "code-02-xss-innerhtml",
@@ -2290,15 +2288,15 @@
             "startLine": 10,
             "endLine": 10,
             "isIntroducedByPullRequest": true,
-            "summary": "The name query parameter from the page URL is read into visitorName and placed directly into an HTML template that is assigned to innerHTML at line 10 of public/app.ts. Because the value is never escaped, a crafted link can inject script that runs in the victim's browser, which is a DOM-based cross-site scripting flaw (CWE-79) that can lead to session theft or actions taken as the user.",
-            "remediation": "Stop building HTML from the query parameter. Replace the innerHTML assignment on line 10 with textContent, or create the h1 element with document.createElement and set its text via textContent, so the visitor name is treated as plain text.",
+            "summary": "The name query parameter from the page URL is read from window.location and placed directly into an HTML template string that is assigned to innerHTML at public/app.ts line 10. Because the value is not escaped, an attacker can craft a link containing HTML or script markup in the name parameter, which the browser will run in the context of the victim's page. This is a DOM-based cross-site scripting flaw (CWE-79) and can lead to session theft, actions on behalf of the user, or content spoofing.",
+            "remediation": "In public/app.ts, stop assigning untrusted text to innerHTML. Build the heading with document.createElement('h1') and set its textContent to the visitor name, then append it to the greeting element. If HTML output is truly required, escape the name value first, but prefer textContent.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-79",
             "evidence": [
               "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
             ],
-            "sourceToSink": "The name query parameter of the page URL is read into visitorName and interpolated into HTML assigned to innerHTML, so a crafted link runs attacker script in the page.",
-            "promptVersion": "3",
+            "sourceToSink": "The name query parameter of the page URL is read from window.location and interpolated into an HTML string assigned to innerHTML.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2306,8 +2304,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0121456,
-      "durationMs": 4649
+      "costUsd": 0.012652100000000001,
+      "durationMs": 5213
     },
     {
       "caseId": "code-03-command-injection-exec",
@@ -2330,14 +2328,14 @@
             "id": "28f78eacd4d2a1b6",
             "detector": "code-review",
             "severity": "critical",
-            "confidence": 0.96,
+            "confidence": 0.97,
             "title": "OS command injection via host query parameter in ping route",
             "file": "src/server.ts",
             "startLine": 104,
             "endLine": 105,
             "isIntroducedByPullRequest": true,
-            "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string passed to execSync. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges. This is an OS command injection (CWE-78) rated critical.",
-            "remediation": "Stop building a shell command from request input. Replace execSync with a call that passes arguments as an array without a shell, such as execFileSync('ping', ['-c', '1', host]), and validate host against a strict allowlist pattern (for example hostname or IP characters only) before using it.",
+            "summary": "The ping route takes the host query parameter from the request and drops it straight into a shell command string passed to execSync. An attacker can supply shell metacharacters in host to run arbitrary commands on the server with the application's privileges, which is a critical OS command injection (CWE-78) risk.",
+            "remediation": "Stop building the shell string in src/server.ts around lines 104-105. Validate host against a strict allowlist such as a hostname or IP address pattern, and call execFileSync('ping', ['-c', '1', host]) so no shell interprets the input.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-78",
             "evidence": [
@@ -2345,7 +2343,7 @@
               "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
             ],
             "sourceToSink": "The host query parameter of the incoming request is interpolated into the shell command string that execSync runs.",
-            "promptVersion": "3",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2353,8 +2351,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.012543200000000001,
-      "durationMs": 4444
+      "costUsd": 0.0130332,
+      "durationMs": 4499
     },
     {
       "caseId": "code-04-path-traversal-download",
@@ -2383,8 +2381,8 @@
             "startLine": 81,
             "endLine": 83,
             "isIntroducedByPullRequest": true,
-            "summary": "The download route takes the name query parameter and joins it directly onto the uploads directory before reading the file with Bun.file. Because nothing checks the value, a name containing ../ sequences can point outside the uploads folder, letting an attacker read arbitrary files the server process can access. This is a path traversal flaw (CWE-22) rated high severity.",
-            "remediation": "Resolve the joined path and confirm it still falls inside config.uploadsDirectory before reading it, rejecting the request otherwise. Also reject names that contain path separators or ../ sequences, or restrict name to a plain file name lookup such as an allowlist of stored upload ids.",
+            "summary": "The download route takes the name query parameter and joins it onto the uploads directory without checking it. Because Bun.file streams whatever path results, a name containing ../ sequences can escape the uploads directory and read arbitrary files on the server, such as configuration or credentials. This is a path traversal flaw (CWE-22) rated high severity.",
+            "remediation": "Resolve the joined path and confirm it still sits inside config.uploadsDirectory before serving it, rejecting the request otherwise. Also reject names containing path separators or .. segments, and return an error instead of streaming the file when the check fails.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-22",
             "evidence": [
@@ -2392,8 +2390,8 @@
               "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
               "      return new Response(uploadFile)"
             ],
-            "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file reads and returns that file, so ../ sequences escape the directory.",
-            "promptVersion": "3",
+            "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file streams the resulting file, so ../ sequences read arbitrary files.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2401,8 +2399,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0128027,
-      "durationMs": 5649
+      "costUsd": 0.0134604,
+      "durationMs": 5252
     },
     {
       "caseId": "code-05-hardcoded-credential",
@@ -2424,54 +2422,55 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.009706,
-      "durationMs": 909
+      "costUsd": 0.010342,
+      "durationMs": 1502
     },
     {
       "caseId": "code-06-jwt-verification-disabled",
       "category": "code",
       "split": "dev",
       "status": "completed",
-      "truePositives": 0,
-      "falsePositives": 1,
-      "falseNegatives": 1,
-      "matchedPairs": [],
-      "unmatchedPredictions": [
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
         {
-          "id": "2079ce5749ebeff0",
-          "detector": "code-review",
-          "severity": "critical",
-          "confidence": 0.95,
-          "title": "JWT claims trusted without signature verification",
-          "file": "src/auth.ts",
-          "startLine": 45,
-          "endLine": 49,
-          "isIntroducedByPullRequest": true,
-          "summary": "The authentication code in src/auth.ts (lines 45-49) decodes the bearer token with jsonwebtoken.decode, which reads the claims without checking the signature. The userId and role values from the token are then returned as the authenticated identity. Anyone can forge a token with any userId and role, including admin, and gain access as that user. This is a critical authentication bypass (CWE-287).",
-          "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithm allowlist, and use only the verified payload's userId and role. Reject the request when verification throws.",
-          "summarySource": "model",
-          "vulnerabilityType": "CWE-287",
-          "evidence": [
-            "  const payload = jsonwebtoken.decode(token)",
-            "  return { userId: Number(payload.userId), role: String(payload.role) }"
-          ],
-          "sourceToSink": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as the authenticated identity.",
-          "promptVersion": "3",
-          "model": "anthropic/claude-sonnet-5-5"
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-347",
+            "file": "src/auth.ts",
+            "startLine": 45,
+            "endLine": 46
+          },
+          "predictedFinding": {
+            "id": "dd95bbd5c913d219",
+            "detector": "code-review",
+            "severity": "critical",
+            "confidence": 0.95,
+            "title": "Bearer token decoded without signature verification",
+            "file": "src/auth.ts",
+            "startLine": 45,
+            "endLine": 49,
+            "isIntroducedByPullRequest": true,
+            "summary": "The bearer token from the Authorization header is decoded with jsonwebtoken.decode, which reads the claims without checking the signature. The userId and role values are then trusted as the session identity, so anyone who can craft a token can impersonate any user or claim any role, including admin. This is a critical authentication bypass (CWE-347).",
+            "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithms allowlist, so the signature and expiry are checked before userId and role are read. Reject the request when verification fails instead of falling back to the decoded payload.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-347",
+            "evidence": [
+              "  const payload = jsonwebtoken.decode(token)",
+              "  return { userId: Number(payload.userId), role: String(payload.role) }"
+            ],
+            "sourceToSink": "The bearer token from the Authorization header is read with jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as trusted session claims.",
+            "promptVersion": "4",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
         }
       ],
-      "missedExpectations": [
-        {
-          "detector": "code-review",
-          "vulnerabilityType": "CWE-347",
-          "file": "src/auth.ts",
-          "startLine": 45,
-          "endLine": 46
-        }
-      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0126133,
-      "durationMs": 4623
+      "costUsd": 0.013388399999999998,
+      "durationMs": 5156
     },
     {
       "caseId": "code-07-ssrf-user-url",
@@ -2495,13 +2494,13 @@
             "detector": "code-review",
             "severity": "high",
             "confidence": 0.93,
-            "title": "Server-side request forgery in /preview endpoint",
+            "title": "SSRF via user-controlled url parameter in /preview",
             "file": "src/server.ts",
             "startLine": 103,
             "endLine": 106,
             "isIntroducedByPullRequest": true,
-            "summary": "The /preview endpoint takes the url query parameter from the incoming request and passes it straight to fetch with no validation, then returns the first 200 characters of the upstream response to the caller. An attacker can make the server request internal or otherwise restricted addresses on their behalf (server-side request forgery, CWE-918) and read part of the response, which can expose internal services or metadata.",
-            "remediation": "Validate the url parameter before calling fetch: parse it, allow only expected protocols (https) and an explicit allowlist of hosts, reject private, loopback and link-local addresses, and refuse redirects or re-validate each redirect target. Only then call fetch on the validated URL.",
+            "summary": "The /preview handler at src/server.ts (lines 103-106) takes the url query parameter from the incoming request and passes it directly to fetch without any validation. The first 200 characters of whatever the upstream server returns are then sent back to the caller. This is a server-side request forgery (CWE-918): an attacker can make the server send requests to internal hosts, private network addresses, or cloud metadata endpoints and read part of the response, which exposes internal services and data.",
+            "remediation": "Parse the url parameter and reject any target that is not on an explicit allowlist of permitted hosts and schemes (for example only https to approved domains). Resolve the hostname and block private, loopback, link-local, and metadata address ranges before calling fetch, and disable or validate redirects so a permitted host cannot redirect to an internal address.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-918",
             "evidence": [
@@ -2510,8 +2509,8 @@
               "      const upstreamBody = await upstreamResponse.text()",
               "      return new Response(upstreamBody.slice(0, 200))"
             ],
-            "sourceToSink": "The url query parameter of the incoming request is passed to fetch without validation, and the first 200 characters of the response body are returned to the caller.",
-            "promptVersion": "3",
+            "sourceToSink": "The url query parameter of the incoming request is passed to fetch, and the first 200 characters of the response body are returned to the caller.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2519,8 +2518,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0128259,
-      "durationMs": 5288
+      "costUsd": 0.0134948,
+      "durationMs": 6450
     },
     {
       "caseId": "code-08-prototype-pollution-merge",
@@ -2543,22 +2542,22 @@
             "id": "e468f4255126a41d",
             "detector": "code-review",
             "severity": "medium",
-            "confidence": 0.9,
+            "confidence": 0.88,
             "title": "Prototype pollution through recursive merge of request JSON",
             "file": "src/server.ts",
             "startLine": 26,
             "endLine": 27,
             "isIntroducedByPullRequest": true,
-            "summary": "The recursive merge in src/server.ts (around lines 26-27) copies keys from the POST /users/:id/preferences JSON body into the target object without filtering them. An attacker can send an own \"__proto__\" key, which the merge follows into Object.prototype and writes attacker-chosen properties onto it. Polluted prototypes can change application behavior for every object in the process, which can lead to authorization bypass, denial of service, or further code-execution risk depending on how the rest of the code reads properties.",
-            "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\", and \"prototype\" before reading or writing any property, and create merge targets with Object.create(null) or validate the request body against a strict schema that rejects unknown keys. Add a regression test that posts a body containing \"__proto__\" and confirms Object.prototype is unchanged.",
+            "summary": "The recursive merge in src/server.ts (lines 26-27) walks keys from a JSON body posted to /users/:id/preferences without filtering them. A key named \"__proto__\" lets an attacker reach Object.prototype and write properties onto it, which can change behavior for every object in the running process. This is a prototype pollution flaw (CWE-1321) with medium severity.",
+            "remediation": "Update mergeDeep in src/server.ts so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing target[key], and add a test that posts a body containing \"__proto__\" to /users/:id/preferences and confirms Object.prototype is unchanged.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-1321",
             "evidence": [
               "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
               "      target[key] = mergeDeep("
             ],
-            "sourceToSink": "The JSON body of the POST /users/:id/preferences request can contain an own \"__proto__\" key, which mergeDeep follows into Object.prototype and writes attacker-chosen properties onto it.",
-            "promptVersion": "3",
+            "sourceToSink": "A JSON body posted to /users/:id/preferences can contain an own \"__proto__\" key, which mergeDeep follows via target[key] to Object.prototype and then writes the submitted properties onto it.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -2566,8 +2565,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0199598,
-      "durationMs": 10956
+      "costUsd": 0.021192899999999997,
+      "durationMs": 10158
     },
     {
       "caseId": "code-09-md5-password-hashing",
@@ -2589,54 +2588,55 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.010284,
-      "durationMs": 1752
+      "costUsd": 0.010920000000000001,
+      "durationMs": 2009
     },
     {
       "caseId": "code-10-eval-request-input",
       "category": "code",
       "split": "dev",
       "status": "completed",
-      "truePositives": 0,
-      "falsePositives": 1,
-      "falseNegatives": 1,
-      "matchedPairs": [],
-      "unmatchedPredictions": [
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
         {
-          "id": "c8d7cb38f8f12964",
-          "detector": "code-review",
-          "severity": "critical",
-          "confidence": 0.97,
-          "title": "eval of client-supplied expression in /calculate",
-          "file": "src/server.ts",
-          "startLine": 104,
-          "endLine": 105,
-          "isIntroducedByPullRequest": true,
-          "summary": "The POST /calculate handler in src/server.ts takes the expression field from the request body and passes it directly to eval, so any caller can run arbitrary JavaScript on the server (CWE-94, code injection). This is critical because it can lead to full server compromise, data theft, or denial of service.",
-          "remediation": "Remove the eval call in src/server.ts at lines 104-105 and replace it with a safe expression parser or a fixed set of supported operations that only evaluates arithmetic. Validate that expression is a string of allowed characters before parsing, and return an error for anything else.",
-          "summarySource": "model",
-          "vulnerabilityType": "CWE-94",
-          "evidence": [
-            "        const calculationBody = (await request.json()) as { expression: string }",
-            "        const calculationResult = eval(String(calculationBody.expression))"
-          ],
-          "sourceToSink": "The expression field of the JSON body of the POST /calculate request is passed to eval, which runs it as code on the server.",
-          "promptVersion": "3",
-          "model": "anthropic/claude-sonnet-5-5"
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-95",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105
+          },
+          "predictedFinding": {
+            "id": "596bb2018b3e017f",
+            "detector": "code-review",
+            "severity": "critical",
+            "confidence": 0.96,
+            "title": "eval of expression from request body in /calculate",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105,
+            "isIntroducedByPullRequest": true,
+            "summary": "The POST /calculate handler in src/server.ts takes the expression field from the client's JSON body and passes it straight to eval, so anyone who can reach the endpoint can run arbitrary JavaScript on the server. This is a critical code injection flaw (CWE-95) that could expose data, change files, or take over the server process.",
+            "remediation": "Remove the eval call on line 105 of src/server.ts and replace it with a safe expression parser or a fixed set of allowed arithmetic operations that accepts only numbers and operators. Validate the expression field as a string of allowed characters before using it, and add a test that confirms code such as process or require strings is rejected.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-95",
+            "evidence": [
+              "        const calculationBody = (await request.json()) as { expression: string }",
+              "        const calculationResult = eval(String(calculationBody.expression))"
+            ],
+            "sourceToSink": "The expression field of the JSON body sent by the client to POST /calculate is passed to eval, which runs it as code on the server.",
+            "promptVersion": "4",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
         }
       ],
-      "missedExpectations": [
-        {
-          "detector": "code-review",
-          "vulnerabilityType": "CWE-95",
-          "file": "src/server.ts",
-          "startLine": 104,
-          "endLine": 105
-        }
-      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0120803,
-      "durationMs": 4761
+      "costUsd": 0.012738300000000001,
+      "durationMs": 5035
     },
     {
       "caseId": "dependency-01-direct-production-vulnerable",
@@ -2661,8 +2661,8 @@
             "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The production dependency ms at version 1.0.0, which is directly imported, is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162), an inefficient regular expression complexity issue in its parse function. A remote attacker can supply a crafted string to the parse function, which can cause excessive CPU use, and a public exploit has been disclosed.",
-            "remediation": "Upgrade ms from 1.0.0 to version 2.0.0 in bun.lock and package.json, then rerun your install and tests to confirm the direct imports of ms still work as expected.",
+            "summary": "The production dependency ms at version 1.0.0, imported directly by this project, is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162). The parse function in index.js handles crafted input with inefficient regular expression complexity, so a remote attacker can cause excessive CPU use, a denial-of-service risk. A public exploit is reported to exist.",
+            "remediation": "Upgrade the ms dependency from 1.0.0 to version 2.0.0 in bun.lock and your package manifest, then rerun your tests to confirm nothing depends on the old behavior.",
             "summarySource": "model",
             "packageName": "ms",
             "version": "1.0.0",
@@ -2731,8 +2731,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009418,
-      "durationMs": 1922
+      "costUsd": 0.0115276,
+      "durationMs": 4255
     },
     {
       "caseId": "dependency-02-development-dependency-vulnerable",
@@ -2757,8 +2757,8 @@
             "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The development dependency semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue. It is triggered when untrusted input is passed as a range to the Range constructor, which can cause excessive CPU use. The dependency is only a development dependency and is listed as direct but unused, so the practical exposure appears limited.",
-            "remediation": "Upgrade semver to version 7.5.2 in the lockfile, or remove the unused direct dependency on semver if it is not needed.",
+            "summary": "The development dependency semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue triggered through new Range when untrusted input is used as a range. The dependency is only a development dependency and is listed as direct but unused, so the practical exposure is low, but the vulnerable version is still present in the lockfile.",
+            "remediation": "Upgrade semver to version 7.5.2 in bun.lock, or remove the unused direct dependency on semver if it is not needed.",
             "summarySource": "model",
             "packageName": "semver",
             "version": "7.5.1",
@@ -2827,8 +2827,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.00935,
-      "durationMs": 1440
+      "costUsd": 0.0102441,
+      "durationMs": 4143
     },
     {
       "caseId": "dependency-03-transitive-only",
@@ -2853,8 +2853,8 @@
             "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
-            "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
+            "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2, a production dependency) is affected by GHSA-869p-cjfg-cm3x / CVE-2025-65945, an improper HMAC signature verification issue. The advisory says exposure requires the application to use jws.createVerify() for HMAC algorithms and to pass user-provided header or payload data into the HMAC secret lookup. Applications that use jws.verify() (which includes jsonwebtoken users), use only asymmetric algorithms, or do not feed user-controlled data into secret lookups are not affected. Whether this project meets those conditions needs to be checked.",
+            "remediation": "Upgrade jws to version 3.2.3 (or 4.0.1 if moving to the 4.x line) so the transitive dependency under jsonwebtoken@9.0.2 is no longer 3.2.2, then regenerate bun.lock. Also confirm that the code does not call jws.createVerify() with HMAC secrets derived from user-supplied token data.",
             "summarySource": "model",
             "packageName": "jws",
             "version": "3.2.2",
@@ -2923,8 +2923,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009358,
-      "durationMs": 1429
+      "costUsd": 0.010346699999999999,
+      "durationMs": 4305
     },
     {
       "caseId": "dependency-04-last-affected-range",
@@ -2949,8 +2949,8 @@
             "title": "semver@7.7.1 is affected by PRR-TEST-0001",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The production dependency semver at installed version 7.7.1 is affected by advisory PRR-TEST-0001, a synthetic benchmark advisory covering semver 7.7.0 through 7.7.1. The package is listed as direct but unused, so exposure in this codebase is likely limited, but the vulnerable version is still locked in bun.lock.",
-            "remediation": "Upgrade semver to 7.7.2 or later, which the advisory range does not affect, update bun.lock accordingly, and confirm the test suite still passes.",
+            "summary": "The lockfile pins semver 7.7.1, which advisory PRR-TEST-0001 marks as affected. The advisory's range runs from an introduced version through 7.7.1 with no fixed version listed. The package is a production dependency declared directly, but the reachability check says it is unused, so the exposure is probably limited to the declared dependency. The finding is still medium severity because the vulnerable version ships in production builds.",
+            "remediation": "Remove semver from the production dependencies if nothing imports it. If it is needed, upgrade semver to a release outside the affected range described in advisory PRR-TEST-0001, then regenerate bun.lock and rerun the dependency scan to confirm the finding is cleared.",
             "summarySource": "model",
             "packageName": "semver",
             "version": "7.7.1",
@@ -3019,8 +3019,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009342,
-      "durationMs": 1538
+      "costUsd": 0.0103256,
+      "durationMs": 4833
     },
     {
       "caseId": "dependency-05-versions-only-listing",
@@ -3045,8 +3045,8 @@
             "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The project uses lodash 4.18.0 in production code, and that exact version is listed as affected by advisory PRR-TEST-0002. The lodash import is direct, so the vulnerable version is actually loaded by the application, which makes the issue more than a theoretical lockfile entry.",
-            "remediation": "Upgrade the direct lodash dependency in bun.lock so the resolved version is no longer 4.18.0, then confirm the new version is not listed as affected in the advisory at https://example.com/benchmark-advisories/PRR-TEST-0002. The advisory does not name a fixed version, so check its references before choosing the target.",
+            "summary": "The production dependency lodash 4.18.0, which is directly imported, is flagged by advisory PRR-TEST-0002 as affected at exactly that version. The advisory lists only 4.18.0 and gives no version ranges, so the installed copy is the affected one. Code that imports lodash therefore runs the vulnerable release.",
+            "remediation": "Upgrade lodash from 4.18.0 in bun.lock and package.json to a release outside the affected list, then rerun the install and tests. The advisory does not name a fixed version, so check the advisory reference at https://example.com/benchmark-advisories/PRR-TEST-0002 for the patched release before choosing one.",
             "summarySource": "model",
             "packageName": "lodash",
             "version": "4.18.0",
@@ -3066,8 +3066,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.00941,
-      "durationMs": 1939
+      "costUsd": 0.0102677,
+      "durationMs": 3664
     },
     {
       "caseId": "dependency-06-withdrawn-advisory",
@@ -3130,8 +3130,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.00935,
-      "durationMs": 1948
+      "costUsd": 0.009986,
+      "durationMs": 1750
     },
     {
       "caseId": "dependency-07-unreviewed-advisory",
@@ -3156,8 +3156,8 @@
             "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The project depends on mustache 4.1.0 in bun.lock, and advisory PRR-TEST-0004 says that version is affected. The dependency is a production dependency and is imported directly, so the flaw can reach running code. The advisory has not been reviewed by GitHub, so its details should be checked against the source before relying on them.",
-            "remediation": "Upgrade mustache to version 4.2.0 in the dependency manifest and regenerate bun.lock, then confirm the lockfile resolves mustache to 4.2.0 and re-run the test suite.",
+            "summary": "The project depends directly on mustache 4.1.0 in production code, and advisory PRR-TEST-0004 reports that this version is affected. The advisory has not been reviewed by GitHub, so its severity and details should be confirmed before relying on it. Because the package is imported directly, the affected code path may be reachable in the application.",
+            "remediation": "Upgrade mustache from 4.1.0 to version 4.2.0 in bun.lock and verify the application still renders templates correctly. Then confirm the PRR-TEST-0004 advisory details against its reference link.",
             "summarySource": "model",
             "packageName": "mustache",
             "version": "4.1.0",
@@ -3226,8 +3226,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009424,
-      "durationMs": 1695
+      "costUsd": 0.0102671,
+      "durationMs": 3356
     },
     {
       "caseId": "dependency-08-added-never-imported",
@@ -3252,8 +3252,8 @@
             "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue. A crafted route pattern can make regex matching backtrack excessively and tie up the process. The dependency is a production dependency, but the scanner marks it as direct and unused, so the practical exposure depends on whether any route path with two parameters in one segment is ever processed.",
-            "remediation": "Upgrade path-to-regexp to version 0.1.12 in the project and regenerate bun.lock so the lockfile records the fixed version. If the upgrade cannot happen right away, avoid defining two parameters within a single path segment when the separator is not '.' (for example, no '/:a-:b' patterns).",
+            "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue caused by catastrophic backtracking in generated regular expressions. The dependency is a production scope dependency, but the advisory report marks it as directly present and currently unused, so exploitation risk depends on whether it is reached at runtime. An attacker able to supply crafted input could still cause excessive CPU use if the vulnerable pattern path is exercised.",
+            "remediation": "Upgrade path-to-regexp to version 0.1.12 in the project and regenerate bun.lock so the lockfile records the fixed version. As an interim mitigation, avoid defining two parameters within a single path segment when the separator is not a dot (for example, avoid /:a-:b).",
             "summarySource": "model",
             "packageName": "path-to-regexp",
             "version": "0.1.11",
@@ -3322,8 +3322,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.009474,
-      "durationMs": 1838
+      "costUsd": 0.010405000000000001,
+      "durationMs": 4006
     },
     {
       "caseId": "real-world-01-ms",
@@ -3348,18 +3348,18 @@
             "detector": "code-review",
             "severity": "medium",
             "confidence": 0.6,
-            "title": "Input length cap raised 100x in front of a backtracking-prone regex",
+            "title": "Input length cap raised 100x in front of a backtracking regex",
             "file": "index.js",
             "startLine": 49,
             "endLine": 49,
             "isIntroducedByPullRequest": true,
-            "summary": "The input length limit in parse() was raised from 100 to 10000 characters, in front of a regular expression with overlapping \\d+ quantifiers. Attacker-controlled text such as a header or query value can now reach that regex at much larger sizes, which can trigger polynomial backtracking (ReDoS, CWE-1333) and tie up CPU for long periods.",
-            "remediation": "Restore the input length cap to its previous value of 100 characters, or rewrite the regex at line 49 so its quantifiers do not overlap (for example, use a single unambiguous \\d+ pattern), and test it with long adversarial inputs before raising the limit again.",
+            "summary": "The input length cap in front of the parse function was raised from 100 to 10000 characters. The value passed in is then matched against a regular expression whose overlapping digit quantifiers can backtrack quadratically on a long run of digits followed by an invalid suffix. A 100x larger input makes that slowdown about 10000x worse, so a single crafted request can tie up the process for a long time (CWE-1333, regular expression denial of service).",
+            "remediation": "Restore the input length cap to its previous lower limit, or rewrite the regex so the digit quantifiers do not overlap (for example, match a single digit run such as \\d*\\.?\\d+ without the optional repeated group) and add a test with a long digit string plus an invalid suffix to confirm parse returns quickly.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-1333",
             "evidence": ["  if (str.length > 10000) {"],
-            "sourceToSink": "The str argument of parse(), which can be attacker-controlled text such as a header or query value, may now be up to 10000 characters long before it reaches the existing regex with overlapping \\d+ quantifiers, causing polynomial backtracking.",
-            "promptVersion": "3",
+            "sourceToSink": "The str argument passed to parse is now allowed up to 10000 characters before reaching the regex `^((?:\\d+)?\\.?\\d+) *(...)?$`, whose overlapping `\\d+` quantifiers backtrack quadratically on a long digit string with an invalid suffix.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -3367,8 +3367,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0174483,
-      "durationMs": 9397
+      "costUsd": 0.0170847,
+      "durationMs": 8465
     },
     {
       "caseId": "real-world-02-node-fetch",
@@ -3392,19 +3392,19 @@
             "id": "693e6397be311396",
             "detector": "code-review",
             "severity": "medium",
-            "confidence": 0.72,
-            "title": "Regex with nested quantifier on URL host allows ReDoS",
+            "confidence": 0.8,
+            "title": "Regex with nested overlapping quantifiers on host causes ReDoS",
             "file": "src/utils/referrer.js",
             "startLine": 122,
             "endLine": 122,
             "isIntroducedByPullRequest": true,
-            "summary": "The check on line 122 of src/utils/referrer.js uses the regex /^(.+\\.)*localhost$/ on the referrer URL host, which can be attacker-supplied. The nested quantifier (.+\\.)* has ambiguous ways to split a dotted host, so on a long dotted host that does not end in localhost the regex engine backtracks exponentially. This is a ReDoS (CWE-1333) risk: a crafted referrer can tie up the CPU and cause a denial of service.",
-            "remediation": "Replace the regex test on line 122 with a plain string check that cannot backtrack, such as host === 'localhost' || (host.endsWith('.localhost') && host.length > '.localhost'.length), which keeps the original behavior for leading-dot hosts. Then add a test with a long dotted host that does not end in localhost to confirm the check returns quickly.",
+            "summary": "On line 122 of src/utils/referrer.js, the URL host from an attacker-controlled referrer is tested with /^(.+\\.)*localhost$/. The group (.+\\.)* has overlapping quantifiers, because the dot-matching part can also match the literal dots. When the host is a long dotted string that does not end in localhost, the regex engine backtracks exponentially. A crafted referrer can then stall the thread that processes it, which is a denial of service (CWE-1333, ReDoS).",
+            "remediation": "Replace the regex test on line 122 with a plain string check that cannot backtrack, such as url.host === 'localhost' || url.host.endsWith('.localhost'), and confirm that the existing localhost behavior is preserved. Then add a test with a long dotted host that does not end in localhost to confirm it returns quickly.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-1333",
             "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
-            "sourceToSink": "The host of the referrer URL, which can be attacker-supplied, is tested against the regex /^(.+\\.)*localhost$/, whose ambiguous nested quantifier (.+\\.)* backtracks exponentially on a long dotted host that does not end in localhost.",
-            "promptVersion": "3",
+            "sourceToSink": "The host of an attacker-controlled referrer URL is tested against the regex /^(.+\\.)*localhost$/, whose (.+\\.)* group has overlapping quantifiers that backtrack exponentially on a long dotted host that does not end in localhost.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -3412,8 +3412,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0164281,
-      "durationMs": 10555
+      "costUsd": 0.017228999999999998,
+      "durationMs": 8362
     },
     {
       "caseId": "real-world-04-tar",
@@ -3436,8 +3436,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.022992,
-      "durationMs": 4690
+      "costUsd": 0.026074,
+      "durationMs": 7699
     },
     {
       "caseId": "real-world-05-path-to-regexp",
@@ -3460,8 +3460,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.012278,
-      "durationMs": 3337
+      "costUsd": 0.010574,
+      "durationMs": 1533
     },
     {
       "caseId": "real-world-07-ws",
@@ -3484,8 +3484,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.021606,
-      "durationMs": 11750
+      "costUsd": 0.014022,
+      "durationMs": 4482
     },
     {
       "caseId": "real-world-08-moment",
@@ -3508,20 +3508,20 @@
           "predictedFinding": {
             "id": "025c34224082f61b",
             "detector": "code-review",
-            "severity": "high",
+            "severity": "medium",
             "confidence": 0.6,
-            "title": "Locale name path check removed before require()",
+            "title": "Locale name path check removed before dynamic require",
             "file": "src/lib/locale/locales.js",
             "startLine": 73,
             "endLine": 73,
             "isIntroducedByPullRequest": true,
-            "summary": "The locale loader in src/lib/locale/locales.js no longer checks locale names for path separators ('/' or '\\') before passing them to require(). A caller-supplied locale name, such as one passed through moment.locale(name), can therefore reach the require-based loader unchecked, allowing path traversal (CWE-22) to load files outside the intended locale directory. The finding is rated high severity.",
-            "remediation": "Restore the check that rejects locale names containing '/' or '\\' before loadLocale calls require(), and reject or sanitize any name that fails it. Add a test that confirms a name such as '../' is refused before merging.",
+            "summary": "A caller-supplied locale name passed to loadLocale is no longer checked for path separators ('/' or '\\') before it is used in a dynamic require of a locale file path. This opens a path traversal risk (CWE-22), where a crafted locale name could point the require at files outside the intended locale directory.",
+            "remediation": "Restore the check that rejects locale names containing '/' or '\\' before the dynamic require in src/lib/locale/locales.js near line 73, and also validate the locale name against an allowlist of known locale identifiers before calling require.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-22",
             "evidence": ["        module.exports"],
-            "sourceToSink": "A caller-supplied locale name passed to loadLocale (for example via moment.locale(name)) now reaches the require-based locale loader without the check that rejected names containing '/' or '\\', allowing path traversal.",
-            "promptVersion": "3",
+            "sourceToSink": "A caller-supplied locale name passed to loadLocale is no longer checked for '/' or '\\' and then reaches the existing dynamic require of a locale file path.",
+            "promptVersion": "4",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -3529,8 +3529,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0122123,
-      "durationMs": 5807
+      "costUsd": 0.0125741,
+      "durationMs": 4697
     },
     {
       "caseId": "secrets-01-aws-key-in-config",
@@ -3550,8 +3550,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.009756,
-      "durationMs": 1731
+      "costUsd": 0.010392,
+      "durationMs": 1587
     },
     {
       "caseId": "secrets-02-github-token-in-workflow",
@@ -3578,8 +3578,8 @@
             "startLine": 13,
             "endLine": 13,
             "isIntroducedByPullRequest": true,
-            "summary": "A GitHub token was hardcoded in the deploy workflow file at .github/workflows/deploy.yml, line 13. The secrets detector flagged it as critical under the github-token rule. Anyone who can read the repository, including through its history, can copy the token and use whatever access it grants, such as altering code or deployments.",
-            "remediation": "Revoke the exposed token in GitHub right away and issue a replacement. Remove the literal value from line 13 of deploy.yml, store the new token as an encrypted repository or organization secret, and have the workflow read it from there. Then remove the old value from the git history so it cannot be recovered from earlier commits.",
+            "summary": "A GitHub token is hardcoded in the workflow file .github/workflows/deploy.yml at line 13. Anyone who can read the repository, or its git history, can copy the token and use it with whatever permissions it grants, which could allow access to code or deployments. Because the value is now in version control, treat it as compromised even if the line is later removed.",
+            "remediation": "Revoke the exposed token in GitHub immediately and issue a replacement with the least permissions needed. Remove the literal value from line 13 of .github/workflows/deploy.yml and reference the new token as a repository or environment secret, such as ${{ secrets.YOUR_SECRET_NAME }}. Then check the repository's git history and purge the old value if your policy requires it.",
             "summarySource": "model",
             "ruleId": "github-token",
             "fingerprint": "c8f04c416e92"
@@ -3589,8 +3589,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.00962,
-      "durationMs": 1649
+      "costUsd": 0.010539999999999999,
+      "durationMs": 5092
     },
     {
       "caseId": "secrets-03-committed-private-key",
@@ -3617,8 +3617,8 @@
             "startLine": 1,
             "endLine": 1,
             "isIntroducedByPullRequest": true,
-            "summary": "A private key block was added in deploy/key.pem. Anyone with access to this repository or its history can read the key, which could let them impersonate the service or decrypt protected data.",
-            "remediation": "Remove the private key from deploy/key.pem, rotate or revoke the key everywhere it is used, and load the replacement from a secrets manager or CI secret store instead of committing it. Then rewrite the git history to purge the key from earlier commits.",
+            "summary": "A private key block was added in deploy/key.pem. Anyone with access to this repository or its history can read the key, which could let them impersonate the service or decrypt data protected by it. This is rated critical because the secret is now exposed in version control.",
+            "remediation": "Remove the private key from deploy/key.pem in this change, then rotate the key so the exposed one is no longer trusted. Load the key at deploy time from a secrets manager or environment variable instead of committing it to the repository.",
             "summarySource": "model",
             "ruleId": "private-key",
             "fingerprint": "8bcac7908eb9"
@@ -3628,8 +3628,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.011024,
-      "durationMs": 1224
+      "costUsd": 0.0118175,
+      "durationMs": 3309
     }
   ],
   "warnings": []

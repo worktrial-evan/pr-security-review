@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark run cwe-family-hints (dev)</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --background: #ffffff;
+  --text: #1c2128;
+  --muted-text: #59636e;
+  --border: #d1d9e0;
+  --surface: #f6f8fa;
+  --link: #0969da;
+  --critical: #a40e26;
+  --high: #c2410c;
+  --medium: #9a6700;
+  --low: #1a7f37;
+  --info: #57606a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1117;
+    --text: #e6edf3;
+    --muted-text: #9198a1;
+    --border: #3d444d;
+    --surface: #151b23;
+    --link: #4493f8;
+    --critical: #ff7b72;
+    --high: #ffa657;
+    --medium: #e3b341;
+    --low: #56d364;
+    --info: #9198a1;
+  }
+}
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  padding: 16px;
+  background: var(--background);
+  color: var(--text);
+  font: 14px/1.5 system-ui, sans-serif;
+}
+a { color: var(--link); }
+code { font: 12px ui-monospace, monospace; word-break: break-all; }
+h1 { margin: 0 0 12px; font-size: 20px; }
+.run-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 16px;
+  margin: 0 0 12px;
+}
+.run-details dt { color: var(--muted-text); }
+.run-details dd { margin: 0; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 8px; }
+.counts ul { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
+.counts strong { font-size: 18px; }
+.counts .severity-critical strong { color: var(--critical); }
+.counts .severity-high strong { color: var(--high); }
+.counts .severity-medium strong { color: var(--medium); }
+.counts .severity-low strong { color: var(--low); }
+.origin-line { margin: 0 0 16px; color: var(--muted-text); }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.filter { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.filter summary { padding: 4px 10px; cursor: pointer; user-select: none; }
+.filter-values { display: flex; flex-direction: column; padding: 4px 10px 8px; }
+.row-count { margin: 6px 0 0 auto; color: var(--muted-text); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--surface); white-space: nowrap; }
+th button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+th[aria-sort="ascending"] button::after { content: " \25B2"; }
+th[aria-sort="descending"] button::after { content: " \25BC"; }
+tr.finding { cursor: pointer; }
+tr.finding:hover { background: var(--surface); }
+tr.finding.muted { opacity: 0.55; }
+td.empty { color: var(--muted-text); }
+.badge { padding: 1px 8px; border: 1px solid currentColor; border-radius: 999px; font-size: 12px; }
+.badge.severity-critical { color: var(--critical); }
+.badge.severity-high { color: var(--high); }
+.badge.severity-medium { color: var(--medium); }
+.badge.severity-low { color: var(--low); }
+.badge.severity-info { color: var(--info); }
+tr.detail td { background: var(--surface); }
+.detail-list { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; }
+.detail-list dt { color: var(--muted-text); }
+.detail-list dd { margin: 0; }
+.detail-list ol, .detail-list ul { margin: 0; padding-left: 20px; }
+
+  table { border-collapse: collapse; margin-bottom: 2rem; }
+  th, td { border: 1px solid var(--border); padding: 0.3rem 0.6rem; text-align: left; }
+  th { background: var(--surface); }
+  td.number { text-align: right; font-variant-numeric: tabular-nums; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+  .filters { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .warning { color: var(--critical); }
+</style>
+</head>
+<body>
+<h1>Benchmark run cwe-family-hints (dev)</h1>
+<dl><dt>Label</dt><dd>cwe-family-hints</dd><dt>Split</dt><dd>dev</dd><dt>Started at</dt><dd>2026-10-16T04:00:23.228Z</dd><dt>Finished at</dt><dd>2026-10-16T04:02:46.059Z</dd><dt>Git sha</dt><dd>4cb3cede1984b5d686f32348f81c9338cec73dfe</dd><dt>Prompt versions</dt><dd>code-review=4, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>true</dd></dl>
+
+<h2>Metrics</h2>
+<table>
+<thead><tr><th>Scope</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+<tbody><tr>
+<td>overall</td>
+<td class="number">0.952</td>
+<td class="number">0.769</td>
+<td class="number">0.851</td>
+</tr><tr>
+<td>detector: dependency</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>detector: code-review</td>
+<td class="number">0.917</td>
+<td class="number">0.688</td>
+<td class="number">0.786</td>
+</tr><tr>
+<td>detector: secrets</td>
+<td class="number">1.000</td>
+<td class="number">0.667</td>
+<td class="number">0.800</td>
+</tr><tr>
+<td>category: dependency</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+<td class="number">1.000</td>
+</tr><tr>
+<td>category: code</td>
+<td class="number">1.000</td>
+<td class="number">0.800</td>
+<td class="number">0.889</td>
+</tr><tr>
+<td>category: secrets</td>
+<td class="number">1.000</td>
+<td class="number">0.667</td>
+<td class="number">0.800</td>
+</tr><tr>
+<td>category: clean</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+<td class="number">0.000</td>
+</tr><tr>
+<td>category: real-world</td>
+<td class="number">1.000</td>
+<td class="number">0.500</td>
+<td class="number">0.667</td>
+</tr></tbody>
+</table>
+<h2>Totals</h2>
+<dl>
+<dt>False positives on clean cases</dt><dd>1</dd>
+<dt>Total cost</dt><dd>$0.4703</dd>
+<dt>Total duration</dt><dd>142610 ms</dd>
+</dl>
+<h2>Cases</h2>
+<div class="filters"><label>Category
+<select data-filter="category">
+<option value="all">all</option>
+<option value="dependency">dependency</option>
+<option value="code">code</option>
+<option value="secrets">secrets</option>
+<option value="clean">clean</option>
+<option value="real-world">real-world</option>
+</select>
+</label>
+<label>Split
+<select data-filter="split">
+<option value="all">all</option>
+<option value="dev">dev</option>
+<option value="test">test</option>
+</select>
+</label>
+<label>Status
+<select data-filter="status">
+<option value="all">all</option>
+<option value="completed">completed</option>
+<option value="failed">failed</option>
+<option value="skipped">skipped</option>
+</select>
+</label></div>
+<table>
+<thead><tr><th>Id</th><th>Category</th><th>Split</th><th>Status</th><th>TP</th><th>FP</th><th>FN</th><th>Cost</th><th>Duration</th><th>Error</th></tr></thead>
+<tbody><tr data-case="clean-01-parameterized-query" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-01-parameterized-query</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0103</td>
+<td class="number">1800 ms</td>
+<td></td>
+</tr><tr data-case="clean-02-textcontent-not-innerhtml" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-02-textcontent-not-innerhtml</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1623 ms</td>
+<td></td>
+</tr><tr data-case="clean-03-exec-constant-command" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-03-exec-constant-command</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0103</td>
+<td class="number">1846 ms</td>
+<td></td>
+</tr><tr data-case="clean-04-safe-dependency-bump" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-04-safe-dependency-bump</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1352 ms</td>
+<td></td>
+</tr><tr data-case="clean-05-refactor-moves-vulnerable-code" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-05-refactor-moves-vulnerable-code</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">$0.0133</td>
+<td class="number">5986 ms</td>
+<td></td>
+</tr><tr data-case="clean-06-docs-only" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-06-docs-only</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0107</td>
+<td class="number">1271 ms</td>
+<td></td>
+</tr><tr data-case="clean-07-tests-only" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-07-tests-only</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0117</td>
+<td class="number">1166 ms</td>
+<td></td>
+</tr><tr data-case="clean-08-validated-feature" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-08-validated-feature</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0210</td>
+<td class="number">3829 ms</td>
+<td></td>
+</tr><tr data-case="clean-09-logging-added" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-09-logging-added</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1840 ms</td>
+<td></td>
+</tr><tr data-case="clean-10-rename-variable" data-category="clean" data-split="dev" data-status="completed">
+<td>clean-10-rename-variable</td>
+<td>clean</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0103</td>
+<td class="number">1425 ms</td>
+<td></td>
+</tr><tr data-case="code-01-sql-injection-concatenation" data-category="code" data-split="dev" data-status="completed">
+<td>code-01-sql-injection-concatenation</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0126</td>
+<td class="number">3587 ms</td>
+<td></td>
+</tr><tr data-case="code-02-xss-innerhtml" data-category="code" data-split="dev" data-status="completed">
+<td>code-02-xss-innerhtml</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0128</td>
+<td class="number">5211 ms</td>
+<td></td>
+</tr><tr data-case="code-03-command-injection-exec" data-category="code" data-split="dev" data-status="completed">
+<td>code-03-command-injection-exec</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0130</td>
+<td class="number">2787 ms</td>
+<td></td>
+</tr><tr data-case="code-04-path-traversal-download" data-category="code" data-split="dev" data-status="completed">
+<td>code-04-path-traversal-download</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0136</td>
+<td class="number">5615 ms</td>
+<td></td>
+</tr><tr data-case="code-05-hardcoded-credential" data-category="code" data-split="dev" data-status="completed">
+<td>code-05-hardcoded-credential</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0103</td>
+<td class="number">2025 ms</td>
+<td></td>
+</tr><tr data-case="code-06-jwt-verification-disabled" data-category="code" data-split="dev" data-status="completed">
+<td>code-06-jwt-verification-disabled</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0135</td>
+<td class="number">7715 ms</td>
+<td></td>
+</tr><tr data-case="code-07-ssrf-user-url" data-category="code" data-split="dev" data-status="completed">
+<td>code-07-ssrf-user-url</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0136</td>
+<td class="number">7509 ms</td>
+<td></td>
+</tr><tr data-case="code-08-prototype-pollution-merge" data-category="code" data-split="dev" data-status="completed">
+<td>code-08-prototype-pollution-merge</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0214</td>
+<td class="number">12358 ms</td>
+<td></td>
+</tr><tr data-case="code-09-md5-password-hashing" data-category="code" data-split="dev" data-status="completed">
+<td>code-09-md5-password-hashing</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0109</td>
+<td class="number">1943 ms</td>
+<td></td>
+</tr><tr data-case="code-10-eval-request-input" data-category="code" data-split="dev" data-status="completed">
+<td>code-10-eval-request-input</td>
+<td>code</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0127</td>
+<td class="number">4584 ms</td>
+<td></td>
+</tr><tr data-case="dependency-01-direct-production-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-01-direct-production-vulnerable</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1515 ms</td>
+<td></td>
+</tr><tr data-case="dependency-02-development-dependency-vulnerable" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-02-development-dependency-vulnerable</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">1913 ms</td>
+<td></td>
+</tr><tr data-case="dependency-03-transitive-only" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-03-transitive-only</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">1413 ms</td>
+<td></td>
+</tr><tr data-case="dependency-04-last-affected-range" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-04-last-affected-range</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">2802 ms</td>
+<td></td>
+</tr><tr data-case="dependency-05-versions-only-listing" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-05-versions-only-listing</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">1992 ms</td>
+<td></td>
+</tr><tr data-case="dependency-06-withdrawn-advisory" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-06-withdrawn-advisory</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0100</td>
+<td class="number">1873 ms</td>
+<td></td>
+</tr><tr data-case="dependency-07-unreviewed-advisory" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-07-unreviewed-advisory</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1956 ms</td>
+<td></td>
+</tr><tr data-case="dependency-08-added-never-imported" data-category="dependency" data-split="dev" data-status="completed">
+<td>dependency-08-added-never-imported</td>
+<td>dependency</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0101</td>
+<td class="number">1517 ms</td>
+<td></td>
+</tr><tr data-case="real-world-01-ms" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-01-ms</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0172</td>
+<td class="number">8365 ms</td>
+<td></td>
+</tr><tr data-case="real-world-02-node-fetch" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-02-node-fetch</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0176</td>
+<td class="number">8981 ms</td>
+<td></td>
+</tr><tr data-case="real-world-04-tar" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-04-tar</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0268</td>
+<td class="number">6816 ms</td>
+<td></td>
+</tr><tr data-case="real-world-05-path-to-regexp" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-05-path-to-regexp</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0106</td>
+<td class="number">1514 ms</td>
+<td></td>
+</tr><tr data-case="real-world-07-ws" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-07-ws</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0148</td>
+<td class="number">5245 ms</td>
+<td></td>
+</tr><tr data-case="real-world-08-moment" data-category="real-world" data-split="dev" data-status="completed">
+<td>real-world-08-moment</td>
+<td>real-world</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0185</td>
+<td class="number">16401 ms</td>
+<td></td>
+</tr><tr data-case="secrets-01-aws-key-in-config" data-category="secrets" data-split="dev" data-status="completed">
+<td>secrets-01-aws-key-in-config</td>
+<td>secrets</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">1</td>
+<td class="number">$0.0104</td>
+<td class="number">1639 ms</td>
+<td></td>
+</tr><tr data-case="secrets-02-github-token-in-workflow" data-category="secrets" data-split="dev" data-status="completed">
+<td>secrets-02-github-token-in-workflow</td>
+<td>secrets</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0103</td>
+<td class="number">1633 ms</td>
+<td></td>
+</tr><tr data-case="secrets-03-committed-private-key" data-category="secrets" data-split="dev" data-status="completed">
+<td>secrets-03-committed-private-key</td>
+<td>secrets</td>
+<td>dev</td>
+<td>completed</td>
+<td class="number">1</td>
+<td class="number">0</td>
+<td class="number">0</td>
+<td class="number">$0.0117</td>
+<td class="number">1563 ms</td>
+<td></td>
+</tr></tbody>
+</table>
+<script>
+  // read every filter select and every case row once
+  const filterSelects = Array.from(document.querySelectorAll('select[data-filter]'))
+  const caseRows = Array.from(document.querySelectorAll('tr[data-case]'))
+
+  // show a row only when every select is on all or on the row's value
+  function applyFilters() {
+    for (const caseRow of caseRows) {
+      const isShown = filterSelects.every((filterSelect) => {
+        const attribute = filterSelect.dataset.filter
+        return filterSelect.value === 'all' || caseRow.dataset[attribute] === filterSelect.value
+      })
+      caseRow.hidden = !isShown
+    }
+  }
+
+  // filter again whenever a select changes
+  for (const filterSelect of filterSelects) {
+    filterSelect.addEventListener('change', applyFilters)
+  }
+</script>
+</body>
+</html>

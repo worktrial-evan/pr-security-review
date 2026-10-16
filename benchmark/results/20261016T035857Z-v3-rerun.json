@@ -1,0 +1,3640 @@
+{
+  "label": "v3-rerun",
+  "split": "dev",
+  "startedAt": "2026-10-16T03:58:57.371Z",
+  "finishedAt": "2026-10-16T04:01:40.097Z",
+  "gitSha": "4cb3cede1984b5d686f32348f81c9338cec73dfe",
+  "promptVersions": {
+    "code-review": "3",
+    "summarize": "1"
+  },
+  "modelIds": {
+    "code-review": "anthropic/claude-sonnet-5-5",
+    "summarize": "anthropic/claude-haiku-5-5"
+  },
+  "advisorySnapshotDate": "2026-10-15T21:47:35.942Z",
+  "isLlmCacheUsed": false,
+  "score": {
+    "precision": 0.8571428571428571,
+    "recall": 0.6923076923076923,
+    "f1": 0.7659574468085107,
+    "byDetector": {
+      "code-review": {
+        "precision": 0.75,
+        "recall": 0.5625,
+        "f1": 0.6428571428571429
+      },
+      "dependency": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "secrets": {
+        "precision": 1,
+        "recall": 0.6666666666666666,
+        "f1": 0.8
+      }
+    },
+    "byCategory": {
+      "clean": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0
+      },
+      "code": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6666666666666665
+      },
+      "dependency": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "real-world": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "secrets": {
+        "precision": 1,
+        "recall": 0.6666666666666666,
+        "f1": 0.8
+      }
+    },
+    "falsePositivesOnClean": 1,
+    "totalCostUsd": 0.451006,
+    "totalDurationMs": 162488,
+    "caseResults": [
+      {
+        "caseId": "clean-01-parameterized-query",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-02-textcontent-not-innerhtml",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-03-exec-constant-command",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-04-safe-dependency-bump",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-05-refactor-moves-vulnerable-code",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-06-docs-only",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-07-tests-only",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-08-validated-feature",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-09-logging-added",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-10-rename-variable",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-01-sql-injection-concatenation",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-02-xss-innerhtml",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-03-command-injection-exec",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-04-path-traversal-download",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-05-hardcoded-credential",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "code-06-jwt-verification-disabled",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "code-07-ssrf-user-url",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-08-prototype-pollution-merge",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-09-md5-password-hashing",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "code-10-eval-request-input",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "dependency-01-direct-production-vulnerable",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-02-development-dependency-vulnerable",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-03-transitive-only",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-04-last-affected-range",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-05-versions-only-listing",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-06-withdrawn-advisory",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-07-unreviewed-advisory",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-08-added-never-imported",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "real-world-01-ms",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "real-world-02-node-fetch",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "real-world-04-tar",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "real-world-05-path-to-regexp",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "real-world-07-ws",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "real-world-08-moment",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "secrets-01-aws-key-in-config",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "secrets-02-github-token-in-workflow",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "secrets-03-committed-private-key",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      }
+    ],
+    "caseDetails": [
+      {
+        "caseId": "clean-01-parameterized-query",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009632,
+        "durationMs": 1947
+      },
+      {
+        "caseId": "clean-02-textcontent-not-innerhtml",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009514,
+        "durationMs": 1631
+      },
+      {
+        "caseId": "clean-03-exec-constant-command",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.00966,
+        "durationMs": 1645
+      },
+      {
+        "caseId": "clean-04-safe-dependency-bump",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.009454,
+        "durationMs": 1648
+      },
+      {
+        "caseId": "clean-05-refactor-moves-vulnerable-code",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [
+          {
+            "id": "9f7294f9183f5320",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.8,
+            "title": "SQL query built by concatenating the name prefix",
+            "file": "src/user-search.ts",
+            "startLine": 13,
+            "endLine": 15,
+            "isIntroducedByPullRequest": true,
+            "summary": "The user search query in src/user-search.ts builds its SQL text by concatenating the caller-supplied namePrefix directly into the statement passed to database.query. A crafted search string can break out of the LIKE quotes and change the query logic, which is a SQL injection flaw (CWE-89). This can expose or alter user records beyond what the search is meant to return.",
+            "remediation": "Replace the string concatenation on lines 13 to 15 with a parameterized query: keep the SQL text fixed as \"SELECT id, name, role FROM users WHERE name LIKE ?\" and pass namePrefix + \"%\" as a bound parameter through the database driver, then update the generic type arguments of database.query to match the bound parameter list.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-89",
+            "evidence": [
+              "  const selectUsers = database.query<User, []>(",
+              "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\",",
+              "  )"
+            ],
+            "sourceToSink": "The namePrefix argument of findUsersByNamePrefix, a caller-supplied search string, is concatenated into the SQL text that database.query prepares and executes.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        ],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.012858300000000001,
+        "durationMs": 5307
+      },
+      {
+        "caseId": "clean-06-docs-only",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.010032,
+        "durationMs": 1184
+      },
+      {
+        "caseId": "clean-07-tests-only",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.01107,
+        "durationMs": 1722
+      },
+      {
+        "caseId": "clean-08-validated-feature",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.019708000000000003,
+        "durationMs": 3465
+      },
+      {
+        "caseId": "clean-09-logging-added",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009448,
+        "durationMs": 1594
+      },
+      {
+        "caseId": "clean-10-rename-variable",
+        "category": "clean",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009656,
+        "durationMs": 1549
+      },
+      {
+        "caseId": "code-01-sql-injection-concatenation",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-89",
+              "file": "src/server.ts",
+              "startLine": 29,
+              "endLine": 34
+            },
+            "predictedFinding": {
+              "id": "4d0cd247c15788e3",
+              "detector": "code-review",
+              "severity": "high",
+              "confidence": 0.95,
+              "title": "SQL injection via name query parameter in user search",
+              "file": "src/server.ts",
+              "startLine": 29,
+              "endLine": 34,
+              "isIntroducedByPullRequest": true,
+              "summary": "The user search handler in src/server.ts builds its SQL query by inserting the raw name query parameter directly into the query string, so a crafted name value can change the structure of the SQL statement that database.query runs. This is a high severity SQL injection (CWE-89), since an attacker could read or modify data in the users table beyond what the search is meant to return.",
+              "remediation": "Replace the string interpolation in the query with a parameterized query, passing the name value as a bound parameter (for example, a placeholder in the SQL text with the pattern '%' + namePattern + '%' supplied in the parameter array) so the input is never parsed as SQL. Then add a test that submits a name containing a single quote and SQL syntax to confirm it is treated as plain text.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-89",
+              "evidence": [
+                "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
+                "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
+              ],
+              "sourceToSink": "The name query parameter of the incoming request is interpolated into the SQL string that database.query executes.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0123633,
+        "durationMs": 4599
+      },
+      {
+        "caseId": "code-02-xss-innerhtml",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-79",
+              "file": "public/app.ts",
+              "startLine": 5,
+              "endLine": 10
+            },
+            "predictedFinding": {
+              "id": "c5f106f9fa2782dc",
+              "detector": "code-review",
+              "severity": "high",
+              "confidence": 0.95,
+              "title": "DOM XSS from name query parameter written to innerHTML",
+              "file": "public/app.ts",
+              "startLine": 10,
+              "endLine": 10,
+              "isIntroducedByPullRequest": true,
+              "summary": "The page reads the name query parameter from the URL and places it directly into HTML assigned to innerHTML, so a crafted link can inject script that runs in the visitor's browser (DOM-based cross-site scripting, CWE-79). An attacker could steal session data or act on the user's behalf.",
+              "remediation": "Stop assigning untrusted text to innerHTML in public/app.ts line 10. Set the text with textContent, for example by creating an h1 element, setting its textContent to the visitor name, and appending it to greetingElement, or escape the value before interpolating it.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-79",
+              "evidence": [
+                "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
+              ],
+              "sourceToSink": "The name query parameter of the page URL is read into visitorName and interpolated into HTML assigned to greetingElement.innerHTML.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0120045,
+        "durationMs": 4380
+      },
+      {
+        "caseId": "code-03-command-injection-exec",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-78",
+              "file": "src/server.ts",
+              "startLine": 104,
+              "endLine": 105
+            },
+            "predictedFinding": {
+              "id": "28f78eacd4d2a1b6",
+              "detector": "code-review",
+              "severity": "critical",
+              "confidence": 0.96,
+              "title": "OS command injection via host query parameter in ping route",
+              "file": "src/server.ts",
+              "startLine": 104,
+              "endLine": 105,
+              "isIntroducedByPullRequest": true,
+              "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string that execSync runs. An attacker can supply shell metacharacters in host, such as a semicolon or backtick subshell, to run arbitrary commands on the server with the application's privileges. This is a critical OS command injection flaw (CWE-78).",
+              "remediation": "Stop building a shell string from user input. Validate host against a strict allowlist such as a hostname or IP address pattern, then call execFileSync('ping', ['-c', '1', host]) so the value is passed as a single argument without a shell.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-78",
+              "evidence": [
+                "      const host = new URL(request.url).searchParams.get('host') ?? 'localhost'",
+                "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
+              ],
+              "sourceToSink": "The host query parameter of the incoming request is interpolated into a shell command string that execSync runs.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0124047,
+        "durationMs": 4377
+      },
+      {
+        "caseId": "code-04-path-traversal-download",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-22",
+              "file": "src/server.ts",
+              "startLine": 81,
+              "endLine": 82
+            },
+            "predictedFinding": {
+              "id": "908f11da63b8b4af",
+              "detector": "code-review",
+              "severity": "high",
+              "confidence": 0.93,
+              "title": "Path traversal in upload download route via name parameter",
+              "file": "src/server.ts",
+              "startLine": 81,
+              "endLine": 83,
+              "isIntroducedByPullRequest": true,
+              "summary": "The download route takes the name query parameter and joins it directly onto the uploads directory before reading the file with Bun.file. Because nothing checks the value, a name containing ../ sequences can point outside the uploads folder, and the server will return any file the process can read. This is a path traversal flaw (CWE-22) rated high severity.",
+              "remediation": "Resolve the joined path and confirm it stays inside config.uploadsDirectory before reading it, rejecting the request otherwise. Also reject names that contain path separators or ../ segments, and return a 400 or 404 response for invalid names.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-22",
+              "evidence": [
+                "      const uploadName = new URL(request.url).searchParams.get('name') ?? ''",
+                "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
+                "      return new Response(uploadFile)"
+              ],
+              "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file reads the resulting path, so ../ sequences let the response return arbitrary files.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.012852700000000002,
+        "durationMs": 4962
+      },
+      {
+        "caseId": "code-05-hardcoded-credential",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-798",
+            "file": "src/server.ts",
+            "startLine": 72,
+            "endLine": 73
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.009706,
+        "durationMs": 1093
+      },
+      {
+        "caseId": "code-06-jwt-verification-disabled",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [
+          {
+            "id": "2079ce5749ebeff0",
+            "detector": "code-review",
+            "severity": "critical",
+            "confidence": 0.95,
+            "title": "JWT claims trusted without signature verification",
+            "file": "src/auth.ts",
+            "startLine": 45,
+            "endLine": 49,
+            "isIntroducedByPullRequest": true,
+            "summary": "The auth code in src/auth.ts (lines 45-49) reads the userId and role from a bearer token using jsonwebtoken.decode, which parses the token without checking its signature. Anyone can craft a token with any userId and role, and the server will treat them as the authenticated identity. This is a critical authentication bypass (CWE-287) that allows impersonation of any user, including administrators.",
+            "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithm allowlist, so that invalid or forged signatures are rejected before userId and role are read. Reject the request when verification throws.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-287",
+            "evidence": [
+              "  const payload = jsonwebtoken.decode(token)",
+              "  return { userId: Number(payload.userId), role: String(payload.role) }"
+            ],
+            "sourceToSink": "The bearer token from the request's Authorization header is parsed by jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as the authenticated identity.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        ],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-347",
+            "file": "src/auth.ts",
+            "startLine": 45,
+            "endLine": 46
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.0128485,
+        "durationMs": 4887
+      },
+      {
+        "caseId": "code-07-ssrf-user-url",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-918",
+              "file": "src/server.ts",
+              "startLine": 103,
+              "endLine": 104
+            },
+            "predictedFinding": {
+              "id": "141790be4eba35e2",
+              "detector": "code-review",
+              "severity": "high",
+              "confidence": 0.93,
+              "title": "SSRF through the url query parameter in /preview",
+              "file": "src/server.ts",
+              "startLine": 103,
+              "endLine": 106,
+              "isIntroducedByPullRequest": true,
+              "summary": "The /preview endpoint in src/server.ts takes the url query parameter from the incoming request and passes it straight to fetch without any validation. The first 200 characters of whatever the server fetches are returned to the caller. This is a server-side request forgery (CWE-918): an attacker can make the server send requests to internal hosts, private network addresses, or other services the server can reach, and read part of the response.",
+              "remediation": "Before calling fetch, parse the url parameter and reject anything that is not an http or https URL on an allowlist of approved hosts. Resolve the hostname and block private, loopback, and link-local addresses. Disable automatic redirects or re-validate each redirect target. Only then call fetch on the validated URL.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-918",
+              "evidence": [
+                "      const targetUrl = new URL(request.url).searchParams.get('url') ?? ''",
+                "      const upstreamResponse = await fetch(targetUrl)",
+                "      const upstreamBody = await upstreamResponse.text()",
+                "      return new Response(upstreamBody.slice(0, 200))"
+              ],
+              "sourceToSink": "The url query parameter of the incoming request is passed unvalidated to fetch, and the first 200 characters of the response body are returned to the caller.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0127935,
+        "durationMs": 4791
+      },
+      {
+        "caseId": "code-08-prototype-pollution-merge",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-1321",
+              "file": "src/server.ts",
+              "startLine": 19,
+              "endLine": 35
+            },
+            "predictedFinding": {
+              "id": "d7c09c9115dc1e62",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.9,
+              "title": "Prototype pollution in recursive mergeDeep of request JSON",
+              "file": "src/server.ts",
+              "startLine": 23,
+              "endLine": 33,
+              "isIntroducedByPullRequest": true,
+              "summary": "The recursive mergeDeep function copies keys from the JSON body of POST /users/:id/preferences without filtering them. A request can include an own \"__proto__\" key, which the merge follows into Object.prototype and writes attacker-chosen properties onto. Those properties then appear on every object in the running process, which can change application behavior, bypass checks, or cause denial of service.",
+              "remediation": "Update mergeDeep in src/server.ts (lines 23 to 33) so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing any property. Also build the target with Object.create(null) or validate the parsed body against an allowlist of expected preference fields, then add a test that posts a body containing \"__proto__\" and confirms Object.prototype is unchanged.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-1321",
+              "evidence": [
+                "  for (const key of Object.keys(source)) {",
+                "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
+                "    target[key] = sourceValue"
+              ],
+              "sourceToSink": "The JSON body of POST /users/:id/preferences can contain an own \"__proto__\" key, which mergeDeep follows into Object.prototype and then writes attacker-chosen properties onto it.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0226364,
+        "durationMs": 11539
+      },
+      {
+        "caseId": "code-09-md5-password-hashing",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-328",
+            "file": "src/users.ts",
+            "startLine": 76,
+            "endLine": 77
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.010284,
+        "durationMs": 1651
+      },
+      {
+        "caseId": "code-10-eval-request-input",
+        "category": "code",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [
+          {
+            "id": "c8d7cb38f8f12964",
+            "detector": "code-review",
+            "severity": "critical",
+            "confidence": 0.97,
+            "title": "eval of client-supplied expression in /calculate endpoint",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105,
+            "isIntroducedByPullRequest": true,
+            "summary": "The /calculate endpoint in src/server.ts takes the expression field from the JSON request body and passes it directly to eval, so anyone who can reach the endpoint can run arbitrary JavaScript on the server. This is a critical code injection flaw (CWE-94) that can lead to full server compromise, data theft, and tampering with the host.",
+            "remediation": "Remove the eval call on lines 104-105 of src/server.ts and replace it with a safe expression parser or a fixed set of supported operations that only evaluates numeric arithmetic. Validate the expression field as a string with an allowlist of characters before using it, and add a test that confirms payloads such as code calls are rejected.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-94",
+            "evidence": [
+              "        const calculationBody = (await request.json()) as { expression: string }",
+              "        const calculationResult = eval(String(calculationBody.expression))"
+            ],
+            "sourceToSink": "The expression field of the JSON body in the POST /calculate request is passed to eval, which executes it as JavaScript on the server.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        ],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-95",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.0121486,
+        "durationMs": 5537
+      },
+      {
+        "caseId": "dependency-01-direct-production-vulnerable",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "ms",
+              "advisoryId": "GHSA-w9mr-4mfr-499f"
+            },
+            "predictedFinding": {
+              "id": "9e52dd191cf6efbf",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The production dependency ms at version 1.0.0, directly imported by this project (listed in bun.lock), is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162), an inefficient regular expression complexity flaw in the parse function that handles the str argument. A remote attacker can supply crafted input to trigger excessive processing time, which can degrade or deny service in code that parses untrusted strings with ms. Public exploit information has been disclosed.",
+              "remediation": "Upgrade ms from 1.0.0 to the fixed version 2.0.0 in the project's dependencies, regenerate bun.lock, and confirm that calls to ms still behave as expected in the code paths that parse input.",
+              "summarySource": "model",
+              "packageName": "ms",
+              "version": "1.0.0",
+              "advisoryId": "GHSA-w9mr-4mfr-499f",
+              "aliases": ["CVE-2017-20162"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "direct-imported",
+              "importedBy": ["src/auth.ts"],
+              "dependencyPath": ["ms@1.0.0"],
+              "fixedVersions": ["2.0.0"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.009681599999999999,
+        "durationMs": 3827
+      },
+      {
+        "caseId": "dependency-02-development-dependency-vulnerable",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "semver",
+              "advisoryId": "GHSA-c2qf-rxjj-qqgw"
+            },
+            "predictedFinding": {
+              "id": "b85e66ce4712058c",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The installed semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue. It is triggered through new Range when untrusted input is supplied as a range string. The dependency is a development-scope package and is listed as direct but unused, so exposure in this project is likely low, but the vulnerable version is still present in the lockfile.",
+              "remediation": "Upgrade semver to version 7.5.2 in bun.lock, which is the fixed version listed for this advisory, and confirm the lockfile resolves to 7.5.2 or later.",
+              "summarySource": "model",
+              "packageName": "semver",
+              "version": "7.5.1",
+              "advisoryId": "GHSA-c2qf-rxjj-qqgw",
+              "aliases": ["CVE-2022-25883"],
+              "isGithubReviewed": true,
+              "dependencyScope": "development",
+              "reachability": "direct-unused",
+              "importedBy": [],
+              "dependencyPath": ["semver@7.5.1"],
+              "fixedVersions": ["7.5.2"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.0096196,
+        "durationMs": 2777
+      },
+      {
+        "caseId": "dependency-03-transitive-only",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "jws",
+              "advisoryId": "GHSA-869p-cjfg-cm3x"
+            },
+            "predictedFinding": {
+              "id": "4ad3bb2c71aea3a1",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The jws package installed at 3.2.2, pulled in transitively through jsonwebtoken 9.0.2, is affected by advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() with HMAC algorithms and takes user-provided data from the JWS header or payload in the HMAC secret lookup. Applications that use jws.verify() (which includes jsonwebtoken users), use only asymmetric algorithms, or do not use such user-provided data are not affected, so the real exposure depends on how the code verifies tokens.",
+              "remediation": "Upgrade the jws package to version 3.2.3 in bun.lock, either by updating the jsonwebtoken dependency chain so it resolves jws 3.2.3 or by overriding jws to 3.2.3, then rerun the lockfile install. Also confirm that the application does not call jws.createVerify() with HMAC secrets derived from untrusted header or payload data.",
+              "summarySource": "model",
+              "packageName": "jws",
+              "version": "3.2.2",
+              "advisoryId": "GHSA-869p-cjfg-cm3x",
+              "aliases": ["CVE-2025-65945"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "transitive",
+              "importedBy": [],
+              "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+              "fixedVersions": ["3.2.3"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.0097067,
+        "durationMs": 5252
+      },
+      {
+        "caseId": "dependency-04-last-affected-range",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "semver",
+              "advisoryId": "PRR-TEST-0001"
+            },
+            "predictedFinding": {
+              "id": "10236bfecc5bff97",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "semver@7.7.1 is affected by PRR-TEST-0001",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The production dependency semver 7.7.1 in bun.lock is affected by advisory PRR-TEST-0001, which covers semver 7.7.0 through 7.7.1. The package is listed as direct and currently unused in code reachable from the application, so immediate exposure is limited, but the vulnerable version is still installed and shipped as a production dependency.",
+              "remediation": "Upgrade semver from 7.7.1 to 7.7.2, which the advisory range does not cover, update bun.lock, and rerun the test suite to confirm nothing breaks.",
+              "summarySource": "model",
+              "packageName": "semver",
+              "version": "7.7.1",
+              "advisoryId": "PRR-TEST-0001",
+              "aliases": [],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "direct-unused",
+              "importedBy": [],
+              "dependencyPath": ["semver@7.7.1"],
+              "fixedVersions": [],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.009546599999999999,
+        "durationMs": 3609
+      },
+      {
+        "caseId": "dependency-05-versions-only-listing",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "lodash",
+              "advisoryId": "PRR-TEST-0002"
+            },
+            "predictedFinding": {
+              "id": "919a08dfdce9e493",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The production dependency lodash@4.18.0 in bun.lock is flagged by advisory PRR-TEST-0002, which lists 4.18.0 as an affected version. Lodash is directly imported by the project, so the vulnerable code is reachable and the issue matters for any runtime path that uses it.",
+              "remediation": "Upgrade lodash from 4.18.0 to a version not listed as affected by advisory PRR-TEST-0002, then regenerate bun.lock and confirm the lockfile no longer resolves lodash@4.18.0.",
+              "summarySource": "model",
+              "packageName": "lodash",
+              "version": "4.18.0",
+              "advisoryId": "PRR-TEST-0002",
+              "aliases": [],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "direct-imported",
+              "importedBy": ["src/config.ts"],
+              "dependencyPath": ["lodash@4.18.0"],
+              "fixedVersions": [],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0096122,
+        "durationMs": 3741
+      },
+      {
+        "caseId": "dependency-06-withdrawn-advisory",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.00935,
+        "durationMs": 2029
+      },
+      {
+        "caseId": "dependency-07-unreviewed-advisory",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "mustache",
+              "advisoryId": "PRR-TEST-0004"
+            },
+            "predictedFinding": {
+              "id": "0bd592569d4c39bb",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The project depends on mustache 4.1.0 in production, and that version is affected by advisory PRR-TEST-0004. The package is imported directly by the code, so the vulnerable version is actually in use. The advisory has not been reviewed by GitHub, so its details should be checked before relying on it.",
+              "remediation": "Upgrade mustache to version 4.2.0 in bun.lock and reinstall dependencies, then confirm the lockfile resolves mustache to 4.2.0.",
+              "summarySource": "model",
+              "packageName": "mustache",
+              "version": "4.1.0",
+              "advisoryId": "PRR-TEST-0004",
+              "aliases": [],
+              "isGithubReviewed": false,
+              "dependencyScope": "production",
+              "reachability": "direct-imported",
+              "importedBy": ["src/templates.ts"],
+              "dependencyPath": ["mustache@4.1.0"],
+              "fixedVersions": ["4.2.0"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.009618100000000001,
+        "durationMs": 3604
+      },
+      {
+        "caseId": "dependency-08-added-never-imported",
+        "category": "dependency",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "path-to-regexp",
+              "advisoryId": "GHSA-rhx6-c78j-4q9w"
+            },
+            "predictedFinding": {
+              "id": "bf69acf258f674c1",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue. A crafted route pattern can make the regex engine backtrack excessively and consume CPU. The dependency is a production dependency, but the scanner marks it as direct and unused, so the exposure in this project appears limited; it still matters because the vulnerable version ships with the application.",
+              "remediation": "Upgrade path-to-regexp to version 0.1.12 in your package manifest and regenerate bun.lock so the lockfile resolves to 0.1.12. If an immediate upgrade is not possible, avoid defining two parameters within a single path segment when the separator is not '.' (for example, no '/:a-:b').",
+              "summarySource": "model",
+              "packageName": "path-to-regexp",
+              "version": "0.1.11",
+              "advisoryId": "GHSA-rhx6-c78j-4q9w",
+              "aliases": ["CVE-2024-52798"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "direct-unused",
+              "importedBy": [],
+              "dependencyPath": ["path-to-regexp@0.1.11"],
+              "fixedVersions": ["0.1.12"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.0097615,
+        "durationMs": 4277
+      },
+      {
+        "caseId": "real-world-01-ms",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "advisoryId": "GHSA-w9mr-4mfr-499f",
+              "vulnerabilityType": "CWE-1333",
+              "file": "index.js",
+              "startLine": 49,
+              "endLine": 49
+            },
+            "predictedFinding": {
+              "id": "827860551d2292ba",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.6,
+              "title": "ReDoS exposure reopened by raising the parse input length cap to 10000",
+              "file": "index.js",
+              "startLine": 49,
+              "endLine": 49,
+              "isIntroducedByPullRequest": true,
+              "summary": "The input length cap in parse() was raised to 10000 characters, which lets a long crafted string reach a regular expression with nested, backtracking-prone quantifiers. Matching such a string can take a very long time and block the Node.js event loop, a denial-of-service risk (CWE-1333). The regex runs on the untrusted string passed to parse(), so the larger cap widens the exposure.",
+              "remediation": "Restore the previous, lower input length cap in index.js at line 49 so strings longer than that are rejected before the regular expression runs. Alternatively, rewrite the regular expression in index.js to remove the nested quantifiers, then add a test that parses a long crafted input and confirms it returns quickly.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-1333",
+              "evidence": ["  if (str.length > 10000) {"],
+              "sourceToSink": "The str argument passed to parse() can be a 10000-character string, which reaches the backtracking-prone regex /^((?:\\d+)?\\.?\\d+) *(...)?$/i.exec and blocks the event loop.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.016797000000000003,
+        "durationMs": 15998
+      },
+      {
+        "caseId": "real-world-02-node-fetch",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "advisoryId": "GHSA-vp56-6g26-6827",
+              "vulnerabilityType": "CWE-1333",
+              "file": "src/utils/referrer.js",
+              "startLine": 122,
+              "endLine": 122
+            },
+            "predictedFinding": {
+              "id": "693e6397be311396",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.6,
+              "title": "Regex with nested quantifier on URL host can backtrack exponentially",
+              "file": "src/utils/referrer.js",
+              "startLine": 122,
+              "endLine": 122,
+              "isIntroducedByPullRequest": true,
+              "summary": "The check on line 122 of src/utils/referrer.js tests the URL host against /^(.+\\.)*localhost$/. The pattern nests an unbounded `.+` inside a repeated group, so when a long dotted host does not end in localhost, the regex engine can try a very large number of ways to split the host before failing. An attacker who controls the URL being checked can send a crafted host that makes this match take a long time, which can stall the request handler and cause a denial of service.",
+              "remediation": "Replace the regex test on line 122 with a plain string check that does not backtrack, such as comparing url.host against 'localhost' or checking that it ends with '.localhost'. Then add a test with a long dotted host that does not end in localhost to confirm the check returns quickly and gives the same result as before.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-1333",
+              "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
+              "sourceToSink": "The host of the URL being checked is tested against /^(.+\\.)*localhost$/, whose group `(.+\\.)*` can split a long dotted host in exponentially many ways when the host does not end in localhost.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0184048,
+        "durationMs": 12298
+      },
+      {
+        "caseId": "real-world-04-tar",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-f5x3-32g6-xq36",
+            "vulnerabilityType": "CWE-400",
+            "file": "lib/unpack.js",
+            "startLine": 242,
+            "endLine": 260
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.025512,
+        "durationMs": 7908
+      },
+      {
+        "caseId": "real-world-05-path-to-regexp",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-rhx6-c78j-4q9w",
+            "vulnerabilityType": "CWE-1333",
+            "file": "index.js",
+            "startLine": 75,
+            "endLine": 88
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.011598,
+        "durationMs": 5337
+      },
+      {
+        "caseId": "real-world-07-ws",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-6fc8-4gx4-v693",
+            "vulnerabilityType": "CWE-400",
+            "file": "lib/websocket-server.js",
+            "startLine": 289,
+            "endLine": 289
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.017696,
+        "durationMs": 7913
+      },
+      {
+        "caseId": "real-world-08-moment",
+        "category": "real-world",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "advisoryId": "GHSA-8hfj-j24r-96c4",
+              "vulnerabilityType": "CWE-22",
+              "file": "src/lib/locale/locales.js",
+              "startLine": 73,
+              "endLine": 73
+            },
+            "predictedFinding": {
+              "id": "025c34224082f61b",
+              "detector": "code-review",
+              "severity": "high",
+              "confidence": 0.6,
+              "title": "Locale name path check removed before dynamic require",
+              "file": "src/lib/locale/locales.js",
+              "startLine": 73,
+              "endLine": 73,
+              "isIntroducedByPullRequest": true,
+              "summary": "The locale name check that rejected path separators was removed from src/lib/locale/locales.js at line 73, so a caller-supplied locale name now reaches the dynamic require of './locale/' + name unchecked. A name containing '../' can make the loader resolve and load an arbitrary module, which is a path traversal flaw (CWE-22) with high severity because it can run code outside the intended locale directory.",
+              "remediation": "Restore the path-separator validation before the dynamic require in src/lib/locale/locales.js, rejecting any locale name containing '/', '\\' or '..', and only load names that match a known locale list. Then add a test that calls loadLocale with a traversal name such as '../x' and confirms it is refused.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-22",
+              "evidence": ["        module.exports"],
+              "sourceToSink": "A caller-supplied locale name passed to loadLocale (for example through a locale() call) now reaches the existing dynamic require of './locale/' + name without the removed path-separator check, so a name containing '../' can load an arbitrary module.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.012278400000000002,
+        "durationMs": 5499
+      },
+      {
+        "caseId": "secrets-01-aws-key-in-config",
+        "category": "secrets",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "secrets",
+            "file": "src/config.ts",
+            "startLine": 21
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.009756,
+        "durationMs": 1939
+      },
+      {
+        "caseId": "secrets-02-github-token-in-workflow",
+        "category": "secrets",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "secrets",
+              "file": ".github/workflows/deploy.yml",
+              "startLine": 13
+            },
+            "predictedFinding": {
+              "id": "0b633577edb9fc3b",
+              "detector": "secrets",
+              "severity": "critical",
+              "confidence": 0.95,
+              "title": "GitHub token added in .github/workflows/deploy.yml",
+              "file": ".github/workflows/deploy.yml",
+              "startLine": 13,
+              "endLine": 13,
+              "isIntroducedByPullRequest": true,
+              "summary": "A GitHub token appears hard-coded in the deploy workflow at .github/workflows/deploy.yml, line 13. Anyone who can read the repository, including its history and forks if it is public, can use the token to act with its permissions, which could allow code changes, secret access, or deployments under the project's identity.",
+              "remediation": "Revoke the exposed GitHub token immediately in the GitHub settings, then issue a replacement and store it in the repository or organization secrets. Replace the literal value on line 13 of .github/workflows/deploy.yml with a reference to that secret, such as ${{ secrets.YOUR_SECRET_NAME }}, and remove the token from git history before merging.",
+              "summarySource": "model",
+              "ruleId": "github-token",
+              "fingerprint": "c8f04c416e92"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0098165,
+        "durationMs": 3998
+      },
+      {
+        "caseId": "secrets-03-committed-private-key",
+        "category": "secrets",
+        "split": "dev",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "secrets",
+              "file": "deploy/key.pem",
+              "startLine": 1
+            },
+            "predictedFinding": {
+              "id": "69219508a0293060",
+              "detector": "secrets",
+              "severity": "critical",
+              "confidence": 0.95,
+              "title": "Private key block added in deploy/key.pem",
+              "file": "deploy/key.pem",
+              "startLine": 1,
+              "endLine": 1,
+              "isIntroducedByPullRequest": true,
+              "summary": "A private key block was added in deploy/key.pem. Anyone who can read this file or the repository history can use the key to impersonate the service or decrypt data it protects, so the key should be treated as compromised.",
+              "remediation": "Remove the private key from deploy/key.pem and from the git history, then rotate the key with a new pair issued from a secure store. Load the key at deploy time from a secrets manager or environment variable instead of committing it to the repository.",
+              "summarySource": "model",
+              "ruleId": "private-key",
+              "fingerprint": "8bcac7908eb9"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0111765,
+        "durationMs": 2974
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "clean-01-parameterized-query",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009632,
+      "durationMs": 1947
+    },
+    {
+      "caseId": "clean-02-textcontent-not-innerhtml",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009514,
+      "durationMs": 1631
+    },
+    {
+      "caseId": "clean-03-exec-constant-command",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.00966,
+      "durationMs": 1645
+    },
+    {
+      "caseId": "clean-04-safe-dependency-bump",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.009454,
+      "durationMs": 1648
+    },
+    {
+      "caseId": "clean-05-refactor-moves-vulnerable-code",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 1,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [
+        {
+          "id": "9f7294f9183f5320",
+          "detector": "code-review",
+          "severity": "high",
+          "confidence": 0.8,
+          "title": "SQL query built by concatenating the name prefix",
+          "file": "src/user-search.ts",
+          "startLine": 13,
+          "endLine": 15,
+          "isIntroducedByPullRequest": true,
+          "summary": "The user search query in src/user-search.ts builds its SQL text by concatenating the caller-supplied namePrefix directly into the statement passed to database.query. A crafted search string can break out of the LIKE quotes and change the query logic, which is a SQL injection flaw (CWE-89). This can expose or alter user records beyond what the search is meant to return.",
+          "remediation": "Replace the string concatenation on lines 13 to 15 with a parameterized query: keep the SQL text fixed as \"SELECT id, name, role FROM users WHERE name LIKE ?\" and pass namePrefix + \"%\" as a bound parameter through the database driver, then update the generic type arguments of database.query to match the bound parameter list.",
+          "summarySource": "model",
+          "vulnerabilityType": "CWE-89",
+          "evidence": [
+            "  const selectUsers = database.query<User, []>(",
+            "    \"SELECT id, name, role FROM users WHERE name LIKE '\" + namePrefix + \"%'\",",
+            "  )"
+          ],
+          "sourceToSink": "The namePrefix argument of findUsersByNamePrefix, a caller-supplied search string, is concatenated into the SQL text that database.query prepares and executes.",
+          "promptVersion": "3",
+          "model": "anthropic/claude-sonnet-5-5"
+        }
+      ],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.012858300000000001,
+      "durationMs": 5307
+    },
+    {
+      "caseId": "clean-06-docs-only",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.010032,
+      "durationMs": 1184
+    },
+    {
+      "caseId": "clean-07-tests-only",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.01107,
+      "durationMs": 1722
+    },
+    {
+      "caseId": "clean-08-validated-feature",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.019708000000000003,
+      "durationMs": 3465
+    },
+    {
+      "caseId": "clean-09-logging-added",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009448,
+      "durationMs": 1594
+    },
+    {
+      "caseId": "clean-10-rename-variable",
+      "category": "clean",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009656,
+      "durationMs": 1549
+    },
+    {
+      "caseId": "code-01-sql-injection-concatenation",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-89",
+            "file": "src/server.ts",
+            "startLine": 29,
+            "endLine": 34
+          },
+          "predictedFinding": {
+            "id": "4d0cd247c15788e3",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.95,
+            "title": "SQL injection via name query parameter in user search",
+            "file": "src/server.ts",
+            "startLine": 29,
+            "endLine": 34,
+            "isIntroducedByPullRequest": true,
+            "summary": "The user search handler in src/server.ts builds its SQL query by inserting the raw name query parameter directly into the query string, so a crafted name value can change the structure of the SQL statement that database.query runs. This is a high severity SQL injection (CWE-89), since an attacker could read or modify data in the users table beyond what the search is meant to return.",
+            "remediation": "Replace the string interpolation in the query with a parameterized query, passing the name value as a bound parameter (for example, a placeholder in the SQL text with the pattern '%' + namePattern + '%' supplied in the parameter array) so the input is never parsed as SQL. Then add a test that submits a name containing a single quote and SQL syntax to confirm it is treated as plain text.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-89",
+            "evidence": [
+              "      const namePattern = new URL(request.url).searchParams.get('name') ?? ''",
+              "          `SELECT id, name, role FROM users WHERE name LIKE '%${namePattern}%'`,"
+            ],
+            "sourceToSink": "The name query parameter of the incoming request is interpolated into the SQL string that database.query executes.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0123633,
+      "durationMs": 4599
+    },
+    {
+      "caseId": "code-02-xss-innerhtml",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-79",
+            "file": "public/app.ts",
+            "startLine": 5,
+            "endLine": 10
+          },
+          "predictedFinding": {
+            "id": "c5f106f9fa2782dc",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.95,
+            "title": "DOM XSS from name query parameter written to innerHTML",
+            "file": "public/app.ts",
+            "startLine": 10,
+            "endLine": 10,
+            "isIntroducedByPullRequest": true,
+            "summary": "The page reads the name query parameter from the URL and places it directly into HTML assigned to innerHTML, so a crafted link can inject script that runs in the visitor's browser (DOM-based cross-site scripting, CWE-79). An attacker could steal session data or act on the user's behalf.",
+            "remediation": "Stop assigning untrusted text to innerHTML in public/app.ts line 10. Set the text with textContent, for example by creating an h1 element, setting its textContent to the visitor name, and appending it to greetingElement, or escape the value before interpolating it.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-79",
+            "evidence": [
+              "  greetingElement.innerHTML = `<h1>Hello, ${visitorName}</h1>`"
+            ],
+            "sourceToSink": "The name query parameter of the page URL is read into visitorName and interpolated into HTML assigned to greetingElement.innerHTML.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0120045,
+      "durationMs": 4380
+    },
+    {
+      "caseId": "code-03-command-injection-exec",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-78",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105
+          },
+          "predictedFinding": {
+            "id": "28f78eacd4d2a1b6",
+            "detector": "code-review",
+            "severity": "critical",
+            "confidence": 0.96,
+            "title": "OS command injection via host query parameter in ping route",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 105,
+            "isIntroducedByPullRequest": true,
+            "summary": "The ping route takes the host query parameter from the incoming request and inserts it directly into a shell command string that execSync runs. An attacker can supply shell metacharacters in host, such as a semicolon or backtick subshell, to run arbitrary commands on the server with the application's privileges. This is a critical OS command injection flaw (CWE-78).",
+            "remediation": "Stop building a shell string from user input. Validate host against a strict allowlist such as a hostname or IP address pattern, then call execFileSync('ping', ['-c', '1', host]) so the value is passed as a single argument without a shell.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-78",
+            "evidence": [
+              "      const host = new URL(request.url).searchParams.get('host') ?? 'localhost'",
+              "      const pingOutput = execSync(`ping -c 1 ${host}`).toString()"
+            ],
+            "sourceToSink": "The host query parameter of the incoming request is interpolated into a shell command string that execSync runs.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0124047,
+      "durationMs": 4377
+    },
+    {
+      "caseId": "code-04-path-traversal-download",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-22",
+            "file": "src/server.ts",
+            "startLine": 81,
+            "endLine": 82
+          },
+          "predictedFinding": {
+            "id": "908f11da63b8b4af",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.93,
+            "title": "Path traversal in upload download route via name parameter",
+            "file": "src/server.ts",
+            "startLine": 81,
+            "endLine": 83,
+            "isIntroducedByPullRequest": true,
+            "summary": "The download route takes the name query parameter and joins it directly onto the uploads directory before reading the file with Bun.file. Because nothing checks the value, a name containing ../ sequences can point outside the uploads folder, and the server will return any file the process can read. This is a path traversal flaw (CWE-22) rated high severity.",
+            "remediation": "Resolve the joined path and confirm it stays inside config.uploadsDirectory before reading it, rejecting the request otherwise. Also reject names that contain path separators or ../ segments, and return a 400 or 404 response for invalid names.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-22",
+            "evidence": [
+              "      const uploadName = new URL(request.url).searchParams.get('name') ?? ''",
+              "      const uploadFile = Bun.file(join(config.uploadsDirectory, uploadName))",
+              "      return new Response(uploadFile)"
+            ],
+            "sourceToSink": "The name query parameter of the request is joined onto the uploads directory without validation and Bun.file reads the resulting path, so ../ sequences let the response return arbitrary files.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.012852700000000002,
+      "durationMs": 4962
+    },
+    {
+      "caseId": "code-05-hardcoded-credential",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-798",
+          "file": "src/server.ts",
+          "startLine": 72,
+          "endLine": 73
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.009706,
+      "durationMs": 1093
+    },
+    {
+      "caseId": "code-06-jwt-verification-disabled",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 1,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [
+        {
+          "id": "2079ce5749ebeff0",
+          "detector": "code-review",
+          "severity": "critical",
+          "confidence": 0.95,
+          "title": "JWT claims trusted without signature verification",
+          "file": "src/auth.ts",
+          "startLine": 45,
+          "endLine": 49,
+          "isIntroducedByPullRequest": true,
+          "summary": "The auth code in src/auth.ts (lines 45-49) reads the userId and role from a bearer token using jsonwebtoken.decode, which parses the token without checking its signature. Anyone can craft a token with any userId and role, and the server will treat them as the authenticated identity. This is a critical authentication bypass (CWE-287) that allows impersonation of any user, including administrators.",
+          "remediation": "Replace jsonwebtoken.decode with jsonwebtoken.verify, passing the server's signing secret or public key and an explicit algorithm allowlist, so that invalid or forged signatures are rejected before userId and role are read. Reject the request when verification throws.",
+          "summarySource": "model",
+          "vulnerabilityType": "CWE-287",
+          "evidence": [
+            "  const payload = jsonwebtoken.decode(token)",
+            "  return { userId: Number(payload.userId), role: String(payload.role) }"
+          ],
+          "sourceToSink": "The bearer token from the request's Authorization header is parsed by jsonwebtoken.decode, which does not check the signature, and its userId and role claims are returned as the authenticated identity.",
+          "promptVersion": "3",
+          "model": "anthropic/claude-sonnet-5-5"
+        }
+      ],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-347",
+          "file": "src/auth.ts",
+          "startLine": 45,
+          "endLine": 46
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.0128485,
+      "durationMs": 4887
+    },
+    {
+      "caseId": "code-07-ssrf-user-url",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-918",
+            "file": "src/server.ts",
+            "startLine": 103,
+            "endLine": 104
+          },
+          "predictedFinding": {
+            "id": "141790be4eba35e2",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.93,
+            "title": "SSRF through the url query parameter in /preview",
+            "file": "src/server.ts",
+            "startLine": 103,
+            "endLine": 106,
+            "isIntroducedByPullRequest": true,
+            "summary": "The /preview endpoint in src/server.ts takes the url query parameter from the incoming request and passes it straight to fetch without any validation. The first 200 characters of whatever the server fetches are returned to the caller. This is a server-side request forgery (CWE-918): an attacker can make the server send requests to internal hosts, private network addresses, or other services the server can reach, and read part of the response.",
+            "remediation": "Before calling fetch, parse the url parameter and reject anything that is not an http or https URL on an allowlist of approved hosts. Resolve the hostname and block private, loopback, and link-local addresses. Disable automatic redirects or re-validate each redirect target. Only then call fetch on the validated URL.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-918",
+            "evidence": [
+              "      const targetUrl = new URL(request.url).searchParams.get('url') ?? ''",
+              "      const upstreamResponse = await fetch(targetUrl)",
+              "      const upstreamBody = await upstreamResponse.text()",
+              "      return new Response(upstreamBody.slice(0, 200))"
+            ],
+            "sourceToSink": "The url query parameter of the incoming request is passed unvalidated to fetch, and the first 200 characters of the response body are returned to the caller.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0127935,
+      "durationMs": 4791
+    },
+    {
+      "caseId": "code-08-prototype-pollution-merge",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-1321",
+            "file": "src/server.ts",
+            "startLine": 19,
+            "endLine": 35
+          },
+          "predictedFinding": {
+            "id": "d7c09c9115dc1e62",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.9,
+            "title": "Prototype pollution in recursive mergeDeep of request JSON",
+            "file": "src/server.ts",
+            "startLine": 23,
+            "endLine": 33,
+            "isIntroducedByPullRequest": true,
+            "summary": "The recursive mergeDeep function copies keys from the JSON body of POST /users/:id/preferences without filtering them. A request can include an own \"__proto__\" key, which the merge follows into Object.prototype and writes attacker-chosen properties onto. Those properties then appear on every object in the running process, which can change application behavior, bypass checks, or cause denial of service.",
+            "remediation": "Update mergeDeep in src/server.ts (lines 23 to 33) so it skips the keys \"__proto__\", \"constructor\" and \"prototype\" before reading or writing any property. Also build the target with Object.create(null) or validate the parsed body against an allowlist of expected preference fields, then add a test that posts a body containing \"__proto__\" and confirms Object.prototype is unchanged.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-1321",
+            "evidence": [
+              "  for (const key of Object.keys(source)) {",
+              "      const nestedTarget = (target[key] ?? {}) as Record<string, unknown>",
+              "    target[key] = sourceValue"
+            ],
+            "sourceToSink": "The JSON body of POST /users/:id/preferences can contain an own \"__proto__\" key, which mergeDeep follows into Object.prototype and then writes attacker-chosen properties onto it.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0226364,
+      "durationMs": 11539
+    },
+    {
+      "caseId": "code-09-md5-password-hashing",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-328",
+          "file": "src/users.ts",
+          "startLine": 76,
+          "endLine": 77
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.010284,
+      "durationMs": 1651
+    },
+    {
+      "caseId": "code-10-eval-request-input",
+      "category": "code",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 1,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [
+        {
+          "id": "c8d7cb38f8f12964",
+          "detector": "code-review",
+          "severity": "critical",
+          "confidence": 0.97,
+          "title": "eval of client-supplied expression in /calculate endpoint",
+          "file": "src/server.ts",
+          "startLine": 104,
+          "endLine": 105,
+          "isIntroducedByPullRequest": true,
+          "summary": "The /calculate endpoint in src/server.ts takes the expression field from the JSON request body and passes it directly to eval, so anyone who can reach the endpoint can run arbitrary JavaScript on the server. This is a critical code injection flaw (CWE-94) that can lead to full server compromise, data theft, and tampering with the host.",
+          "remediation": "Remove the eval call on lines 104-105 of src/server.ts and replace it with a safe expression parser or a fixed set of supported operations that only evaluates numeric arithmetic. Validate the expression field as a string with an allowlist of characters before using it, and add a test that confirms payloads such as code calls are rejected.",
+          "summarySource": "model",
+          "vulnerabilityType": "CWE-94",
+          "evidence": [
+            "        const calculationBody = (await request.json()) as { expression: string }",
+            "        const calculationResult = eval(String(calculationBody.expression))"
+          ],
+          "sourceToSink": "The expression field of the JSON body in the POST /calculate request is passed to eval, which executes it as JavaScript on the server.",
+          "promptVersion": "3",
+          "model": "anthropic/claude-sonnet-5-5"
+        }
+      ],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-95",
+          "file": "src/server.ts",
+          "startLine": 104,
+          "endLine": 105
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.0121486,
+      "durationMs": 5537
+    },
+    {
+      "caseId": "dependency-01-direct-production-vulnerable",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "ms",
+            "advisoryId": "GHSA-w9mr-4mfr-499f"
+          },
+          "predictedFinding": {
+            "id": "9e52dd191cf6efbf",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "ms@1.0.0 is affected by GHSA-w9mr-4mfr-499f",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The production dependency ms at version 1.0.0, directly imported by this project (listed in bun.lock), is affected by GHSA-w9mr-4mfr-499f (CVE-2017-20162), an inefficient regular expression complexity flaw in the parse function that handles the str argument. A remote attacker can supply crafted input to trigger excessive processing time, which can degrade or deny service in code that parses untrusted strings with ms. Public exploit information has been disclosed.",
+            "remediation": "Upgrade ms from 1.0.0 to the fixed version 2.0.0 in the project's dependencies, regenerate bun.lock, and confirm that calls to ms still behave as expected in the code paths that parse input.",
+            "summarySource": "model",
+            "packageName": "ms",
+            "version": "1.0.0",
+            "advisoryId": "GHSA-w9mr-4mfr-499f",
+            "aliases": ["CVE-2017-20162"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/auth.ts"],
+            "dependencyPath": ["ms@1.0.0"],
+            "fixedVersions": ["2.0.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.009681599999999999,
+      "durationMs": 3827
+    },
+    {
+      "caseId": "dependency-02-development-dependency-vulnerable",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "semver",
+            "advisoryId": "GHSA-c2qf-rxjj-qqgw"
+          },
+          "predictedFinding": {
+            "id": "b85e66ce4712058c",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "semver@7.5.1 is affected by GHSA-c2qf-rxjj-qqgw",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The installed semver 7.5.1 in bun.lock is affected by GHSA-c2qf-rxjj-qqgw (CVE-2022-25883), a Regular Expression Denial of Service issue. It is triggered through new Range when untrusted input is supplied as a range string. The dependency is a development-scope package and is listed as direct but unused, so exposure in this project is likely low, but the vulnerable version is still present in the lockfile.",
+            "remediation": "Upgrade semver to version 7.5.2 in bun.lock, which is the fixed version listed for this advisory, and confirm the lockfile resolves to 7.5.2 or later.",
+            "summarySource": "model",
+            "packageName": "semver",
+            "version": "7.5.1",
+            "advisoryId": "GHSA-c2qf-rxjj-qqgw",
+            "aliases": ["CVE-2022-25883"],
+            "isGithubReviewed": true,
+            "dependencyScope": "development",
+            "reachability": "direct-unused",
+            "importedBy": [],
+            "dependencyPath": ["semver@7.5.1"],
+            "fixedVersions": ["7.5.2"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.0096196,
+      "durationMs": 2777
+    },
+    {
+      "caseId": "dependency-03-transitive-only",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "jws",
+            "advisoryId": "GHSA-869p-cjfg-cm3x"
+          },
+          "predictedFinding": {
+            "id": "4ad3bb2c71aea3a1",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The jws package installed at 3.2.2, pulled in transitively through jsonwebtoken 9.0.2, is affected by advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() with HMAC algorithms and takes user-provided data from the JWS header or payload in the HMAC secret lookup. Applications that use jws.verify() (which includes jsonwebtoken users), use only asymmetric algorithms, or do not use such user-provided data are not affected, so the real exposure depends on how the code verifies tokens.",
+            "remediation": "Upgrade the jws package to version 3.2.3 in bun.lock, either by updating the jsonwebtoken dependency chain so it resolves jws 3.2.3 or by overriding jws to 3.2.3, then rerun the lockfile install. Also confirm that the application does not call jws.createVerify() with HMAC secrets derived from untrusted header or payload data.",
+            "summarySource": "model",
+            "packageName": "jws",
+            "version": "3.2.2",
+            "advisoryId": "GHSA-869p-cjfg-cm3x",
+            "aliases": ["CVE-2025-65945"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "transitive",
+            "importedBy": [],
+            "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+            "fixedVersions": ["3.2.3"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.0097067,
+      "durationMs": 5252
+    },
+    {
+      "caseId": "dependency-04-last-affected-range",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "semver",
+            "advisoryId": "PRR-TEST-0001"
+          },
+          "predictedFinding": {
+            "id": "10236bfecc5bff97",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "semver@7.7.1 is affected by PRR-TEST-0001",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The production dependency semver 7.7.1 in bun.lock is affected by advisory PRR-TEST-0001, which covers semver 7.7.0 through 7.7.1. The package is listed as direct and currently unused in code reachable from the application, so immediate exposure is limited, but the vulnerable version is still installed and shipped as a production dependency.",
+            "remediation": "Upgrade semver from 7.7.1 to 7.7.2, which the advisory range does not cover, update bun.lock, and rerun the test suite to confirm nothing breaks.",
+            "summarySource": "model",
+            "packageName": "semver",
+            "version": "7.7.1",
+            "advisoryId": "PRR-TEST-0001",
+            "aliases": [],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-unused",
+            "importedBy": [],
+            "dependencyPath": ["semver@7.7.1"],
+            "fixedVersions": [],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.009546599999999999,
+      "durationMs": 3609
+    },
+    {
+      "caseId": "dependency-05-versions-only-listing",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "lodash",
+            "advisoryId": "PRR-TEST-0002"
+          },
+          "predictedFinding": {
+            "id": "919a08dfdce9e493",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.18.0 is affected by PRR-TEST-0002",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The production dependency lodash@4.18.0 in bun.lock is flagged by advisory PRR-TEST-0002, which lists 4.18.0 as an affected version. Lodash is directly imported by the project, so the vulnerable code is reachable and the issue matters for any runtime path that uses it.",
+            "remediation": "Upgrade lodash from 4.18.0 to a version not listed as affected by advisory PRR-TEST-0002, then regenerate bun.lock and confirm the lockfile no longer resolves lodash@4.18.0.",
+            "summarySource": "model",
+            "packageName": "lodash",
+            "version": "4.18.0",
+            "advisoryId": "PRR-TEST-0002",
+            "aliases": [],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.18.0"],
+            "fixedVersions": [],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0096122,
+      "durationMs": 3741
+    },
+    {
+      "caseId": "dependency-06-withdrawn-advisory",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.00935,
+      "durationMs": 2029
+    },
+    {
+      "caseId": "dependency-07-unreviewed-advisory",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "mustache",
+            "advisoryId": "PRR-TEST-0004"
+          },
+          "predictedFinding": {
+            "id": "0bd592569d4c39bb",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "mustache@4.1.0 is affected by PRR-TEST-0004",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The project depends on mustache 4.1.0 in production, and that version is affected by advisory PRR-TEST-0004. The package is imported directly by the code, so the vulnerable version is actually in use. The advisory has not been reviewed by GitHub, so its details should be checked before relying on it.",
+            "remediation": "Upgrade mustache to version 4.2.0 in bun.lock and reinstall dependencies, then confirm the lockfile resolves mustache to 4.2.0.",
+            "summarySource": "model",
+            "packageName": "mustache",
+            "version": "4.1.0",
+            "advisoryId": "PRR-TEST-0004",
+            "aliases": [],
+            "isGithubReviewed": false,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/templates.ts"],
+            "dependencyPath": ["mustache@4.1.0"],
+            "fixedVersions": ["4.2.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.009618100000000001,
+      "durationMs": 3604
+    },
+    {
+      "caseId": "dependency-08-added-never-imported",
+      "category": "dependency",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "path-to-regexp",
+            "advisoryId": "GHSA-rhx6-c78j-4q9w"
+          },
+          "predictedFinding": {
+            "id": "bf69acf258f674c1",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "path-to-regexp@0.1.11 is affected by GHSA-rhx6-c78j-4q9w",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The bun.lock file pins path-to-regexp at version 0.1.11, which is affected by GHSA-rhx6-c78j-4q9w (CVE-2024-52798), a regular expression denial of service (ReDoS) issue. A crafted route pattern can make the regex engine backtrack excessively and consume CPU. The dependency is a production dependency, but the scanner marks it as direct and unused, so the exposure in this project appears limited; it still matters because the vulnerable version ships with the application.",
+            "remediation": "Upgrade path-to-regexp to version 0.1.12 in your package manifest and regenerate bun.lock so the lockfile resolves to 0.1.12. If an immediate upgrade is not possible, avoid defining two parameters within a single path segment when the separator is not '.' (for example, no '/:a-:b').",
+            "summarySource": "model",
+            "packageName": "path-to-regexp",
+            "version": "0.1.11",
+            "advisoryId": "GHSA-rhx6-c78j-4q9w",
+            "aliases": ["CVE-2024-52798"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-unused",
+            "importedBy": [],
+            "dependencyPath": ["path-to-regexp@0.1.11"],
+            "fixedVersions": ["0.1.12"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.0097615,
+      "durationMs": 4277
+    },
+    {
+      "caseId": "real-world-01-ms",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "advisoryId": "GHSA-w9mr-4mfr-499f",
+            "vulnerabilityType": "CWE-1333",
+            "file": "index.js",
+            "startLine": 49,
+            "endLine": 49
+          },
+          "predictedFinding": {
+            "id": "827860551d2292ba",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.6,
+            "title": "ReDoS exposure reopened by raising the parse input length cap to 10000",
+            "file": "index.js",
+            "startLine": 49,
+            "endLine": 49,
+            "isIntroducedByPullRequest": true,
+            "summary": "The input length cap in parse() was raised to 10000 characters, which lets a long crafted string reach a regular expression with nested, backtracking-prone quantifiers. Matching such a string can take a very long time and block the Node.js event loop, a denial-of-service risk (CWE-1333). The regex runs on the untrusted string passed to parse(), so the larger cap widens the exposure.",
+            "remediation": "Restore the previous, lower input length cap in index.js at line 49 so strings longer than that are rejected before the regular expression runs. Alternatively, rewrite the regular expression in index.js to remove the nested quantifiers, then add a test that parses a long crafted input and confirms it returns quickly.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-1333",
+            "evidence": ["  if (str.length > 10000) {"],
+            "sourceToSink": "The str argument passed to parse() can be a 10000-character string, which reaches the backtracking-prone regex /^((?:\\d+)?\\.?\\d+) *(...)?$/i.exec and blocks the event loop.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.016797000000000003,
+      "durationMs": 15998
+    },
+    {
+      "caseId": "real-world-02-node-fetch",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "advisoryId": "GHSA-vp56-6g26-6827",
+            "vulnerabilityType": "CWE-1333",
+            "file": "src/utils/referrer.js",
+            "startLine": 122,
+            "endLine": 122
+          },
+          "predictedFinding": {
+            "id": "693e6397be311396",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.6,
+            "title": "Regex with nested quantifier on URL host can backtrack exponentially",
+            "file": "src/utils/referrer.js",
+            "startLine": 122,
+            "endLine": 122,
+            "isIntroducedByPullRequest": true,
+            "summary": "The check on line 122 of src/utils/referrer.js tests the URL host against /^(.+\\.)*localhost$/. The pattern nests an unbounded `.+` inside a repeated group, so when a long dotted host does not end in localhost, the regex engine can try a very large number of ways to split the host before failing. An attacker who controls the URL being checked can send a crafted host that makes this match take a long time, which can stall the request handler and cause a denial of service.",
+            "remediation": "Replace the regex test on line 122 with a plain string check that does not backtrack, such as comparing url.host against 'localhost' or checking that it ends with '.localhost'. Then add a test with a long dotted host that does not end in localhost to confirm the check returns quickly and gives the same result as before.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-1333",
+            "evidence": ["\tif (/^(.+\\.)*localhost$/.test(url.host)) {"],
+            "sourceToSink": "The host of the URL being checked is tested against /^(.+\\.)*localhost$/, whose group `(.+\\.)*` can split a long dotted host in exponentially many ways when the host does not end in localhost.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0184048,
+      "durationMs": 12298
+    },
+    {
+      "caseId": "real-world-04-tar",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-f5x3-32g6-xq36",
+          "vulnerabilityType": "CWE-400",
+          "file": "lib/unpack.js",
+          "startLine": 242,
+          "endLine": 260
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.025512,
+      "durationMs": 7908
+    },
+    {
+      "caseId": "real-world-05-path-to-regexp",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-rhx6-c78j-4q9w",
+          "vulnerabilityType": "CWE-1333",
+          "file": "index.js",
+          "startLine": 75,
+          "endLine": 88
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.011598,
+      "durationMs": 5337
+    },
+    {
+      "caseId": "real-world-07-ws",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-6fc8-4gx4-v693",
+          "vulnerabilityType": "CWE-400",
+          "file": "lib/websocket-server.js",
+          "startLine": 289,
+          "endLine": 289
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.017696,
+      "durationMs": 7913
+    },
+    {
+      "caseId": "real-world-08-moment",
+      "category": "real-world",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "advisoryId": "GHSA-8hfj-j24r-96c4",
+            "vulnerabilityType": "CWE-22",
+            "file": "src/lib/locale/locales.js",
+            "startLine": 73,
+            "endLine": 73
+          },
+          "predictedFinding": {
+            "id": "025c34224082f61b",
+            "detector": "code-review",
+            "severity": "high",
+            "confidence": 0.6,
+            "title": "Locale name path check removed before dynamic require",
+            "file": "src/lib/locale/locales.js",
+            "startLine": 73,
+            "endLine": 73,
+            "isIntroducedByPullRequest": true,
+            "summary": "The locale name check that rejected path separators was removed from src/lib/locale/locales.js at line 73, so a caller-supplied locale name now reaches the dynamic require of './locale/' + name unchecked. A name containing '../' can make the loader resolve and load an arbitrary module, which is a path traversal flaw (CWE-22) with high severity because it can run code outside the intended locale directory.",
+            "remediation": "Restore the path-separator validation before the dynamic require in src/lib/locale/locales.js, rejecting any locale name containing '/', '\\' or '..', and only load names that match a known locale list. Then add a test that calls loadLocale with a traversal name such as '../x' and confirms it is refused.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-22",
+            "evidence": ["        module.exports"],
+            "sourceToSink": "A caller-supplied locale name passed to loadLocale (for example through a locale() call) now reaches the existing dynamic require of './locale/' + name without the removed path-separator check, so a name containing '../' can load an arbitrary module.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.012278400000000002,
+      "durationMs": 5499
+    },
+    {
+      "caseId": "secrets-01-aws-key-in-config",
+      "category": "secrets",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "secrets",
+          "file": "src/config.ts",
+          "startLine": 21
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.009756,
+      "durationMs": 1939
+    },
+    {
+      "caseId": "secrets-02-github-token-in-workflow",
+      "category": "secrets",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "secrets",
+            "file": ".github/workflows/deploy.yml",
+            "startLine": 13
+          },
+          "predictedFinding": {
+            "id": "0b633577edb9fc3b",
+            "detector": "secrets",
+            "severity": "critical",
+            "confidence": 0.95,
+            "title": "GitHub token added in .github/workflows/deploy.yml",
+            "file": ".github/workflows/deploy.yml",
+            "startLine": 13,
+            "endLine": 13,
+            "isIntroducedByPullRequest": true,
+            "summary": "A GitHub token appears hard-coded in the deploy workflow at .github/workflows/deploy.yml, line 13. Anyone who can read the repository, including its history and forks if it is public, can use the token to act with its permissions, which could allow code changes, secret access, or deployments under the project's identity.",
+            "remediation": "Revoke the exposed GitHub token immediately in the GitHub settings, then issue a replacement and store it in the repository or organization secrets. Replace the literal value on line 13 of .github/workflows/deploy.yml with a reference to that secret, such as ${{ secrets.YOUR_SECRET_NAME }}, and remove the token from git history before merging.",
+            "summarySource": "model",
+            "ruleId": "github-token",
+            "fingerprint": "c8f04c416e92"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0098165,
+      "durationMs": 3998
+    },
+    {
+      "caseId": "secrets-03-committed-private-key",
+      "category": "secrets",
+      "split": "dev",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "secrets",
+            "file": "deploy/key.pem",
+            "startLine": 1
+          },
+          "predictedFinding": {
+            "id": "69219508a0293060",
+            "detector": "secrets",
+            "severity": "critical",
+            "confidence": 0.95,
+            "title": "Private key block added in deploy/key.pem",
+            "file": "deploy/key.pem",
+            "startLine": 1,
+            "endLine": 1,
+            "isIntroducedByPullRequest": true,
+            "summary": "A private key block was added in deploy/key.pem. Anyone who can read this file or the repository history can use the key to impersonate the service or decrypt data it protects, so the key should be treated as compromised.",
+            "remediation": "Remove the private key from deploy/key.pem and from the git history, then rotate the key with a new pair issued from a secure store. Load the key at deploy time from a secrets manager or environment variable instead of committing it to the repository.",
+            "summarySource": "model",
+            "ruleId": "private-key",
+            "fingerprint": "8bcac7908eb9"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0111765,
+      "durationMs": 2974
+    }
+  ],
+  "warnings": []
+}

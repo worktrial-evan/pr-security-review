@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Benchmark run final (test)</title>
+<title>Benchmark run final-v4 (test)</title>
 <style>
 :root {
   color-scheme: light dark;
@@ -100,17 +100,17 @@ tr.detail td { background: var(--surface); }
 </style>
 </head>
 <body>
-<h1>Benchmark run final (test)</h1>
-<dl><dt>Label</dt><dd>final</dd><dt>Split</dt><dd>test</dd><dt>Started at</dt><dd>2026-10-16T03:45:35.257Z</dd><dt>Finished at</dt><dd>2026-10-16T03:46:31.704Z</dd><dt>Git sha</dt><dd>795f30d33fc07c92df739e3e507113d81c25d4b6</dd><dt>Prompt versions</dt><dd>code-review=3, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>true</dd></dl>
+<h1>Benchmark run final-v4 (test)</h1>
+<dl><dt>Label</dt><dd>final-v4</dd><dt>Split</dt><dd>test</dd><dt>Started at</dt><dd>2026-10-16T04:05:37.006Z</dd><dt>Finished at</dt><dd>2026-10-16T04:06:41.742Z</dd><dt>Git sha</dt><dd>4cb3cede1984b5d686f32348f81c9338cec73dfe</dd><dt>Prompt versions</dt><dd>code-review=4, summarize=1</dd><dt>Model ids</dt><dd>code-review=anthropic/claude-sonnet-5-5, summarize=anthropic/claude-haiku-5-5</dd><dt>Advisory snapshot date</dt><dd>2026-10-15T21:47:35.942Z</dd><dt>LLM cache used</dt><dd>true</dd></dl>
 
 <h2>Metrics</h2>
 <table>
 <thead><tr><th>Scope</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
 <tbody><tr>
 <td>overall</td>
-<td class="number">0.875</td>
+<td class="number">0.778</td>
 <td class="number">0.636</td>
-<td class="number">0.737</td>
+<td class="number">0.700</td>
 </tr><tr>
 <td>detector: dependency</td>
 <td class="number">1.000</td>
@@ -118,9 +118,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">1.000</td>
 </tr><tr>
 <td>detector: code-review</td>
-<td class="number">0.750</td>
+<td class="number">0.600</td>
 <td class="number">0.429</td>
-<td class="number">0.545</td>
+<td class="number">0.500</td>
 </tr><tr>
 <td>detector: secrets</td>
 <td class="number">1.000</td>
@@ -133,9 +133,9 @@ tr.detail td { background: var(--surface); }
 <td class="number">1.000</td>
 </tr><tr>
 <td>category: code</td>
-<td class="number">0.750</td>
 <td class="number">0.600</td>
-<td class="number">0.667</td>
+<td class="number">0.600</td>
+<td class="number">0.600</td>
 </tr><tr>
 <td>category: secrets</td>
 <td class="number">1.000</td>
@@ -156,8 +156,8 @@ tr.detail td { background: var(--surface); }
 <h2>Totals</h2>
 <dl>
 <dt>False positives on clean cases</dt><dd>0</dd>
-<dt>Total cost</dt><dd>$0.2100</dd>
-<dt>Total duration</dt><dd>56357 ms</dd>
+<dt>Total cost</dt><dd>$0.2195</dd>
+<dt>Total duration</dt><dd>64644 ms</dd>
 </dl>
 <h2>Cases</h2>
 <div class="filters"><label>Category
@@ -195,8 +195,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0098</td>
-<td class="number">1695 ms</td>
+<td class="number">$0.0105</td>
+<td class="number">1407 ms</td>
 <td></td>
 </tr><tr data-case="clean-12-config-default-changed" data-category="clean" data-split="test" data-status="completed">
 <td>clean-12-config-default-changed</td>
@@ -206,8 +206,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0095</td>
-<td class="number">1065 ms</td>
+<td class="number">$0.0101</td>
+<td class="number">1618 ms</td>
 <td></td>
 </tr><tr data-case="clean-13-error-handling-added" data-category="clean" data-split="test" data-status="completed">
 <td>clean-13-error-handling-added</td>
@@ -217,8 +217,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0097</td>
-<td class="number">1218 ms</td>
+<td class="number">$0.0103</td>
+<td class="number">1581 ms</td>
 <td></td>
 </tr><tr data-case="clean-14-comment-only-change" data-category="clean" data-split="test" data-status="completed">
 <td>clean-14-comment-only-change</td>
@@ -228,8 +228,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0095</td>
-<td class="number">1739 ms</td>
+<td class="number">$0.0102</td>
+<td class="number">1311 ms</td>
 <td></td>
 </tr><tr data-case="clean-15-safe-redirect-allowlist" data-category="clean" data-split="test" data-status="completed">
 <td>clean-15-safe-redirect-allowlist</td>
@@ -239,8 +239,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0198</td>
-<td class="number">2618 ms</td>
+<td class="number">$0.0226</td>
+<td class="number">5757 ms</td>
 <td></td>
 </tr><tr data-case="code-11-open-redirect" data-category="code" data-split="test" data-status="completed">
 <td>code-11-open-redirect</td>
@@ -250,8 +250,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0125</td>
-<td class="number">5369 ms</td>
+<td class="number">$0.0136</td>
+<td class="number">9219 ms</td>
 <td></td>
 </tr><tr data-case="code-12-missing-authorization-admin" data-category="code" data-split="test" data-status="completed">
 <td>code-12-missing-authorization-admin</td>
@@ -261,8 +261,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0170</td>
-<td class="number">8399 ms</td>
+<td class="number">$0.0195</td>
+<td class="number">11567 ms</td>
 <td></td>
 </tr><tr data-case="code-13-redos-user-input" data-category="code" data-split="test" data-status="completed">
 <td>code-13-redos-user-input</td>
@@ -272,8 +272,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0135</td>
-<td class="number">5954 ms</td>
+<td class="number">$0.0141</td>
+<td class="number">6141 ms</td>
 <td></td>
 </tr><tr data-case="code-14-insecure-deserialization" data-category="code" data-split="test" data-status="completed">
 <td>code-14-insecure-deserialization</td>
@@ -281,10 +281,10 @@ tr.detail td { background: var(--surface); }
 <td>test</td>
 <td>completed</td>
 <td class="number">0</td>
-<td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0123</td>
-<td class="number">2874 ms</td>
+<td class="number">1</td>
+<td class="number">$0.0135</td>
+<td class="number">5125 ms</td>
 <td></td>
 </tr><tr data-case="code-15-directory-listing-uploads" data-category="code" data-split="test" data-status="completed">
 <td>code-15-directory-listing-uploads</td>
@@ -294,8 +294,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">1</td>
 <td class="number">1</td>
-<td class="number">$0.0189</td>
-<td class="number">10541 ms</td>
+<td class="number">$0.0137</td>
+<td class="number">5361 ms</td>
 <td></td>
 </tr><tr data-case="dependency-09-imported-through-subpath" data-category="dependency" data-split="test" data-status="completed">
 <td>dependency-09-imported-through-subpath</td>
@@ -305,8 +305,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1400 ms</td>
+<td class="number">$0.0101</td>
+<td class="number">1712 ms</td>
 <td></td>
 </tr><tr data-case="dependency-10-bun-lock-only" data-category="dependency" data-split="test" data-status="completed">
 <td>dependency-10-bun-lock-only</td>
@@ -317,7 +317,7 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">$0.0000</td>
-<td class="number">61 ms</td>
+<td class="number">64 ms</td>
 <td></td>
 </tr><tr data-case="dependency-11-package-lock-only" data-category="dependency" data-split="test" data-status="completed">
 <td>dependency-11-package-lock-only</td>
@@ -328,7 +328,7 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">$0.0000</td>
-<td class="number">62 ms</td>
+<td class="number">69 ms</td>
 <td></td>
 </tr><tr data-case="dependency-12-bump-to-fixed-version" data-category="dependency" data-split="test" data-status="completed">
 <td>dependency-12-bump-to-fixed-version</td>
@@ -338,8 +338,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0094</td>
-<td class="number">1259 ms</td>
+<td class="number">$0.0100</td>
+<td class="number">1392 ms</td>
 <td></td>
 </tr><tr data-case="real-world-03-qs" data-category="real-world" data-split="test" data-status="completed">
 <td>real-world-03-qs</td>
@@ -349,8 +349,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0263</td>
-<td class="number">6189 ms</td>
+<td class="number">$0.0292</td>
+<td class="number">7920 ms</td>
 <td></td>
 </tr><tr data-case="real-world-06-express" data-category="real-world" data-split="test" data-status="completed">
 <td>real-world-06-express</td>
@@ -360,8 +360,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">0</td>
 <td class="number">0</td>
 <td class="number">1</td>
-<td class="number">$0.0226</td>
-<td class="number">4907 ms</td>
+<td class="number">$0.0217</td>
+<td class="number">2874 ms</td>
 <td></td>
 </tr><tr data-case="secrets-04-generic-high-entropy-token" data-category="secrets" data-split="test" data-status="completed">
 <td>secrets-04-generic-high-entropy-token</td>
@@ -371,8 +371,8 @@ tr.detail td { background: var(--surface); }
 <td class="number">1</td>
 <td class="number">0</td>
 <td class="number">0</td>
-<td class="number">$0.0098</td>
-<td class="number">1007 ms</td>
+<td class="number">$0.0105</td>
+<td class="number">1526 ms</td>
 <td></td>
 </tr></tbody>
 </table>
