@@ -8,7 +8,7 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 
 ### review-code.ts
 
-- `reviewCode({ changedFiles, llmClient, auditSink, runId, isLlmEnabled, contextLines, modelId, promptVersion, promptsDirectory, maxChunkLines })`: reviews the changed files and returns a `CodeReviewResult`. `promptVersion` picks the prompt file and defaults to the highest version present. `promptsDirectory` defaults to the repository's `prompts/`, `maxChunkLines` to `defaultMaxChunkLines`
+- `reviewCode({ changedFiles, llmClient, auditSink, runId, isLlmEnabled, contextLines, modelId, promptVersion, promptsDirectory, maxChunkLines })`: reviews the changed files and returns a `CodeReviewResult`. `promptVersion` picks the prompt file and defaults to the highest version present, which is v3. The pipeline passes the live version from `config/review.json`, which is also v3. `promptsDirectory` defaults to the repository's `prompts/`, `maxChunkLines` to `defaultMaxChunkLines`
 - `ReviewCodeOptions`: the options `reviewCode` takes
 - `CodeReviewResult`: `findings` as `CodeReviewFinding[]`, `groundingRejectionCount`, `injectionAttemptCount`, `failedChunkCount`, `promptVersion` and `unreviewedFiles`, the files with a chunk the review stopped before
 - `ReviewCodeOptions.isStopError`: the predicate naming the chunk error the review stops on instead of propagating. The stop is noted and the findings of the finished chunks are kept
@@ -78,11 +78,12 @@ LLM code review of the diff for security issues, grounded in evidence: the chang
 - `fixtures/memory-audit-sink.ts`: `createMemoryAuditSink()` returning a `MemoryAuditSink` whose `events` array holds every written event
 - `fixtures/fenced-content.ts`: `readFencedContent({ text, openTag, closeTag })` with `ReadFencedContentOptions`, the content between the tags of a fenced text, throwing when a tag is missing or the text is shorter than both tag lines
 - `fixtures/markdown-fenced-blocks.ts`: `readFencedBlocks({ text, title })` with `ReadFencedBlocksOptions`, every fenced code block of a markdown text as a `FencedBlock` of `{ infoString, content }`, throwing when a block never closes, and `findFencedBlock({ fencedBlocks, infoString, title })` with `FindFencedBlockOptions`, the content of the first block with that info string
+- `fixtures/shipped-prompt-versions.ts`: `loadShippedPromptVersions()` returning every `v<N>.md` of the code review prompt in ascending version order as a `ShippedPromptVersion` of `{ template, fileText }`
 - `fixtures/review-harness.ts`: `runReview({ changedFiles, replies, isLlmEnabled, contextLines, maxChunkLines, clientModelId, reviewModelId })` with `RunReviewOptions`, returning a `ReviewRun` of `{ codeReviewResult, provider, auditSink }`; `buildOutputReply({ findings, injectionAttempts })` with `BuildOutputReplyOptions`, `emptyOutputReply`, `assemblePacket({ changedFiles, maxChunkLines })` with `AssemblePacketOptions`, `readAddedLineText(changedFile, index)`, `findCodeReviewEvents(auditSink)`, `findNotePayloads(auditSink, message)`, `findFindingEvents(auditSink)`, and the constants `reviewRunId`, `defaultClientModelId` and `defaultReviewModelId` the review tests share
 
 ## Inputs and outputs
 
-`reviewCode` takes `ChangedFile` values from `src/shared/pull-request-source.ts`, an `LlmClient` from `src/shared/llm.ts` and an `AuditSink` from `src/shared/audit.ts`. `contextLines` is the caller's context setting, the `contextLines` of `ReviewOptions` in `src/shared/review.ts`, which `config/review.json` sets to 30. It must be the value the pull request source produced its hunks with, because the packet caps context and never adds it. The pipeline change that wires `reviewCode` to a source is not written yet. It reads `prompts/code-review/v<N>.md` through the prompts module, taking the highest version. It produces `CodeReviewFinding` values from `src/shared/finding.ts`, each parsed through `codeReviewFindingSchema`, with `isIntroducedByPullRequest` true, `promptVersion` from the loaded template and `model` from `modelId`.
+`reviewCode` takes `ChangedFile` values from `src/shared/pull-request-source.ts`, an `LlmClient` from `src/shared/llm.ts` and an `AuditSink` from `src/shared/audit.ts`. `contextLines` is the caller's context setting, the `contextLines` of `ReviewOptions` in `src/shared/review.ts`, which `config/review.json` sets to 30. It must be the value the pull request source produced its hunks with, because the packet caps context and never adds it. The pipeline change that wires `reviewCode` to a source is not written yet. It reads `prompts/code-review/v<N>.md` through the prompts module, taking the version it is given or else the highest one. Three versions ship. v1 is the baseline rubric. v2 admits a hard-coded credential as CWE-798 in rule 2. It was a discarded benchmark candidate and nothing points at it. v3 is v1 plus rule 9, which treats code the pull request only moves inside one chunk as pre-existing, and a fourth worked example titled moved code. `docs/benchmark-log.md` records why v3 is live. It produces `CodeReviewFinding` values from `src/shared/finding.ts`, each parsed through `codeReviewFindingSchema`, with `isIntroducedByPullRequest` true, `promptVersion` from the loaded template and `model` from `modelId`.
 
 It writes these audit events under the step `code-review`, every one a `note` unless stated:
 
@@ -105,7 +106,7 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - `prompt-version.test.ts`: the given prompt version is loaded, and the highest version is loaded without one
 - `review-code.ts`: `reviewCode`, the session, the disabled path, the packet note, the chunk loop, the totals, dedupe, finding shaping with `createFindingId` and the finding events
-- `review-code.test.ts`: against the fake provider through the harness: the disabled run, one request per chunk in packet order with the user turn equal to the fence of each chunk text, a file split into three chunks sent in chunk order, the fence described in the system turn, a provider error rethrown, the finding shape with its provenance on a review model that differs from the client model and a 16 hex id that is stable across runs and differs by CWE, and the packet note and finding events
+- `review-code.test.ts`: against the fake provider through the harness: the disabled run, one request per chunk in packet order with the user turn equal to the fence of each chunk text, a file split into three chunks sent in chunk order, the fence described in the system turn, a provider error rethrown, the finding shape with its provenance and the highest shipped prompt version on a review model that differs from the client model and a 16 hex id that is stable across runs and differs by CWE, and the packet note and finding events
 - `review-code-answers.test.ts`: the answers of the fake provider: injection attempts as notes with their count, a fabricated evidence line dropped with a note and the count, each other grounding rejection reason dropped with a note naming it, a grounded finding kept, a duplicate across two chunks collapsed to the higher confidence, two CWEs on one range both kept, and the schema failure path skipping one chunk and keeping the other
 - `review-chunk.ts`: `reviewChunk`, the prompt build and model call with the validation failure caught, the injection notes, grounding and the grounding notes
 - `review-packet.ts`: `assembleReviewPacket`, the input validation, the path sort, the skip split, the context cap, hunk rendering, chunk packing, chunk text and the hash
@@ -116,8 +117,8 @@ Bun and Node built-ins and npm packages are always allowed.
 - `skip-rules.ts`: `findSkipReason`, the lockfile names, the generated segments, suffixes and infix, and the added line check over both `addedLines` and the hunks
 - `skip-rules.test.ts`: a modified source file with added lines kept, each reason, the check order, a file with added lines listed but no added hunk line, a file with no hunks, every lockfile name and generated pattern, a source file named like a lockfile kept, and a segment or name that only resembles a generated one kept
 - `review-prompt.ts`: `buildReviewPrompt`, the variable check and `codeReviewPromptId`
-- `review-prompt.test.ts`: the fence as the user turn, the chunk byte for byte inside it, the fence described in the system turn with the whole rendered allowlist, no placeholder left, a `{{name}}` in the chunk staying in the user turn, a template whose text lacks a placeholder rejected, and the shipped prompt loading as version 1 with the two variables and naming both output fields
-- `prompt-examples.test.ts`: the three worked examples titled true positive, tricky negative and pre-existing issue, each present in the loaded rubric, parsed back into a changed file and re-rendered through the packet byte for byte, its answer passing the output schema, every finding in it grounded, one finding for the true positive and none for the two negatives. The parser accepts exactly the packet format: a removed line shows 0 and every other line a positive head line, a new hunk starts at each `@@` line and a `renamed from:` header needs the status renamed
+- `review-prompt.test.ts`: the fence as the user turn, the chunk byte for byte inside it, the fence described in the system turn with the whole rendered allowlist, no placeholder left, a `{{name}}` in the chunk staying in the user turn, a template whose text lacks a placeholder rejected, and every shipped version loading with the two variables, rendering every allowed CWE and the fence with no placeholder left, and naming both output fields. Versions count up from 1 with no gap, v1 keeps its shipped hash, and v2 holds the credential exception
+- `prompt-examples.test.ts`: per shipped version, the worked examples open with true positive, tricky negative and pre-existing issue, and any later example is a known one. A moved code example is present exactly when the rubric has the moved-code rule. Each example is present in the loaded rubric, parsed back into a changed file and re-rendered through the packet byte for byte, and its answer passes the output schema with every finding grounded. The true positive has one finding and every other example none. The parser accepts exactly the packet format: a removed line shows 0 and every other line a positive head line, a new hunk starts at each `@@` line and a `renamed from:` header needs the status renamed
 - `model-output.ts`: the model answer schema with a description on every field
 - `model-output.test.ts`: a round trip, an empty answer, the sample finding accepted, and rejections of empty evidence, an unknown severity, line 0 and confidence 1.5
 - `vulnerability-type-allowlist.ts`: `allowedVulnerabilityTypes`, `isAllowedVulnerabilityType` and `renderVulnerabilityTypeAllowlist`
@@ -135,6 +136,7 @@ Bun and Node built-ins and npm packages are always allowed.
 - `fixtures/fenced-content.ts`: the fence content reader the prompt and review tests share
 - `fixtures/markdown-fenced-blocks.ts`: the fenced code block reader the prompt examples test uses
 - `fixtures/review-harness.ts`: the review test harness
+- `fixtures/shipped-prompt-versions.ts`: the loader of every shipped prompt version the prompt tests share
 - `tsconfig.json`: the module's composite TypeScript project. It references shared, llm and prompts
 - `AGENTS.md`: this file
 
@@ -153,7 +155,8 @@ Bun and Node built-ins and npm packages are always allowed.
 
 - The prompt file renders into the system turn with `fence_description` from `describeFence` and `vulnerability_type_allowlist` from `renderVulnerabilityTypeAllowlist`. The user turn is the chunk text fenced with the label `diff` and nothing else, so instructions and data never share a turn. A template whose text does not use both placeholders is rejected before any call.
 - The CWE allowlist lives in `vulnerability-type-allowlist.ts` only and holds only classes where the model can name an input or a caller, because the rubric demands a named input. Missing or incorrect authentication and authorization stay in, because the unauthenticated request is the input. The prompt sees what the grounding filter checks.
-- The three worked examples in the prompt render through `assembleReviewPacket` byte for byte and their answers pass the output schema and the grounding filter. A test enforces it, so the examples cannot drift from the renderer and a renderer change fails that test. The prose of the packet format section is not checked and is updated by hand.
+- A prompt change is a new `v<N>.md` with the next version number. v1 is never edited, and a test pins its hash.
+- The worked examples of every shipped version render through `assembleReviewPacket` byte for byte and their answers pass the output schema and the grounding filter. A test enforces it, so the examples cannot drift from the renderer and a renderer change fails that test. The prose of the packet format section is not checked and is updated by hand.
 - Chunks are reviewed one after another, so canned replies in a test land in packet order.
 
 ### Grounding rules
@@ -170,14 +173,16 @@ Bun and Node built-ins and npm packages are always allowed.
 
 ## How to test
 
-`bun test src/code-review` runs every test in the module, the fixture tests included. The review tests build an llm client on the fake provider with zero-priced models and the memory audit sink through `fixtures/review-harness.ts`, so no test needs a network, a key or the cache. `bun test src/prompts/prompt-files.test.ts` loads the shipped prompt. `bun check src/code-review` type-checks the module.
+`bun test src/code-review` runs every test in the module, the fixture tests included. The review tests build an llm client on the fake provider with zero-priced models and the memory audit sink through `fixtures/review-harness.ts`, so no test needs a network, a key or the cache. `bun test src/prompts/prompt-files.test.ts` loads the shipped prompt. `docs/benchmark-log.md` records the benchmark runs behind the live version. `bun check src/code-review` type-checks the module.
 
 ## Known gaps
 
-- No verifier pass: a grounded finding is never re-asked. Few-shot examples drawn from benchmark failures are also left to the improvement change.
+- No verifier pass: a grounded finding is never re-asked. No few-shot examples are drawn from benchmark failures.
+- A move across files looks like new code. The file the code leaves has no added lines, so the packet skips it and the model sees only the file the code arrives in. The moved-code rule of v3 covers only a move inside one chunk.
+- The model often names a neighboring CWE that the scorer does not join with the labeled one, such as CWE-287 for CWE-347, CWE-94 for CWE-95 and CWE-1333 for CWE-400. A CWE family hint list in the rubric is the next benchmark candidate.
 - Chunks run one at a time. A large pull request waits on each call in turn.
 - The grounding filter accepts any evidence line of the file, not only lines inside the finding's range or inside the chunk the model saw.
 - An injection attempt is recorded as the model reports it. Its file and line are not checked against the packet.
 - The model is told that a chunk may be part of a larger file, but a chunk never carries lines from another chunk, so a weakness that spans two chunks can be missed.
-- Weaknesses with no untrusted input, such as hard-coded credentials, weak algorithms, cleartext storage and weak randomness, are outside the allowlist. The secrets detector covers credentials.
+- Weaknesses with no untrusted input, such as hard-coded credentials, weak algorithms, cleartext storage and weak randomness, are outside the allowlist. The secrets detector covers credentials. Adding CWE-798 was measured and discarded: the reviewer then also reported credentials the secrets detector owns.
 - On the llm client's one validation retry, the correction it appends sits after the fence's close tag in the user turn.

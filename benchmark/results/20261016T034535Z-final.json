@@ -1,0 +1,1660 @@
+{
+  "label": "final",
+  "split": "test",
+  "startedAt": "2026-10-16T03:45:35.257Z",
+  "finishedAt": "2026-10-16T03:46:31.704Z",
+  "gitSha": "795f30d33fc07c92df739e3e507113d81c25d4b6",
+  "promptVersions": {
+    "code-review": "3",
+    "summarize": "1"
+  },
+  "modelIds": {
+    "code-review": "anthropic/claude-sonnet-5-5",
+    "summarize": "anthropic/claude-haiku-5-5"
+  },
+  "advisorySnapshotDate": "2026-10-15T21:47:35.942Z",
+  "isLlmCacheUsed": true,
+  "score": {
+    "precision": 0.875,
+    "recall": 0.6363636363636364,
+    "f1": 0.7368421052631579,
+    "byDetector": {
+      "code-review": {
+        "precision": 0.75,
+        "recall": 0.42857142857142855,
+        "f1": 0.5454545454545454
+      },
+      "dependency": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "secrets": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      }
+    },
+    "byCategory": {
+      "clean": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0
+      },
+      "code": {
+        "precision": 0.75,
+        "recall": 0.6,
+        "f1": 0.6666666666666665
+      },
+      "dependency": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "real-world": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0
+      },
+      "secrets": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      }
+    },
+    "falsePositivesOnClean": 0,
+    "totalCostUsd": 0.2100245,
+    "totalDurationMs": 56357,
+    "caseResults": [
+      {
+        "caseId": "clean-11-add-type-annotations",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-12-config-default-changed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-13-error-handling-added",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-14-comment-only-change",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "clean-15-safe-redirect-allowlist",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-11-open-redirect",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-12-missing-authorization-admin",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-13-redos-user-input",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "code-14-insecure-deserialization",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "code-15-directory-listing-uploads",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "dependency-09-imported-through-subpath",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-10-bun-lock-only",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-11-package-lock-only",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "dependency-12-bump-to-fixed-version",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      },
+      {
+        "caseId": "real-world-03-qs",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "real-world-06-express",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "secrets-04-generic-high-entropy-token",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0
+      }
+    ],
+    "caseDetails": [
+      {
+        "caseId": "clean-11-add-type-annotations",
+        "category": "clean",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009838,
+        "durationMs": 1695
+      },
+      {
+        "caseId": "clean-12-config-default-changed",
+        "category": "clean",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009482,
+        "durationMs": 1065
+      },
+      {
+        "caseId": "clean-13-error-handling-added",
+        "category": "clean",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009698,
+        "durationMs": 1218
+      },
+      {
+        "caseId": "clean-14-comment-only-change",
+        "category": "clean",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009546,
+        "durationMs": 1739
+      },
+      {
+        "caseId": "clean-15-safe-redirect-allowlist",
+        "category": "clean",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.019818,
+        "durationMs": 2618
+      },
+      {
+        "caseId": "code-11-open-redirect",
+        "category": "code",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-601",
+              "file": "src/redirects.ts",
+              "startLine": 8,
+              "endLine": 9
+            },
+            "predictedFinding": {
+              "id": "9c00e2f18dba8faf",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.85,
+              "title": "Open redirect to any absolute http(s) URL",
+              "file": "src/redirects.ts",
+              "startLine": 8,
+              "endLine": 10,
+              "isIntroducedByPullRequest": true,
+              "summary": "The redirect helper in src/redirects.ts sends users to any absolute http or https URL passed in as the target. Because the check that should keep redirects inside the app is skipped for these URLs, an attacker can craft a link on the real app domain that bounces victims to a malicious site. This open redirect (CWE-601) is useful for phishing and credential theft because the link appears to come from a trusted origin.",
+              "remediation": "Remove the branch at lines 8-10 that returns Response.redirect for absolute http or https targets, so every target goes through the relative-path check. If external redirects are required, validate the target against an explicit allowlist of hostnames before redirecting.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-601",
+              "evidence": [
+                "  if (target.startsWith('http://') || target.startsWith('https://')) {",
+                "    return Response.redirect(target, 302)",
+                "  }"
+              ],
+              "sourceToSink": "The target argument of redirectWithinApp, which is attacker-controlled by name and purpose, is redirected through Response.redirect whenever it starts with http:// or https://, skipping the relative-path check.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.012464199999999998,
+        "durationMs": 5369
+      },
+      {
+        "caseId": "code-12-missing-authorization-admin",
+        "category": "code",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-862",
+              "file": "src/server.ts",
+              "startLine": 72,
+              "endLine": 76
+            },
+            "predictedFinding": {
+              "id": "80cdc436b9a6f2b0",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.6,
+              "title": "Admin user listing lacks a role check",
+              "file": "src/server.ts",
+              "startLine": 70,
+              "endLine": 77,
+              "isIntroducedByPullRequest": true,
+              "summary": "The /admin/users handler in src/server.ts returns every user's id, name and role to any signed-in user. It checks that the session token is valid but never checks that the caller is an admin, so a regular non-admin account can list all users. This is a missing authorization check (CWE-862) that exposes account data to people who should not see it.",
+              "remediation": "Before running the SELECT in the /admin/users handler, verify that the authenticated user's role is admin and return an authorization error (such as 403) otherwise. Add a test that a non-admin session token is rejected on this route.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-862",
+              "evidence": [
+                "    '/admin/users': (request) => {",
+                "      const users = database.query('SELECT id, name, role FROM users').all()"
+              ],
+              "sourceToSink": "A session token from any signed-in non-admin user passes verifySessionToken and reaches the database query that returns every user's id, name and role.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.016953,
+        "durationMs": 8399
+      },
+      {
+        "caseId": "code-13-redos-user-input",
+        "category": "code",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "code-review",
+              "vulnerabilityType": "CWE-1333",
+              "file": "src/server.ts",
+              "startLine": 30,
+              "endLine": 35
+            },
+            "predictedFinding": {
+              "id": "173d36fb933a0717",
+              "detector": "code-review",
+              "severity": "medium",
+              "confidence": 0.85,
+              "title": "User-controlled pattern compiled into a nested-quantifier RegExp",
+              "file": "src/server.ts",
+              "startLine": 30,
+              "endLine": 35,
+              "isIntroducedByPullRequest": true,
+              "summary": "The pattern query parameter from the request is inserted directly into a RegExp wrapped in a nested quantifier, `^(${pattern}+)+$`, and then tested against every user name. A crafted pattern can make the regex engine backtrack catastrophically, so one request can block the Node.js event loop and deny service to all other users. This is a ReDoS issue (CWE-1333) because user input controls the regex structure.",
+              "remediation": "Stop building a RegExp from the raw query parameter: replace the pattern parameter with a plain substring or prefix match (for example, user.name.includes(pattern) or startsWith) with no regex, or if regex is required, use a safe engine such as RE2 and validate the input against a strict allow-list. Remove the nested quantifier wrapper `(${pattern}+)+` entirely and add a test with a long crafted pattern to confirm the request returns quickly.",
+              "summarySource": "model",
+              "vulnerabilityType": "CWE-1333",
+              "evidence": [
+                "      const pattern = new URL(request.url).searchParams.get('pattern') ?? ''",
+                "      const nameMatcher = new RegExp(`^(${pattern}+)+$`)",
+                "      const matchingUsers = users.filter((user) => nameMatcher.test(user.name))"
+              ],
+              "sourceToSink": "The pattern query parameter is embedded in a RegExp with a nested quantifier `(${pattern}+)+` and tested against every user name, so a crafted pattern causes catastrophic backtracking that blocks the event loop.",
+              "promptVersion": "3",
+              "model": "anthropic/claude-sonnet-5-5"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.0135253,
+        "durationMs": 5954
+      },
+      {
+        "caseId": "code-14-insecure-deserialization",
+        "category": "code",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-502",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 107
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.012316,
+        "durationMs": 2874
+      },
+      {
+        "caseId": "code-15-directory-listing-uploads",
+        "category": "code",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 1,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [
+          {
+            "id": "19e26ad0a17f4933",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.6,
+            "title": "Stored XSS from unescaped upload file names in the /uploads listing",
+            "file": "src/server.ts",
+            "startLine": 105,
+            "endLine": 109,
+            "isIntroducedByPullRequest": true,
+            "summary": "The /uploads listing in src/server.ts builds HTML by inserting uploaded file names directly into the markup without escaping. Because an uploader can control those names, a crafted file name containing HTML or script can execute in the browser of anyone who views the listing, which is a stored cross-site scripting (CWE-79) risk, rated medium.",
+            "remediation": "Escape each file name before interpolating it into the HTML, for example by encoding &, <, >, \" and ' characters, and apply the same escaping to the href value. Alternatively, render the listing with a templating engine that auto-escapes output, and serve the response with a restrictive Content-Security-Policy.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-79",
+            "evidence": [
+              "          `<li><a href=\"/uploads/${uploadName}\">${uploadName}</a></li>`,"
+            ],
+            "sourceToSink": "Names of files stored by the upload route, which an uploader can influence, are read from the uploads directory and interpolated unescaped into an HTML response served as text/html.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        ],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-548",
+            "file": "src/server.ts",
+            "startLine": 104,
+            "endLine": 109
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.018872,
+        "durationMs": 10541
+      },
+      {
+        "caseId": "dependency-09-imported-through-subpath",
+        "category": "dependency",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "lodash",
+              "advisoryId": "GHSA-29mw-wpgm-hmr9"
+            },
+            "predictedFinding": {
+              "id": "a69bde101a1c654c",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "lodash@4.17.20 is affected by GHSA-29mw-wpgm-hmr9",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The lodash 4.17.20 package installed in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue in the toNumber, trim and trimEnd functions. Crafted long strings with many repeated whitespace characters can make these calls take a very long time, which can tie up CPU. The package is a direct production dependency and is imported directly, so the vulnerable code path is reachable.",
+              "remediation": "Upgrade lodash to version 4.17.21 in bun.lock and the package manifest, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
+              "summarySource": "model",
+              "packageName": "lodash",
+              "version": "4.17.20",
+              "advisoryId": "GHSA-29mw-wpgm-hmr9",
+              "aliases": ["CVE-2020-28500"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "direct-imported",
+              "importedBy": ["src/config.ts"],
+              "dependencyPath": ["lodash@4.17.20"],
+              "fixedVersions": ["4.17.21"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "ecc3348cca0152d4",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.20 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.20 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.21 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.20",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.20"],
+            "fixedVersions": ["4.17.21", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "3a2eac58f301f7aa",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.20 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.20 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.20",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.20"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.009426,
+        "durationMs": 1400
+      },
+      {
+        "caseId": "dependency-10-bun-lock-only",
+        "category": "dependency",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "jws",
+              "advisoryId": "GHSA-869p-cjfg-cm3x"
+            },
+            "predictedFinding": {
+              "id": "4ad3bb2c71aea3a1",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+              "file": "bun.lock",
+              "isIntroducedByPullRequest": true,
+              "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
+              "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
+              "summarySource": "model",
+              "packageName": "jws",
+              "version": "3.2.2",
+              "advisoryId": "GHSA-869p-cjfg-cm3x",
+              "aliases": ["CVE-2025-65945"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "transitive",
+              "importedBy": [],
+              "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+              "fixedVersions": ["3.2.3"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0,
+        "durationMs": 61
+      },
+      {
+        "caseId": "dependency-11-package-lock-only",
+        "category": "dependency",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "dependency",
+              "packageName": "jws",
+              "advisoryId": "GHSA-869p-cjfg-cm3x"
+            },
+            "predictedFinding": {
+              "id": "9d3cf45d9b068ee3",
+              "detector": "dependency",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+              "file": "package-lock.json",
+              "isIntroducedByPullRequest": true,
+              "summary": "The jws package at version 3.2.2 (pulled in as a transitive production dependency through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS protected header or payload in its HMAC secret lookup. Applications that use jws.verify() (including jsonwebtoken users), use only asymmetric algorithms such as RS256, or do not use such user-provided data in secret lookups are not affected. Exposure therefore depends on how the application calls jws, so it should be checked rather than assumed.",
+              "remediation": "Upgrade the jws package to version 3.2.3 in package-lock.json, for example by updating jsonwebtoken so that it resolves jws 3.2.3 or later, and then confirm that no code calls jws.createVerify() with HMAC secrets derived from unvalidated header or payload data.",
+              "summarySource": "model",
+              "packageName": "jws",
+              "version": "3.2.2",
+              "advisoryId": "GHSA-869p-cjfg-cm3x",
+              "aliases": ["CVE-2025-65945"],
+              "isGithubReviewed": true,
+              "dependencyScope": "production",
+              "reachability": "transitive",
+              "importedBy": [],
+              "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+              "fixedVersions": ["3.2.3"],
+              "isVersionUnparseable": false,
+              "matcherAgreement": "both"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "b6c6a6f0ff18ffd3",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "package-lock.json",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "6dfbc884c3c681e9",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "package-lock.json",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0,
+        "durationMs": 62
+      },
+      {
+        "caseId": "dependency-12-bump-to-fixed-version",
+        "category": "dependency",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [
+          {
+            "id": "741c8e54ad65d848",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.18.0 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-35jh-r3h4-6jhm",
+            "aliases": [
+              "CVE-2021-23337",
+              "CVE-2026-4800",
+              "GHSA-r5fr-rjxr-66jc"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          },
+          {
+            "id": "d9aa96b1dea1b7b8",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": false,
+            "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+            "remediation": "Upgrade lodash to 4.17.23 or later.",
+            "summarySource": "template",
+            "packageName": "lodash",
+            "version": "4.17.21",
+            "advisoryId": "GHSA-f23m-r3pf-42rh",
+            "aliases": [
+              "CVE-2025-13465",
+              "CVE-2026-2950",
+              "GHSA-xxjr-mmjv-4gpg"
+            ],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.21"],
+            "fixedVersions": ["4.17.23", "4.18.0"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        ],
+        "costUsd": 0.00935,
+        "durationMs": 1259
+      },
+      {
+        "caseId": "real-world-03-qs",
+        "category": "real-world",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-gqgv-6jq5-jjj9",
+            "vulnerabilityType": "CWE-20",
+            "file": "lib/parse.js",
+            "startLine": 58,
+            "endLine": 116
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.026328,
+        "durationMs": 6189
+      },
+      {
+        "caseId": "real-world-06-express",
+        "category": "real-world",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-qw6h-vgh9-j6wx",
+            "vulnerabilityType": "CWE-79",
+            "file": "lib/response.js",
+            "startLine": 972,
+            "endLine": 972
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.02257,
+        "durationMs": 4907
+      },
+      {
+        "caseId": "secrets-04-generic-high-entropy-token",
+        "category": "secrets",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "matchedPairs": [
+          {
+            "expectedFinding": {
+              "detector": "secrets",
+              "file": "src/metrics.ts",
+              "startLine": 4
+            },
+            "predictedFinding": {
+              "id": "e7b7403e62fa86ff",
+              "detector": "secrets",
+              "severity": "medium",
+              "confidence": 0.5,
+              "title": "Hardcoded secret assignment added in src/metrics.ts",
+              "file": "src/metrics.ts",
+              "startLine": 4,
+              "endLine": 4,
+              "isIntroducedByPullRequest": true,
+              "summary": "A hardcoded secret value was added to src/metrics.ts at line 4 and flagged by the generic-secret rule. Committing credentials in source code exposes them to anyone with repository access, including its history, and they can be reused against the service they protect.",
+              "remediation": "Remove the literal secret from src/metrics.ts line 4 and load it from an environment variable or a secrets manager instead. Rotate the exposed credential, since it remains in git history, and confirm the new value is not committed.",
+              "summarySource": "model",
+              "ruleId": "generic-secret",
+              "fingerprint": "feff02663d60"
+            }
+          }
+        ],
+        "unmatchedPredictions": [],
+        "missedExpectations": [],
+        "preExistingFindings": [],
+        "costUsd": 0.009838,
+        "durationMs": 1007
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "clean-11-add-type-annotations",
+      "category": "clean",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009838,
+      "durationMs": 1695
+    },
+    {
+      "caseId": "clean-12-config-default-changed",
+      "category": "clean",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009482,
+      "durationMs": 1065
+    },
+    {
+      "caseId": "clean-13-error-handling-added",
+      "category": "clean",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009698,
+      "durationMs": 1218
+    },
+    {
+      "caseId": "clean-14-comment-only-change",
+      "category": "clean",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009546,
+      "durationMs": 1739
+    },
+    {
+      "caseId": "clean-15-safe-redirect-allowlist",
+      "category": "clean",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.019818,
+      "durationMs": 2618
+    },
+    {
+      "caseId": "code-11-open-redirect",
+      "category": "code",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-601",
+            "file": "src/redirects.ts",
+            "startLine": 8,
+            "endLine": 9
+          },
+          "predictedFinding": {
+            "id": "9c00e2f18dba8faf",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.85,
+            "title": "Open redirect to any absolute http(s) URL",
+            "file": "src/redirects.ts",
+            "startLine": 8,
+            "endLine": 10,
+            "isIntroducedByPullRequest": true,
+            "summary": "The redirect helper in src/redirects.ts sends users to any absolute http or https URL passed in as the target. Because the check that should keep redirects inside the app is skipped for these URLs, an attacker can craft a link on the real app domain that bounces victims to a malicious site. This open redirect (CWE-601) is useful for phishing and credential theft because the link appears to come from a trusted origin.",
+            "remediation": "Remove the branch at lines 8-10 that returns Response.redirect for absolute http or https targets, so every target goes through the relative-path check. If external redirects are required, validate the target against an explicit allowlist of hostnames before redirecting.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-601",
+            "evidence": [
+              "  if (target.startsWith('http://') || target.startsWith('https://')) {",
+              "    return Response.redirect(target, 302)",
+              "  }"
+            ],
+            "sourceToSink": "The target argument of redirectWithinApp, which is attacker-controlled by name and purpose, is redirected through Response.redirect whenever it starts with http:// or https://, skipping the relative-path check.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.012464199999999998,
+      "durationMs": 5369
+    },
+    {
+      "caseId": "code-12-missing-authorization-admin",
+      "category": "code",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-862",
+            "file": "src/server.ts",
+            "startLine": 72,
+            "endLine": 76
+          },
+          "predictedFinding": {
+            "id": "80cdc436b9a6f2b0",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.6,
+            "title": "Admin user listing lacks a role check",
+            "file": "src/server.ts",
+            "startLine": 70,
+            "endLine": 77,
+            "isIntroducedByPullRequest": true,
+            "summary": "The /admin/users handler in src/server.ts returns every user's id, name and role to any signed-in user. It checks that the session token is valid but never checks that the caller is an admin, so a regular non-admin account can list all users. This is a missing authorization check (CWE-862) that exposes account data to people who should not see it.",
+            "remediation": "Before running the SELECT in the /admin/users handler, verify that the authenticated user's role is admin and return an authorization error (such as 403) otherwise. Add a test that a non-admin session token is rejected on this route.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-862",
+            "evidence": [
+              "    '/admin/users': (request) => {",
+              "      const users = database.query('SELECT id, name, role FROM users').all()"
+            ],
+            "sourceToSink": "A session token from any signed-in non-admin user passes verifySessionToken and reaches the database query that returns every user's id, name and role.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.016953,
+      "durationMs": 8399
+    },
+    {
+      "caseId": "code-13-redos-user-input",
+      "category": "code",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "code-review",
+            "vulnerabilityType": "CWE-1333",
+            "file": "src/server.ts",
+            "startLine": 30,
+            "endLine": 35
+          },
+          "predictedFinding": {
+            "id": "173d36fb933a0717",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.85,
+            "title": "User-controlled pattern compiled into a nested-quantifier RegExp",
+            "file": "src/server.ts",
+            "startLine": 30,
+            "endLine": 35,
+            "isIntroducedByPullRequest": true,
+            "summary": "The pattern query parameter from the request is inserted directly into a RegExp wrapped in a nested quantifier, `^(${pattern}+)+$`, and then tested against every user name. A crafted pattern can make the regex engine backtrack catastrophically, so one request can block the Node.js event loop and deny service to all other users. This is a ReDoS issue (CWE-1333) because user input controls the regex structure.",
+            "remediation": "Stop building a RegExp from the raw query parameter: replace the pattern parameter with a plain substring or prefix match (for example, user.name.includes(pattern) or startsWith) with no regex, or if regex is required, use a safe engine such as RE2 and validate the input against a strict allow-list. Remove the nested quantifier wrapper `(${pattern}+)+` entirely and add a test with a long crafted pattern to confirm the request returns quickly.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-1333",
+            "evidence": [
+              "      const pattern = new URL(request.url).searchParams.get('pattern') ?? ''",
+              "      const nameMatcher = new RegExp(`^(${pattern}+)+$`)",
+              "      const matchingUsers = users.filter((user) => nameMatcher.test(user.name))"
+            ],
+            "sourceToSink": "The pattern query parameter is embedded in a RegExp with a nested quantifier `(${pattern}+)+` and tested against every user name, so a crafted pattern causes catastrophic backtracking that blocks the event loop.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.0135253,
+      "durationMs": 5954
+    },
+    {
+      "caseId": "code-14-insecure-deserialization",
+      "category": "code",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-502",
+          "file": "src/server.ts",
+          "startLine": 104,
+          "endLine": 107
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.012316,
+      "durationMs": 2874
+    },
+    {
+      "caseId": "code-15-directory-listing-uploads",
+      "category": "code",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 1,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [
+        {
+          "id": "19e26ad0a17f4933",
+          "detector": "code-review",
+          "severity": "medium",
+          "confidence": 0.6,
+          "title": "Stored XSS from unescaped upload file names in the /uploads listing",
+          "file": "src/server.ts",
+          "startLine": 105,
+          "endLine": 109,
+          "isIntroducedByPullRequest": true,
+          "summary": "The /uploads listing in src/server.ts builds HTML by inserting uploaded file names directly into the markup without escaping. Because an uploader can control those names, a crafted file name containing HTML or script can execute in the browser of anyone who views the listing, which is a stored cross-site scripting (CWE-79) risk, rated medium.",
+          "remediation": "Escape each file name before interpolating it into the HTML, for example by encoding &, <, >, \" and ' characters, and apply the same escaping to the href value. Alternatively, render the listing with a templating engine that auto-escapes output, and serve the response with a restrictive Content-Security-Policy.",
+          "summarySource": "model",
+          "vulnerabilityType": "CWE-79",
+          "evidence": [
+            "          `<li><a href=\"/uploads/${uploadName}\">${uploadName}</a></li>`,"
+          ],
+          "sourceToSink": "Names of files stored by the upload route, which an uploader can influence, are read from the uploads directory and interpolated unescaped into an HTML response served as text/html.",
+          "promptVersion": "3",
+          "model": "anthropic/claude-sonnet-5-5"
+        }
+      ],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "vulnerabilityType": "CWE-548",
+          "file": "src/server.ts",
+          "startLine": 104,
+          "endLine": 109
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.018872,
+      "durationMs": 10541
+    },
+    {
+      "caseId": "dependency-09-imported-through-subpath",
+      "category": "dependency",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "lodash",
+            "advisoryId": "GHSA-29mw-wpgm-hmr9"
+          },
+          "predictedFinding": {
+            "id": "a69bde101a1c654c",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "lodash@4.17.20 is affected by GHSA-29mw-wpgm-hmr9",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The lodash 4.17.20 package installed in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue in the toNumber, trim and trimEnd functions. Crafted long strings with many repeated whitespace characters can make these calls take a very long time, which can tie up CPU. The package is a direct production dependency and is imported directly, so the vulnerable code path is reachable.",
+            "remediation": "Upgrade lodash to version 4.17.21 in bun.lock and the package manifest, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
+            "summarySource": "model",
+            "packageName": "lodash",
+            "version": "4.17.20",
+            "advisoryId": "GHSA-29mw-wpgm-hmr9",
+            "aliases": ["CVE-2020-28500"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "direct-imported",
+            "importedBy": ["src/config.ts"],
+            "dependencyPath": ["lodash@4.17.20"],
+            "fixedVersions": ["4.17.21"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "ecc3348cca0152d4",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.20 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.20 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.21 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.20",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.20"],
+          "fixedVersions": ["4.17.21", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "3a2eac58f301f7aa",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.20 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.20 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.20",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.20"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.009426,
+      "durationMs": 1400
+    },
+    {
+      "caseId": "dependency-10-bun-lock-only",
+      "category": "dependency",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "jws",
+            "advisoryId": "GHSA-869p-cjfg-cm3x"
+          },
+          "predictedFinding": {
+            "id": "4ad3bb2c71aea3a1",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+            "file": "bun.lock",
+            "isIntroducedByPullRequest": true,
+            "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
+            "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
+            "summarySource": "model",
+            "packageName": "jws",
+            "version": "3.2.2",
+            "advisoryId": "GHSA-869p-cjfg-cm3x",
+            "aliases": ["CVE-2025-65945"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "transitive",
+            "importedBy": [],
+            "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+            "fixedVersions": ["3.2.3"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0,
+      "durationMs": 61
+    },
+    {
+      "caseId": "dependency-11-package-lock-only",
+      "category": "dependency",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "dependency",
+            "packageName": "jws",
+            "advisoryId": "GHSA-869p-cjfg-cm3x"
+          },
+          "predictedFinding": {
+            "id": "9d3cf45d9b068ee3",
+            "detector": "dependency",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
+            "file": "package-lock.json",
+            "isIntroducedByPullRequest": true,
+            "summary": "The jws package at version 3.2.2 (pulled in as a transitive production dependency through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS protected header or payload in its HMAC secret lookup. Applications that use jws.verify() (including jsonwebtoken users), use only asymmetric algorithms such as RS256, or do not use such user-provided data in secret lookups are not affected. Exposure therefore depends on how the application calls jws, so it should be checked rather than assumed.",
+            "remediation": "Upgrade the jws package to version 3.2.3 in package-lock.json, for example by updating jsonwebtoken so that it resolves jws 3.2.3 or later, and then confirm that no code calls jws.createVerify() with HMAC secrets derived from unvalidated header or payload data.",
+            "summarySource": "model",
+            "packageName": "jws",
+            "version": "3.2.2",
+            "advisoryId": "GHSA-869p-cjfg-cm3x",
+            "aliases": ["CVE-2025-65945"],
+            "isGithubReviewed": true,
+            "dependencyScope": "production",
+            "reachability": "transitive",
+            "importedBy": [],
+            "dependencyPath": ["jsonwebtoken@9.0.2", "jws@3.2.2"],
+            "fixedVersions": ["3.2.3"],
+            "isVersionUnparseable": false,
+            "matcherAgreement": "both"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "b6c6a6f0ff18ffd3",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "package-lock.json",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "6dfbc884c3c681e9",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "package-lock.json",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0,
+      "durationMs": 62
+    },
+    {
+      "caseId": "dependency-12-bump-to-fixed-version",
+      "category": "dependency",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [
+        {
+          "id": "741c8e54ad65d848",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-35jh-r3h4-6jhm",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-35jh-r3h4-6jhm was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.18.0 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-35jh-r3h4-6jhm",
+          "aliases": ["CVE-2021-23337", "CVE-2026-4800", "GHSA-r5fr-rjxr-66jc"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        },
+        {
+          "id": "d9aa96b1dea1b7b8",
+          "detector": "dependency",
+          "severity": "medium",
+          "confidence": 0.5,
+          "title": "lodash@4.17.21 is affected by GHSA-f23m-r3pf-42rh",
+          "file": "bun.lock",
+          "isIntroducedByPullRequest": false,
+          "summary": "lodash 4.17.21 with advisory GHSA-f23m-r3pf-42rh was present before this pull request.",
+          "remediation": "Upgrade lodash to 4.17.23 or later.",
+          "summarySource": "template",
+          "packageName": "lodash",
+          "version": "4.17.21",
+          "advisoryId": "GHSA-f23m-r3pf-42rh",
+          "aliases": ["CVE-2025-13465", "CVE-2026-2950", "GHSA-xxjr-mmjv-4gpg"],
+          "isGithubReviewed": true,
+          "dependencyScope": "production",
+          "reachability": "direct-imported",
+          "importedBy": ["src/config.ts"],
+          "dependencyPath": ["lodash@4.17.21"],
+          "fixedVersions": ["4.17.23", "4.18.0"],
+          "isVersionUnparseable": false,
+          "matcherAgreement": "both"
+        }
+      ],
+      "costUsd": 0.00935,
+      "durationMs": 1259
+    },
+    {
+      "caseId": "real-world-03-qs",
+      "category": "real-world",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-gqgv-6jq5-jjj9",
+          "vulnerabilityType": "CWE-20",
+          "file": "lib/parse.js",
+          "startLine": 58,
+          "endLine": 116
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.026328,
+      "durationMs": 6189
+    },
+    {
+      "caseId": "real-world-06-express",
+      "category": "real-world",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-qw6h-vgh9-j6wx",
+          "vulnerabilityType": "CWE-79",
+          "file": "lib/response.js",
+          "startLine": 972,
+          "endLine": 972
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.02257,
+      "durationMs": 4907
+    },
+    {
+      "caseId": "secrets-04-generic-high-entropy-token",
+      "category": "secrets",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "matchedPairs": [
+        {
+          "expectedFinding": {
+            "detector": "secrets",
+            "file": "src/metrics.ts",
+            "startLine": 4
+          },
+          "predictedFinding": {
+            "id": "e7b7403e62fa86ff",
+            "detector": "secrets",
+            "severity": "medium",
+            "confidence": 0.5,
+            "title": "Hardcoded secret assignment added in src/metrics.ts",
+            "file": "src/metrics.ts",
+            "startLine": 4,
+            "endLine": 4,
+            "isIntroducedByPullRequest": true,
+            "summary": "A hardcoded secret value was added to src/metrics.ts at line 4 and flagged by the generic-secret rule. Committing credentials in source code exposes them to anyone with repository access, including its history, and they can be reused against the service they protect.",
+            "remediation": "Remove the literal secret from src/metrics.ts line 4 and load it from an environment variable or a secrets manager instead. Rotate the exposed credential, since it remains in git history, and confirm the new value is not committed.",
+            "summarySource": "model",
+            "ruleId": "generic-secret",
+            "fingerprint": "feff02663d60"
+          }
+        }
+      ],
+      "unmatchedPredictions": [],
+      "missedExpectations": [],
+      "preExistingFindings": [],
+      "costUsd": 0.009838,
+      "durationMs": 1007
+    }
+  ],
+  "warnings": []
+}

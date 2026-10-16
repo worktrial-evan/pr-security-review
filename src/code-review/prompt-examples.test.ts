@@ -1,7 +1,5 @@
-// tests the worked examples of the shipped review prompt: each chunk re-renders through the packet byte for byte, each answer passes the output schema, and every finding in an answer grounds against the chunk's added lines
+// tests the worked examples of every shipped review prompt version: the moved code example beside its rule, each chunk re-renders through the packet byte for byte, each answer passes the output schema, and every finding in an answer grounds against the chunk's added lines
 import { describe, expect, test } from 'bun:test'
-import { join } from 'node:path'
-import { defaultPromptsDirectory, loadPrompt } from '@/prompts/prompt-loader'
 import {
   type ChangedFile,
   changedFileSchema,
@@ -14,19 +12,34 @@ import {
   findFencedBlock,
   readFencedBlocks,
 } from './fixtures/markdown-fenced-blocks'
+import {
+  loadShippedPromptVersions,
+  type ShippedPromptVersion,
+} from './fixtures/shipped-prompt-versions'
 import { groundFinding } from './grounding'
 import { type CodeReviewOutput, codeReviewOutputSchema } from './model-output'
 import { assembleReviewPacket, renderedHunkLinePattern } from './review-packet'
-import { codeReviewPromptId } from './review-prompt'
 
-// the shipped rubric and the raw text of its file
-const codeReviewTemplate = await loadPrompt({ id: codeReviewPromptId })
-const promptFilePath = join(
-  defaultPromptsDirectory,
-  codeReviewPromptId,
-  `v${codeReviewTemplate.version}.md`,
-)
-const promptFileText = await Bun.file(promptFilePath).text()
+// every shipped rubric paired with its version for the test names
+const shippedPromptVersions = await loadShippedPromptVersions()
+const shippedPromptVersionCases: [string, ShippedPromptVersion][] =
+  shippedPromptVersions.map((shippedPromptVersion) => [
+    shippedPromptVersion.template.version,
+    shippedPromptVersion,
+  ])
+
+// the three worked examples every version opens with
+const firstWorkedExampleTitles = [
+  'True positive',
+  'Tricky negative',
+  'Pre-existing issue',
+]
+
+// the worked examples a later version may add after the first three. each one answers with no findings
+const laterWorkedExampleTitles = ['Moved code']
+
+// the sentence that opens the moved-code rule
+const movedCodeRuleOpening = 'Code the pull request only moves is pre-existing.'
 
 // the start of a hunk header line
 const hunkHeaderPrefix = '@@ '
@@ -38,74 +51,96 @@ interface WorkedExample {
   answerJson: string
 }
 
-// the three worked examples, each paired with its title for the test names
-const workedExamples = readWorkedExamples(promptFileText)
-const workedExampleCases: [string, WorkedExample][] = workedExamples.map(
-  (workedExample) => [workedExample.title, workedExample],
-)
+describe.each(shippedPromptVersionCases)(
+  'the worked examples of code review prompt v%s',
+  (_promptVersion, shippedPromptVersion) => {
+    // the worked examples of this version, each paired with its title for the test names
+    const workedExamples = readWorkedExamples(shippedPromptVersion.fileText)
+    const workedExampleTitles = workedExamples.map(
+      (workedExample) => workedExample.title,
+    )
+    const workedExampleCases: [string, WorkedExample][] = workedExamples.map(
+      (workedExample) => [workedExample.title, workedExample],
+    )
 
-describe('the worked examples of the code review prompt', () => {
-  test('are a true positive, a tricky negative and a pre-existing issue, all in the loaded rubric', () => {
-    expect(workedExamples.map((workedExample) => workedExample.title)).toEqual([
-      'True positive',
-      'Tricky negative',
-      'Pre-existing issue',
-    ])
-    for (const workedExample of workedExamples) {
-      expect(codeReviewTemplate.text).toContain(workedExample.chunkText)
-      expect(codeReviewTemplate.text).toContain(workedExample.answerJson)
-    }
-  })
-
-  test.each(workedExampleCases)(
-    '%s re-renders its chunk through the packet byte for byte',
-    (_title, workedExample) => {
-      // parse the chunk back into a changed file and render it again
-      const changedFile = parseChunkText(workedExample.chunkText)
-      const packet = assembleReviewPacket({
-        changedFiles: [changedFile],
-        contextLines: testContextLines,
-      })
-
-      expect(packet.chunks).toHaveLength(1)
-      expect(packet.chunks[0]?.text).toBe(workedExample.chunkText)
-    },
-  )
-
-  test.each(workedExampleCases)(
-    '%s answers with output that passes the schema and grounds every finding',
-    (_title, workedExample) => {
-      // parse the chunk and the answer it was given
-      const changedFile = parseChunkText(workedExample.chunkText)
-      const codeReviewOutput = parseAnswer(workedExample)
-
-      for (const finding of codeReviewOutput.findings) {
-        expect(
-          groundFinding({
-            finding,
-            file: changedFile.path,
-            addedLines: changedFile.addedLines,
-          }),
-        ).toEqual({ kind: 'grounded' })
+    test('open with a true positive, a tricky negative and a pre-existing issue, all in the loaded rubric', () => {
+      // check the first three titles and that every later one is a known example
+      expect(workedExampleTitles.slice(0, 3)).toEqual(firstWorkedExampleTitles)
+      for (const laterWorkedExampleTitle of workedExampleTitles.slice(3)) {
+        expect(laterWorkedExampleTitles).toContain(laterWorkedExampleTitle)
       }
-    },
-  )
 
-  test('report one finding for the true positive and nothing for the two negatives', () => {
-    const codeReviewOutputs = workedExamples.map(parseAnswer)
+      // check that the loaded rubric holds every chunk and answer
+      for (const workedExample of workedExamples) {
+        expect(shippedPromptVersion.template.text).toContain(
+          workedExample.chunkText,
+        )
+        expect(shippedPromptVersion.template.text).toContain(
+          workedExample.answerJson,
+        )
+      }
+    })
 
-    expect(
-      codeReviewOutputs.map(
+    test('hold a moved code example exactly when the rubric has the moved-code rule', () => {
+      // match the presence of the example to the presence of the rule
+      const hasMovedCodeRule =
+        shippedPromptVersion.fileText.includes(movedCodeRuleOpening)
+      expect(workedExampleTitles.includes('Moved code')).toBe(hasMovedCodeRule)
+    })
+
+    test.each(workedExampleCases)(
+      '%s re-renders its chunk through the packet byte for byte',
+      (_title, workedExample) => {
+        // parse the chunk back into a changed file and render it again
+        const changedFile = parseChunkText(workedExample.chunkText)
+        const packet = assembleReviewPacket({
+          changedFiles: [changedFile],
+          contextLines: testContextLines,
+        })
+
+        expect(packet.chunks).toHaveLength(1)
+        expect(packet.chunks[0]?.text).toBe(workedExample.chunkText)
+      },
+    )
+
+    test.each(workedExampleCases)(
+      '%s answers with output that passes the schema and grounds every finding',
+      (_title, workedExample) => {
+        // parse the chunk and the answer it was given
+        const changedFile = parseChunkText(workedExample.chunkText)
+        const codeReviewOutput = parseAnswer(workedExample)
+
+        for (const finding of codeReviewOutput.findings) {
+          expect(
+            groundFinding({
+              finding,
+              file: changedFile.path,
+              addedLines: changedFile.addedLines,
+            }),
+          ).toEqual({ kind: 'grounded' })
+        }
+      },
+    )
+
+    test('report one finding for the true positive and nothing for every negative', () => {
+      // count the findings and injection attempts of each answer
+      const codeReviewOutputs = workedExamples.map(parseAnswer)
+      const findingCounts = codeReviewOutputs.map(
         (codeReviewOutput) => codeReviewOutput.findings.length,
-      ),
-    ).toEqual([1, 0, 0])
-    expect(
-      codeReviewOutputs.map(
+      )
+      const injectionAttemptCounts = codeReviewOutputs.map(
         (codeReviewOutput) => codeReviewOutput.injectionAttempts.length,
-      ),
-    ).toEqual([0, 0, 0])
-  })
-})
+      )
+
+      // expect one finding first and none after it
+      const negativeCount = workedExamples.length - 1
+      expect(findingCounts).toEqual([1, ...Array(negativeCount).fill(0)])
+      expect(injectionAttemptCounts).toEqual(
+        Array(workedExamples.length).fill(0),
+      )
+    })
+  },
+)
 
 // split the worked examples section of the prompt into its subsections, one example each
 function readWorkedExamples(promptText: string): WorkedExample[] {

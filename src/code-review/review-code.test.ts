@@ -28,8 +28,17 @@ import {
   reviewRunId,
   runReview,
 } from './fixtures/review-harness'
+import { loadShippedPromptVersions } from './fixtures/shipped-prompt-versions'
 import type { PacketChunk, ReviewPacket } from './review-packet'
 import { codeReviewFenceLabel } from './review-prompt'
+
+// the highest shipped prompt version. a review given no version loads it
+const shippedPromptVersions = await loadShippedPromptVersions()
+const highestShippedPromptVersion = shippedPromptVersions.at(-1)
+if (highestShippedPromptVersion === undefined) {
+  throw new Error('no code review prompt version is shipped')
+}
+const highestPromptVersion = highestShippedPromptVersion.template.version
 
 // the shape of a finding id: 16 lowercase hex characters
 const findingIdPattern = /^[0-9a-f]{16}$/
@@ -75,7 +84,7 @@ describe('reviewCode when the llm is disabled', () => {
       injectionAttemptCount: 0,
       failedChunkCount: 0,
       unreviewedFiles: [],
-      promptVersion: '1',
+      promptVersion: highestPromptVersion,
     })
     expect(provider.requests).toHaveLength(0)
     expect(auditSink.events).toHaveLength(1)
@@ -254,7 +263,7 @@ describe('reviewCode finding shape', () => {
       vulnerabilityType: 'CWE-89',
       evidence: [readAddedLineText(sqlInjectionChangedFile, 1)],
       sourceToSink: sqlInjectionModelFinding.sourceToSink,
-      promptVersion: '1',
+      promptVersion: highestPromptVersion,
       model: defaultReviewModelId,
     })
     expect(finding?.id).toMatch(findingIdPattern)

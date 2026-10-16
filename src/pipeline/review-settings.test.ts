@@ -25,7 +25,7 @@ describe('readReviewConfig', () => {
       isLlmEnabled: true,
       isCacheEnabled: true,
       advisoryStaleHours: 24,
-      reviewPromptVersion: '1',
+      reviewPromptVersion: '3',
       maxChangedFiles: 200,
       maxFileBytes: 1_000_000,
       maxReviewCostUsd: 2,
@@ -54,7 +54,7 @@ describe('loadReviewSettings', () => {
     expect(reviewSettings.reviewOptions.reviewModelId).toBe(
       'anthropic/claude-sonnet-5-5',
     )
-    expect(reviewSettings.reviewPromptVersion).toBe('1')
+    expect(reviewSettings.reviewPromptVersion).toBe('3')
     expect(reviewSettings.limits).toEqual({
       maxChangedFiles: 200,
       maxFileBytes: 1_000_000,

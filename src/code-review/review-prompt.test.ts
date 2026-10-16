@@ -1,9 +1,13 @@
-// tests the review prompt: the fenced chunk as the user turn, the shipped rubric rendered with the fence description and the whole allowlist, and a rubric missing a variable rejected
+// tests the review prompt: the fenced chunk as the user turn, the shipped rubric rendered with the fence description and the whole allowlist, a rubric missing a variable rejected, every shipped version loading, and the credential exception in v2
 import { describe, expect, test } from 'bun:test'
 import { describeFence } from '@/prompts/fence-untrusted'
 import { loadPrompt } from '@/prompts/prompt-loader'
 import type { PromptTemplate } from '@/shared/llm'
 import { readFencedContent } from './fixtures/fenced-content'
+import {
+  loadShippedPromptVersions,
+  type ShippedPromptVersion,
+} from './fixtures/shipped-prompt-versions'
 import {
   buildReviewPrompt,
   codeReviewFenceLabel,
@@ -93,18 +97,76 @@ describe('buildReviewPrompt', () => {
   })
 })
 
-describe('the shipped code review prompt', () => {
-  test('loads as version 1 with the two rubric variables', () => {
-    expect(codeReviewTemplate.id).toBe(codeReviewPromptId)
-    expect(codeReviewTemplate.version).toBe('1')
-    expect(codeReviewTemplate.variables).toEqual([
-      'fence_description',
-      'vulnerability_type_allowlist',
-    ])
+// every shipped rubric paired with its version for the test names
+const shippedPromptVersions = await loadShippedPromptVersions()
+const shippedPromptVersionCases: [string, ShippedPromptVersion][] =
+  shippedPromptVersions.map((shippedPromptVersion) => [
+    shippedPromptVersion.template.version,
+    shippedPromptVersion,
+  ])
+
+// the hash of v1 as it shipped. v1 never changes once a later version exists
+const shippedVersionOneHash =
+  '7f08429361fb1b6ef3e21d7bcb6e4aa7b75e3aa19bf506a03cd5bf011af1e88b'
+
+describe.each(shippedPromptVersionCases)(
+  'the shipped code review prompt v%s',
+  (_promptVersion, shippedPromptVersion) => {
+    test('loads with the two rubric variables', () => {
+      expect(shippedPromptVersion.template.id).toBe(codeReviewPromptId)
+      expect(shippedPromptVersion.template.variables).toEqual([
+        'fence_description',
+        'vulnerability_type_allowlist',
+      ])
+    })
+
+    test('renders every allowed CWE id and the fence with no placeholder left', () => {
+      // build the prompt for the sample chunk from this version
+      const versionReviewPrompt = buildReviewPrompt({
+        template: shippedPromptVersion.template,
+        chunkText: sampleChunkText,
+      })
+
+      expect(versionReviewPrompt.system).toContain(
+        describeFence(versionReviewPrompt.fence),
+      )
+      for (const allowedVulnerabilityType of allowedVulnerabilityTypes) {
+        expect(versionReviewPrompt.system).toContain(
+          allowedVulnerabilityType.id,
+        )
+      }
+      expect(versionReviewPrompt.system).not.toMatch(/\{\{[a-z_]+\}\}/)
+    })
+
+    test('names both output fields in the rubric', () => {
+      expect(shippedPromptVersion.template.text).toContain('findings')
+      expect(shippedPromptVersion.template.text).toContain('injectionAttempts')
+    })
+  },
+)
+
+describe('the shipped code review prompt versions', () => {
+  test('start at version 1 and count up with no gap', () => {
+    // compare the shipped version numbers with 1 up to their count
+    const shippedVersionNumbers = shippedPromptVersions.map(
+      (shippedPromptVersion) => Number(shippedPromptVersion.template.version),
+    )
+    const expectedVersionNumbers = shippedVersionNumbers.map(
+      (_versionNumber, i) => i + 1,
+    )
+    expect(shippedVersionNumbers).toEqual(expectedVersionNumbers)
   })
 
-  test('names both output fields in the rubric', () => {
-    expect(codeReviewTemplate.text).toContain('findings')
-    expect(codeReviewTemplate.text).toContain('injectionAttempts')
+  test('keep v1 as it shipped', () => {
+    expect(shippedPromptVersions[0]?.template.hash).toBe(shippedVersionOneHash)
+  })
+
+  test('admit a hard-coded credential as CWE-798 in v2', () => {
+    // read the raw rubric of v2 and look for the credential exception
+    const versionTwoFileText = shippedPromptVersions[1]?.fileText
+    expect(versionTwoFileText).toContain(
+      'The one exception is a credential written into the code',
+    )
+    expect(versionTwoFileText).toContain('`CWE-798`')
   })
 })

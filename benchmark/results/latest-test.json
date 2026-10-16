@@ -1,11 +1,11 @@
 {
-  "label": "baseline",
+  "label": "final",
   "split": "test",
-  "startedAt": "2026-10-16T01:39:10.110Z",
-  "finishedAt": "2026-10-16T01:40:20.202Z",
-  "gitSha": "707bdba6cd9ec1f7219a0922cb33ea417819c412",
+  "startedAt": "2026-10-16T03:45:35.257Z",
+  "finishedAt": "2026-10-16T03:46:31.704Z",
+  "gitSha": "795f30d33fc07c92df739e3e507113d81c25d4b6",
   "promptVersions": {
-    "code-review": "1",
+    "code-review": "3",
     "summarize": "1"
   },
   "modelIds": {
@@ -46,15 +46,15 @@
         "recall": 0.6,
         "f1": 0.6666666666666665
       },
-      "real-world": {
-        "precision": 0,
-        "recall": 0,
-        "f1": 0
-      },
       "dependency": {
         "precision": 1,
         "recall": 1,
         "f1": 1
+      },
+      "real-world": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0
       },
       "secrets": {
         "precision": 1,
@@ -63,8 +63,8 @@
       }
     },
     "falsePositivesOnClean": 0,
-    "totalCostUsd": 0.19421260000000004,
-    "totalDurationMs": 65904,
+    "totalCostUsd": 0.2100245,
+    "totalDurationMs": 56357,
     "caseResults": [
       {
         "caseId": "clean-11-add-type-annotations",
@@ -117,25 +117,13 @@
       {
         "caseId": "code-14-insecure-deserialization",
         "truePositives": 0,
-        "falsePositives": 1,
+        "falsePositives": 0,
         "falseNegatives": 1
       },
       {
         "caseId": "code-15-directory-listing-uploads",
         "truePositives": 0,
-        "falsePositives": 0,
-        "falseNegatives": 1
-      },
-      {
-        "caseId": "real-world-03-qs",
-        "truePositives": 0,
-        "falsePositives": 0,
-        "falseNegatives": 1
-      },
-      {
-        "caseId": "real-world-06-express",
-        "truePositives": 0,
-        "falsePositives": 0,
+        "falsePositives": 1,
         "falseNegatives": 1
       },
       {
@@ -163,6 +151,18 @@
         "falseNegatives": 0
       },
       {
+        "caseId": "real-world-03-qs",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
+        "caseId": "real-world-06-express",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1
+      },
+      {
         "caseId": "secrets-04-generic-high-entropy-token",
         "truePositives": 1,
         "falsePositives": 0,
@@ -182,8 +182,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.008868000000000001,
-        "durationMs": 1184
+        "costUsd": 0.009838,
+        "durationMs": 1695
       },
       {
         "caseId": "clean-12-config-default-changed",
@@ -197,8 +197,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.008512,
-        "durationMs": 1738
+        "costUsd": 0.009482,
+        "durationMs": 1065
       },
       {
         "caseId": "clean-13-error-handling-added",
@@ -212,8 +212,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.008728,
-        "durationMs": 1299
+        "costUsd": 0.009698,
+        "durationMs": 1218
       },
       {
         "caseId": "clean-14-comment-only-change",
@@ -227,8 +227,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.008576,
-        "durationMs": 1737
+        "costUsd": 0.009546,
+        "durationMs": 1739
       },
       {
         "caseId": "clean-15-safe-redirect-allowlist",
@@ -242,8 +242,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.017878,
-        "durationMs": 5338
+        "costUsd": 0.019818,
+        "durationMs": 2618
       },
       {
         "caseId": "code-11-open-redirect",
@@ -263,25 +263,26 @@
               "endLine": 9
             },
             "predictedFinding": {
-              "id": "b89610160b6ec8f4",
+              "id": "9c00e2f18dba8faf",
               "detector": "code-review",
               "severity": "medium",
-              "confidence": 0.8,
+              "confidence": 0.85,
               "title": "Open redirect to any absolute http(s) URL",
               "file": "src/redirects.ts",
               "startLine": 8,
-              "endLine": 9,
+              "endLine": 10,
               "isIntroducedByPullRequest": true,
-              "summary": "The redirect helper in src/redirects.ts accepts any caller-supplied string that begins with http:// or https:// and passes it straight to Response.redirect with a 302 status. This lets an attacker craft a link on the trusted site that sends users to an arbitrary external domain, which is a common route for phishing and credential theft (CWE-601, open redirect).",
-              "remediation": "Change the check in src/redirects.ts (lines 8-9) so that only relative paths on the same site are accepted, or only destinations from an explicit allowlist of hosts. Parse the target with the URL constructor, compare its origin to the site's own origin, and reject anything else before calling Response.redirect.",
+              "summary": "The redirect helper in src/redirects.ts sends users to any absolute http or https URL passed in as the target. Because the check that should keep redirects inside the app is skipped for these URLs, an attacker can craft a link on the real app domain that bounces victims to a malicious site. This open redirect (CWE-601) is useful for phishing and credential theft because the link appears to come from a trusted origin.",
+              "remediation": "Remove the branch at lines 8-10 that returns Response.redirect for absolute http or https targets, so every target goes through the relative-path check. If external redirects are required, validate the target against an explicit allowlist of hostnames before redirecting.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-601",
               "evidence": [
                 "  if (target.startsWith('http://') || target.startsWith('https://')) {",
-                "    return Response.redirect(target, 302)"
+                "    return Response.redirect(target, 302)",
+                "  }"
               ],
-              "sourceToSink": "The caller-supplied target string, accepted when it starts with http:// or https://, is passed to Response.redirect, which sends the user to an arbitrary external site.",
-              "promptVersion": "1",
+              "sourceToSink": "The target argument of redirectWithinApp, which is attacker-controlled by name and purpose, is redirected through Response.redirect whenever it starts with http:// or https://, skipping the relative-path check.",
+              "promptVersion": "3",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -289,8 +290,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0113937,
-        "durationMs": 5040
+        "costUsd": 0.012464199999999998,
+        "durationMs": 5369
       },
       {
         "caseId": "code-12-missing-authorization-admin",
@@ -310,26 +311,25 @@
               "endLine": 76
             },
             "predictedFinding": {
-              "id": "71e1f1dfc1b98301",
+              "id": "80cdc436b9a6f2b0",
               "detector": "code-review",
               "severity": "medium",
-              "confidence": 0.7,
-              "title": "Admin user listing lacks role check",
+              "confidence": 0.6,
+              "title": "Admin user listing lacks a role check",
               "file": "src/server.ts",
-              "startLine": 72,
+              "startLine": 70,
               "endLine": 77,
               "isIntroducedByPullRequest": true,
-              "summary": "The /admin/users handler returns every user's id, name and role to any caller with a valid session token. It never checks whether the caller is an admin, so a non-admin user can enumerate all accounts and their roles. This is a missing authorization check (CWE-862) that exposes user data to unprivileged users.",
-              "remediation": "Before running the user query in the /admin/users handler, read the role from the verified claims and return a 403 response unless the role is admin, then add a test that confirms a non-admin token is rejected.",
+              "summary": "The /admin/users handler in src/server.ts returns every user's id, name and role to any signed-in user. It checks that the session token is valid but never checks that the caller is an admin, so a regular non-admin account can list all users. This is a missing authorization check (CWE-862) that exposes account data to people who should not see it.",
+              "remediation": "Before running the SELECT in the /admin/users handler, verify that the authenticated user's role is admin and return an authorization error (such as 403) otherwise. Add a test that a non-admin session token is rejected on this route.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-862",
               "evidence": [
-                "      const claims = verifySessionToken(request, config.jwtSecret)",
-                "      const users = database.query('SELECT id, name, role FROM users').all()",
-                "      return Response.json(users)"
+                "    '/admin/users': (request) => {",
+                "      const users = database.query('SELECT id, name, role FROM users').all()"
               ],
-              "sourceToSink": "Any request carrying a valid session token, including a non-admin user's, reaches the /admin/users handler, which returns every user's id, name and role from the database query.",
-              "promptVersion": "1",
+              "sourceToSink": "A session token from any signed-in non-admin user passes verifySessionToken and reaches the database query that returns every user's id, name and role.",
+              "promptVersion": "3",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -337,8 +337,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0165257,
-        "durationMs": 8307
+        "costUsd": 0.016953,
+        "durationMs": 8399
       },
       {
         "caseId": "code-13-redos-user-input",
@@ -358,25 +358,26 @@
               "endLine": 35
             },
             "predictedFinding": {
-              "id": "1511b1efaf870bad",
+              "id": "173d36fb933a0717",
               "detector": "code-review",
               "severity": "medium",
-              "confidence": 0.9,
-              "title": "Regex built from client pattern with nested quantifier",
+              "confidence": 0.85,
+              "title": "User-controlled pattern compiled into a nested-quantifier RegExp",
               "file": "src/server.ts",
-              "startLine": 31,
+              "startLine": 30,
               "endLine": 35,
               "isIntroducedByPullRequest": true,
-              "summary": "The pattern query parameter is inserted unescaped into a regular expression of the form ^(...+)+$, and that expression is tested against every user name. A crafted pattern can combine with the nested quantifier to cause catastrophic backtracking, so a single request can tie up the server CPU and deny service to other users. Because the input comes from the client, any caller can trigger this.",
-              "remediation": "Do not build a RegExp from the raw pattern query parameter. Either escape the user input before embedding it, or replace the regex filter with a plain substring or prefix match such as user.name.includes(pattern) on the lowercased values, and remove the nested quantifier wrapper around the input.",
+              "summary": "The pattern query parameter from the request is inserted directly into a RegExp wrapped in a nested quantifier, `^(${pattern}+)+$`, and then tested against every user name. A crafted pattern can make the regex engine backtrack catastrophically, so one request can block the Node.js event loop and deny service to all other users. This is a ReDoS issue (CWE-1333) because user input controls the regex structure.",
+              "remediation": "Stop building a RegExp from the raw query parameter: replace the pattern parameter with a plain substring or prefix match (for example, user.name.includes(pattern) or startsWith) with no regex, or if regex is required, use a safe engine such as RE2 and validate the input against a strict allow-list. Remove the nested quantifier wrapper `(${pattern}+)+` entirely and add a test with a long crafted pattern to confirm the request returns quickly.",
               "summarySource": "model",
               "vulnerabilityType": "CWE-1333",
               "evidence": [
+                "      const pattern = new URL(request.url).searchParams.get('pattern') ?? ''",
                 "      const nameMatcher = new RegExp(`^(${pattern}+)+$`)",
                 "      const matchingUsers = users.filter((user) => nameMatcher.test(user.name))"
               ],
-              "sourceToSink": "The pattern query parameter is embedded unescaped inside a nested-quantifier regex `^(...+)+$` that is run with test() against every user name, so the request can trigger catastrophic backtracking.",
-              "promptVersion": "1",
+              "sourceToSink": "The pattern query parameter is embedded in a RegExp with a nested quantifier `(${pattern}+)+` and tested against every user name, so a crafted pattern causes catastrophic backtracking that blocks the event loop.",
+              "promptVersion": "3",
               "model": "anthropic/claude-sonnet-5-5"
             }
           }
@@ -384,8 +385,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.012143999999999999,
-        "durationMs": 7271
+        "costUsd": 0.0135253,
+        "durationMs": 5954
       },
       {
         "caseId": "code-14-insecure-deserialization",
@@ -393,35 +394,10 @@
         "split": "test",
         "status": "completed",
         "truePositives": 0,
-        "falsePositives": 1,
+        "falsePositives": 0,
         "falseNegatives": 1,
         "matchedPairs": [],
-        "unmatchedPredictions": [
-          {
-            "id": "9bb10417a4fd42b7",
-            "detector": "code-review",
-            "severity": "critical",
-            "confidence": 0.97,
-            "title": "Code injection via new Function in JSON reviver on request body",
-            "file": "src/server.ts",
-            "startLine": 104,
-            "endLine": 107,
-            "isIntroducedByPullRequest": true,
-            "summary": "The POST /import handler in src/server.ts parses the request body with JSON.parse and a reviver. Any string value beginning with 'function:' is passed to new Function and executed on the server. The endpoint requires no authentication, so any remote caller can run arbitrary JavaScript with the server's privileges. This is a critical code injection flaw (CWE-94).",
-            "remediation": "Remove the new Function call from the JSON reviver in src/server.ts (lines 104-107) so request data is never evaluated as code. Parse the body with plain JSON.parse and validate the fields against an explicit schema, then require authentication on the POST /import route.",
-            "summarySource": "model",
-            "vulnerabilityType": "CWE-94",
-            "evidence": [
-              "        const serializedRecord = await request.text()",
-              "        const record = JSON.parse(serializedRecord, (_key, value) => {",
-              "          if (typeof value === 'string' && value.startsWith('function:')) {",
-              "            return new Function(`return ${value.slice('function:'.length)}`)()"
-            ],
-            "sourceToSink": "The body of the unauthenticated POST /import request is parsed, and any string value starting with 'function:' is passed to new Function and executed on the server.",
-            "promptVersion": "1",
-            "model": "anthropic/claude-sonnet-5-5"
-          }
-        ],
+        "unmatchedPredictions": [],
         "missedExpectations": [
           {
             "detector": "code-review",
@@ -432,8 +408,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.0118501,
-        "durationMs": 4786
+        "costUsd": 0.012316,
+        "durationMs": 2874
       },
       {
         "caseId": "code-15-directory-listing-uploads",
@@ -441,10 +417,32 @@
         "split": "test",
         "status": "completed",
         "truePositives": 0,
-        "falsePositives": 0,
+        "falsePositives": 1,
         "falseNegatives": 1,
         "matchedPairs": [],
-        "unmatchedPredictions": [],
+        "unmatchedPredictions": [
+          {
+            "id": "19e26ad0a17f4933",
+            "detector": "code-review",
+            "severity": "medium",
+            "confidence": 0.6,
+            "title": "Stored XSS from unescaped upload file names in the /uploads listing",
+            "file": "src/server.ts",
+            "startLine": 105,
+            "endLine": 109,
+            "isIntroducedByPullRequest": true,
+            "summary": "The /uploads listing in src/server.ts builds HTML by inserting uploaded file names directly into the markup without escaping. Because an uploader can control those names, a crafted file name containing HTML or script can execute in the browser of anyone who views the listing, which is a stored cross-site scripting (CWE-79) risk, rated medium.",
+            "remediation": "Escape each file name before interpolating it into the HTML, for example by encoding &, <, >, \" and ' characters, and apply the same escaping to the href value. Alternatively, render the listing with a templating engine that auto-escapes output, and serve the response with a restrictive Content-Security-Policy.",
+            "summarySource": "model",
+            "vulnerabilityType": "CWE-79",
+            "evidence": [
+              "          `<li><a href=\"/uploads/${uploadName}\">${uploadName}</a></li>`,"
+            ],
+            "sourceToSink": "Names of files stored by the upload route, which an uploader can influence, are read from the uploads directory and interpolated unescaped into an HTML response served as text/html.",
+            "promptVersion": "3",
+            "model": "anthropic/claude-sonnet-5-5"
+          }
+        ],
         "missedExpectations": [
           {
             "detector": "code-review",
@@ -455,56 +453,8 @@
           }
         ],
         "preExistingFindings": [],
-        "costUsd": 0.011727999999999999,
-        "durationMs": 3130
-      },
-      {
-        "caseId": "real-world-03-qs",
-        "category": "real-world",
-        "split": "test",
-        "status": "completed",
-        "truePositives": 0,
-        "falsePositives": 0,
-        "falseNegatives": 1,
-        "matchedPairs": [],
-        "unmatchedPredictions": [],
-        "missedExpectations": [
-          {
-            "detector": "code-review",
-            "advisoryId": "GHSA-gqgv-6jq5-jjj9",
-            "vulnerabilityType": "CWE-20",
-            "file": "lib/parse.js",
-            "startLine": 58,
-            "endLine": 116
-          }
-        ],
-        "preExistingFindings": [],
-        "costUsd": 0.030668,
-        "durationMs": 10698
-      },
-      {
-        "caseId": "real-world-06-express",
-        "category": "real-world",
-        "split": "test",
-        "status": "completed",
-        "truePositives": 0,
-        "falsePositives": 0,
-        "falseNegatives": 1,
-        "matchedPairs": [],
-        "unmatchedPredictions": [],
-        "missedExpectations": [
-          {
-            "detector": "code-review",
-            "advisoryId": "GHSA-qw6h-vgh9-j6wx",
-            "vulnerabilityType": "CWE-79",
-            "file": "lib/response.js",
-            "startLine": 972,
-            "endLine": 972
-          }
-        ],
-        "preExistingFindings": [],
-        "costUsd": 0.020819999999999998,
-        "durationMs": 4771
+        "costUsd": 0.018872,
+        "durationMs": 10541
       },
       {
         "caseId": "dependency-09-imported-through-subpath",
@@ -522,15 +472,15 @@
               "advisoryId": "GHSA-29mw-wpgm-hmr9"
             },
             "predictedFinding": {
-              "id": "477360f4470ca416",
+              "id": "a69bde101a1c654c",
               "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "lodash@4.17.20 is affected by GHSA-29mw-wpgm-hmr9",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The lodash package at version 4.17.20 in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue. Certain inputs passed to the toNumber, trim and trimEnd functions can cause very slow regex processing, which can tie up CPU and stall the application. The package is a direct production dependency and is imported directly, so the vulnerable functions may be reachable from application code.",
-              "remediation": "Upgrade lodash to the fixed version 4.17.21 in the dependency manifest and bun.lock, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
+              "summary": "The lodash 4.17.20 package installed in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue in the toNumber, trim and trimEnd functions. Crafted long strings with many repeated whitespace characters can make these calls take a very long time, which can tie up CPU. The package is a direct production dependency and is imported directly, so the vulnerable code path is reachable.",
+              "remediation": "Upgrade lodash to version 4.17.21 in bun.lock and the package manifest, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
               "summarySource": "model",
               "packageName": "lodash",
               "version": "4.17.20",
@@ -551,7 +501,7 @@
         "missedExpectations": [],
         "preExistingFindings": [
           {
-            "id": "750fb94df1640009",
+            "id": "ecc3348cca0152d4",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -579,7 +529,7 @@
             "matcherAgreement": "both"
           },
           {
-            "id": "0efc42b86bf50113",
+            "id": "3a2eac58f301f7aa",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -607,8 +557,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.008779200000000001,
-        "durationMs": 3615
+        "costUsd": 0.009426,
+        "durationMs": 1400
       },
       {
         "caseId": "dependency-10-bun-lock-only",
@@ -626,15 +576,15 @@
               "advisoryId": "GHSA-869p-cjfg-cm3x"
             },
             "predictedFinding": {
-              "id": "4988df57ece212b0",
+              "id": "4ad3bb2c71aea3a1",
               "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
               "file": "bun.lock",
               "isIntroducedByPullRequest": true,
-              "summary": "The jws package at version 3.2.2 is affected by GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only matters when the application calls jws.createVerify() for HMAC algorithms and takes the HMAC secret from user-supplied header or payload data. This is a transitive production dependency pulled in through jsonwebtoken@9.0.2, and jsonwebtoken uses jws.verify(), which the advisory says is not affected.",
-              "remediation": "Upgrade jws to version 3.2.3 by updating the jsonwebtoken dependency chain or adding an override in bun.lock. Also confirm that your code does not call jws.createVerify() with HMAC secrets looked up from untrusted token data.",
+              "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
+              "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
               "summarySource": "model",
               "packageName": "jws",
               "version": "3.2.2",
@@ -655,7 +605,7 @@
         "missedExpectations": [],
         "preExistingFindings": [
           {
-            "id": "afbf4e83d5d40eab",
+            "id": "741c8e54ad65d848",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -683,7 +633,7 @@
             "matcherAgreement": "both"
           },
           {
-            "id": "e7bef7af5775624b",
+            "id": "d9aa96b1dea1b7b8",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -712,7 +662,7 @@
           }
         ],
         "costUsd": 0,
-        "durationMs": 81
+        "durationMs": 61
       },
       {
         "caseId": "dependency-11-package-lock-only",
@@ -730,15 +680,15 @@
               "advisoryId": "GHSA-869p-cjfg-cm3x"
             },
             "predictedFinding": {
-              "id": "e995154dba75e657",
+              "id": "9d3cf45d9b068ee3",
               "detector": "dependency",
               "severity": "medium",
               "confidence": 0.5,
               "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
               "file": "package-lock.json",
               "isIntroducedByPullRequest": true,
-              "summary": "The jws package at 3.2.2 has an improper HMAC signature verification flaw (GHSA-869p-cjfg-cm3x, CVE-2025-65945). It is pulled in transitively through jsonwebtoken@9.0.2, which is a production dependency. The advisory says the issue only applies when the application uses jws.createVerify() with HMAC algorithms and takes the HMAC secret from user-provided data in the protected header or payload. Applications that use jws.verify() (including jsonwebtoken users), only asymmetric algorithms, or do not derive secrets from user input are not affected.",
-              "remediation": "Upgrade the jws dependency to version 3.2.3 (or 4.0.1 if you are on the 4.x line) in package-lock.json. Then confirm that your code does not call jws.createVerify() with HMAC algorithms using secrets looked up from untrusted header or payload values; if it does, change that logic so the secret does not come from user-provided data.",
+              "summary": "The jws package at version 3.2.2 (pulled in as a transitive production dependency through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS protected header or payload in its HMAC secret lookup. Applications that use jws.verify() (including jsonwebtoken users), use only asymmetric algorithms such as RS256, or do not use such user-provided data in secret lookups are not affected. Exposure therefore depends on how the application calls jws, so it should be checked rather than assumed.",
+              "remediation": "Upgrade the jws package to version 3.2.3 in package-lock.json, for example by updating jsonwebtoken so that it resolves jws 3.2.3 or later, and then confirm that no code calls jws.createVerify() with HMAC secrets derived from unvalidated header or payload data.",
               "summarySource": "model",
               "packageName": "jws",
               "version": "3.2.2",
@@ -759,7 +709,7 @@
         "missedExpectations": [],
         "preExistingFindings": [
           {
-            "id": "27a90351a7178f6c",
+            "id": "b6c6a6f0ff18ffd3",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -787,7 +737,7 @@
             "matcherAgreement": "both"
           },
           {
-            "id": "c02a94b3a22e8de7",
+            "id": "6dfbc884c3c681e9",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -815,8 +765,8 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.00033410000000000004,
-        "durationMs": 1955
+        "costUsd": 0,
+        "durationMs": 62
       },
       {
         "caseId": "dependency-12-bump-to-fixed-version",
@@ -831,7 +781,7 @@
         "missedExpectations": [],
         "preExistingFindings": [
           {
-            "id": "afbf4e83d5d40eab",
+            "id": "741c8e54ad65d848",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -859,7 +809,7 @@
             "matcherAgreement": "both"
           },
           {
-            "id": "e7bef7af5775624b",
+            "id": "d9aa96b1dea1b7b8",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
@@ -887,8 +837,56 @@
             "matcherAgreement": "both"
           }
         ],
-        "costUsd": 0.00838,
-        "durationMs": 1932
+        "costUsd": 0.00935,
+        "durationMs": 1259
+      },
+      {
+        "caseId": "real-world-03-qs",
+        "category": "real-world",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-gqgv-6jq5-jjj9",
+            "vulnerabilityType": "CWE-20",
+            "file": "lib/parse.js",
+            "startLine": 58,
+            "endLine": 116
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.026328,
+        "durationMs": 6189
+      },
+      {
+        "caseId": "real-world-06-express",
+        "category": "real-world",
+        "split": "test",
+        "status": "completed",
+        "truePositives": 0,
+        "falsePositives": 0,
+        "falseNegatives": 1,
+        "matchedPairs": [],
+        "unmatchedPredictions": [],
+        "missedExpectations": [
+          {
+            "detector": "code-review",
+            "advisoryId": "GHSA-qw6h-vgh9-j6wx",
+            "vulnerabilityType": "CWE-79",
+            "file": "lib/response.js",
+            "startLine": 972,
+            "endLine": 972
+          }
+        ],
+        "preExistingFindings": [],
+        "costUsd": 0.02257,
+        "durationMs": 4907
       },
       {
         "caseId": "secrets-04-generic-high-entropy-token",
@@ -915,8 +913,8 @@
               "startLine": 4,
               "endLine": 4,
               "isIntroducedByPullRequest": true,
-              "summary": "A line added in src/metrics.ts at line 4 appears to assign a secret value directly in source code. Credentials committed to the repository can be copied by anyone with read access, including through history, and may let an attacker reach the service they unlock.",
-              "remediation": "Remove the hardcoded value from src/metrics.ts and load it from an environment variable or a secret manager instead. Rotate the credential, since it is now exposed in the repository history, and check the git history for other copies.",
+              "summary": "A hardcoded secret value was added to src/metrics.ts at line 4 and flagged by the generic-secret rule. Committing credentials in source code exposes them to anyone with repository access, including its history, and they can be reused against the service they protect.",
+              "remediation": "Remove the literal secret from src/metrics.ts line 4 and load it from an environment variable or a secrets manager instead. Rotate the exposed credential, since it remains in git history, and confirm the new value is not committed.",
               "summarySource": "model",
               "ruleId": "generic-secret",
               "fingerprint": "feff02663d60"
@@ -926,8 +924,8 @@
         "unmatchedPredictions": [],
         "missedExpectations": [],
         "preExistingFindings": [],
-        "costUsd": 0.0090278,
-        "durationMs": 3022
+        "costUsd": 0.009838,
+        "durationMs": 1007
       }
     ]
   },
@@ -944,8 +942,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.008868000000000001,
-      "durationMs": 1184
+      "costUsd": 0.009838,
+      "durationMs": 1695
     },
     {
       "caseId": "clean-12-config-default-changed",
@@ -959,8 +957,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.008512,
-      "durationMs": 1738
+      "costUsd": 0.009482,
+      "durationMs": 1065
     },
     {
       "caseId": "clean-13-error-handling-added",
@@ -974,8 +972,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.008728,
-      "durationMs": 1299
+      "costUsd": 0.009698,
+      "durationMs": 1218
     },
     {
       "caseId": "clean-14-comment-only-change",
@@ -989,8 +987,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.008576,
-      "durationMs": 1737
+      "costUsd": 0.009546,
+      "durationMs": 1739
     },
     {
       "caseId": "clean-15-safe-redirect-allowlist",
@@ -1004,8 +1002,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.017878,
-      "durationMs": 5338
+      "costUsd": 0.019818,
+      "durationMs": 2618
     },
     {
       "caseId": "code-11-open-redirect",
@@ -1025,25 +1023,26 @@
             "endLine": 9
           },
           "predictedFinding": {
-            "id": "b89610160b6ec8f4",
+            "id": "9c00e2f18dba8faf",
             "detector": "code-review",
             "severity": "medium",
-            "confidence": 0.8,
+            "confidence": 0.85,
             "title": "Open redirect to any absolute http(s) URL",
             "file": "src/redirects.ts",
             "startLine": 8,
-            "endLine": 9,
+            "endLine": 10,
             "isIntroducedByPullRequest": true,
-            "summary": "The redirect helper in src/redirects.ts accepts any caller-supplied string that begins with http:// or https:// and passes it straight to Response.redirect with a 302 status. This lets an attacker craft a link on the trusted site that sends users to an arbitrary external domain, which is a common route for phishing and credential theft (CWE-601, open redirect).",
-            "remediation": "Change the check in src/redirects.ts (lines 8-9) so that only relative paths on the same site are accepted, or only destinations from an explicit allowlist of hosts. Parse the target with the URL constructor, compare its origin to the site's own origin, and reject anything else before calling Response.redirect.",
+            "summary": "The redirect helper in src/redirects.ts sends users to any absolute http or https URL passed in as the target. Because the check that should keep redirects inside the app is skipped for these URLs, an attacker can craft a link on the real app domain that bounces victims to a malicious site. This open redirect (CWE-601) is useful for phishing and credential theft because the link appears to come from a trusted origin.",
+            "remediation": "Remove the branch at lines 8-10 that returns Response.redirect for absolute http or https targets, so every target goes through the relative-path check. If external redirects are required, validate the target against an explicit allowlist of hostnames before redirecting.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-601",
             "evidence": [
               "  if (target.startsWith('http://') || target.startsWith('https://')) {",
-              "    return Response.redirect(target, 302)"
+              "    return Response.redirect(target, 302)",
+              "  }"
             ],
-            "sourceToSink": "The caller-supplied target string, accepted when it starts with http:// or https://, is passed to Response.redirect, which sends the user to an arbitrary external site.",
-            "promptVersion": "1",
+            "sourceToSink": "The target argument of redirectWithinApp, which is attacker-controlled by name and purpose, is redirected through Response.redirect whenever it starts with http:// or https://, skipping the relative-path check.",
+            "promptVersion": "3",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -1051,8 +1050,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0113937,
-      "durationMs": 5040
+      "costUsd": 0.012464199999999998,
+      "durationMs": 5369
     },
     {
       "caseId": "code-12-missing-authorization-admin",
@@ -1072,26 +1071,25 @@
             "endLine": 76
           },
           "predictedFinding": {
-            "id": "71e1f1dfc1b98301",
+            "id": "80cdc436b9a6f2b0",
             "detector": "code-review",
             "severity": "medium",
-            "confidence": 0.7,
-            "title": "Admin user listing lacks role check",
+            "confidence": 0.6,
+            "title": "Admin user listing lacks a role check",
             "file": "src/server.ts",
-            "startLine": 72,
+            "startLine": 70,
             "endLine": 77,
             "isIntroducedByPullRequest": true,
-            "summary": "The /admin/users handler returns every user's id, name and role to any caller with a valid session token. It never checks whether the caller is an admin, so a non-admin user can enumerate all accounts and their roles. This is a missing authorization check (CWE-862) that exposes user data to unprivileged users.",
-            "remediation": "Before running the user query in the /admin/users handler, read the role from the verified claims and return a 403 response unless the role is admin, then add a test that confirms a non-admin token is rejected.",
+            "summary": "The /admin/users handler in src/server.ts returns every user's id, name and role to any signed-in user. It checks that the session token is valid but never checks that the caller is an admin, so a regular non-admin account can list all users. This is a missing authorization check (CWE-862) that exposes account data to people who should not see it.",
+            "remediation": "Before running the SELECT in the /admin/users handler, verify that the authenticated user's role is admin and return an authorization error (such as 403) otherwise. Add a test that a non-admin session token is rejected on this route.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-862",
             "evidence": [
-              "      const claims = verifySessionToken(request, config.jwtSecret)",
-              "      const users = database.query('SELECT id, name, role FROM users').all()",
-              "      return Response.json(users)"
+              "    '/admin/users': (request) => {",
+              "      const users = database.query('SELECT id, name, role FROM users').all()"
             ],
-            "sourceToSink": "Any request carrying a valid session token, including a non-admin user's, reaches the /admin/users handler, which returns every user's id, name and role from the database query.",
-            "promptVersion": "1",
+            "sourceToSink": "A session token from any signed-in non-admin user passes verifySessionToken and reaches the database query that returns every user's id, name and role.",
+            "promptVersion": "3",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -1099,8 +1097,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0165257,
-      "durationMs": 8307
+      "costUsd": 0.016953,
+      "durationMs": 8399
     },
     {
       "caseId": "code-13-redos-user-input",
@@ -1120,25 +1118,26 @@
             "endLine": 35
           },
           "predictedFinding": {
-            "id": "1511b1efaf870bad",
+            "id": "173d36fb933a0717",
             "detector": "code-review",
             "severity": "medium",
-            "confidence": 0.9,
-            "title": "Regex built from client pattern with nested quantifier",
+            "confidence": 0.85,
+            "title": "User-controlled pattern compiled into a nested-quantifier RegExp",
             "file": "src/server.ts",
-            "startLine": 31,
+            "startLine": 30,
             "endLine": 35,
             "isIntroducedByPullRequest": true,
-            "summary": "The pattern query parameter is inserted unescaped into a regular expression of the form ^(...+)+$, and that expression is tested against every user name. A crafted pattern can combine with the nested quantifier to cause catastrophic backtracking, so a single request can tie up the server CPU and deny service to other users. Because the input comes from the client, any caller can trigger this.",
-            "remediation": "Do not build a RegExp from the raw pattern query parameter. Either escape the user input before embedding it, or replace the regex filter with a plain substring or prefix match such as user.name.includes(pattern) on the lowercased values, and remove the nested quantifier wrapper around the input.",
+            "summary": "The pattern query parameter from the request is inserted directly into a RegExp wrapped in a nested quantifier, `^(${pattern}+)+$`, and then tested against every user name. A crafted pattern can make the regex engine backtrack catastrophically, so one request can block the Node.js event loop and deny service to all other users. This is a ReDoS issue (CWE-1333) because user input controls the regex structure.",
+            "remediation": "Stop building a RegExp from the raw query parameter: replace the pattern parameter with a plain substring or prefix match (for example, user.name.includes(pattern) or startsWith) with no regex, or if regex is required, use a safe engine such as RE2 and validate the input against a strict allow-list. Remove the nested quantifier wrapper `(${pattern}+)+` entirely and add a test with a long crafted pattern to confirm the request returns quickly.",
             "summarySource": "model",
             "vulnerabilityType": "CWE-1333",
             "evidence": [
+              "      const pattern = new URL(request.url).searchParams.get('pattern') ?? ''",
               "      const nameMatcher = new RegExp(`^(${pattern}+)+$`)",
               "      const matchingUsers = users.filter((user) => nameMatcher.test(user.name))"
             ],
-            "sourceToSink": "The pattern query parameter is embedded unescaped inside a nested-quantifier regex `^(...+)+$` that is run with test() against every user name, so the request can trigger catastrophic backtracking.",
-            "promptVersion": "1",
+            "sourceToSink": "The pattern query parameter is embedded in a RegExp with a nested quantifier `(${pattern}+)+` and tested against every user name, so a crafted pattern causes catastrophic backtracking that blocks the event loop.",
+            "promptVersion": "3",
             "model": "anthropic/claude-sonnet-5-5"
           }
         }
@@ -1146,8 +1145,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.012143999999999999,
-      "durationMs": 7271
+      "costUsd": 0.0135253,
+      "durationMs": 5954
     },
     {
       "caseId": "code-14-insecure-deserialization",
@@ -1155,35 +1154,10 @@
       "split": "test",
       "status": "completed",
       "truePositives": 0,
-      "falsePositives": 1,
+      "falsePositives": 0,
       "falseNegatives": 1,
       "matchedPairs": [],
-      "unmatchedPredictions": [
-        {
-          "id": "9bb10417a4fd42b7",
-          "detector": "code-review",
-          "severity": "critical",
-          "confidence": 0.97,
-          "title": "Code injection via new Function in JSON reviver on request body",
-          "file": "src/server.ts",
-          "startLine": 104,
-          "endLine": 107,
-          "isIntroducedByPullRequest": true,
-          "summary": "The POST /import handler in src/server.ts parses the request body with JSON.parse and a reviver. Any string value beginning with 'function:' is passed to new Function and executed on the server. The endpoint requires no authentication, so any remote caller can run arbitrary JavaScript with the server's privileges. This is a critical code injection flaw (CWE-94).",
-          "remediation": "Remove the new Function call from the JSON reviver in src/server.ts (lines 104-107) so request data is never evaluated as code. Parse the body with plain JSON.parse and validate the fields against an explicit schema, then require authentication on the POST /import route.",
-          "summarySource": "model",
-          "vulnerabilityType": "CWE-94",
-          "evidence": [
-            "        const serializedRecord = await request.text()",
-            "        const record = JSON.parse(serializedRecord, (_key, value) => {",
-            "          if (typeof value === 'string' && value.startsWith('function:')) {",
-            "            return new Function(`return ${value.slice('function:'.length)}`)()"
-          ],
-          "sourceToSink": "The body of the unauthenticated POST /import request is parsed, and any string value starting with 'function:' is passed to new Function and executed on the server.",
-          "promptVersion": "1",
-          "model": "anthropic/claude-sonnet-5-5"
-        }
-      ],
+      "unmatchedPredictions": [],
       "missedExpectations": [
         {
           "detector": "code-review",
@@ -1194,8 +1168,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.0118501,
-      "durationMs": 4786
+      "costUsd": 0.012316,
+      "durationMs": 2874
     },
     {
       "caseId": "code-15-directory-listing-uploads",
@@ -1203,10 +1177,32 @@
       "split": "test",
       "status": "completed",
       "truePositives": 0,
-      "falsePositives": 0,
+      "falsePositives": 1,
       "falseNegatives": 1,
       "matchedPairs": [],
-      "unmatchedPredictions": [],
+      "unmatchedPredictions": [
+        {
+          "id": "19e26ad0a17f4933",
+          "detector": "code-review",
+          "severity": "medium",
+          "confidence": 0.6,
+          "title": "Stored XSS from unescaped upload file names in the /uploads listing",
+          "file": "src/server.ts",
+          "startLine": 105,
+          "endLine": 109,
+          "isIntroducedByPullRequest": true,
+          "summary": "The /uploads listing in src/server.ts builds HTML by inserting uploaded file names directly into the markup without escaping. Because an uploader can control those names, a crafted file name containing HTML or script can execute in the browser of anyone who views the listing, which is a stored cross-site scripting (CWE-79) risk, rated medium.",
+          "remediation": "Escape each file name before interpolating it into the HTML, for example by encoding &, <, >, \" and ' characters, and apply the same escaping to the href value. Alternatively, render the listing with a templating engine that auto-escapes output, and serve the response with a restrictive Content-Security-Policy.",
+          "summarySource": "model",
+          "vulnerabilityType": "CWE-79",
+          "evidence": [
+            "          `<li><a href=\"/uploads/${uploadName}\">${uploadName}</a></li>`,"
+          ],
+          "sourceToSink": "Names of files stored by the upload route, which an uploader can influence, are read from the uploads directory and interpolated unescaped into an HTML response served as text/html.",
+          "promptVersion": "3",
+          "model": "anthropic/claude-sonnet-5-5"
+        }
+      ],
       "missedExpectations": [
         {
           "detector": "code-review",
@@ -1217,56 +1213,8 @@
         }
       ],
       "preExistingFindings": [],
-      "costUsd": 0.011727999999999999,
-      "durationMs": 3130
-    },
-    {
-      "caseId": "real-world-03-qs",
-      "category": "real-world",
-      "split": "test",
-      "status": "completed",
-      "truePositives": 0,
-      "falsePositives": 0,
-      "falseNegatives": 1,
-      "matchedPairs": [],
-      "unmatchedPredictions": [],
-      "missedExpectations": [
-        {
-          "detector": "code-review",
-          "advisoryId": "GHSA-gqgv-6jq5-jjj9",
-          "vulnerabilityType": "CWE-20",
-          "file": "lib/parse.js",
-          "startLine": 58,
-          "endLine": 116
-        }
-      ],
-      "preExistingFindings": [],
-      "costUsd": 0.030668,
-      "durationMs": 10698
-    },
-    {
-      "caseId": "real-world-06-express",
-      "category": "real-world",
-      "split": "test",
-      "status": "completed",
-      "truePositives": 0,
-      "falsePositives": 0,
-      "falseNegatives": 1,
-      "matchedPairs": [],
-      "unmatchedPredictions": [],
-      "missedExpectations": [
-        {
-          "detector": "code-review",
-          "advisoryId": "GHSA-qw6h-vgh9-j6wx",
-          "vulnerabilityType": "CWE-79",
-          "file": "lib/response.js",
-          "startLine": 972,
-          "endLine": 972
-        }
-      ],
-      "preExistingFindings": [],
-      "costUsd": 0.020819999999999998,
-      "durationMs": 4771
+      "costUsd": 0.018872,
+      "durationMs": 10541
     },
     {
       "caseId": "dependency-09-imported-through-subpath",
@@ -1284,15 +1232,15 @@
             "advisoryId": "GHSA-29mw-wpgm-hmr9"
           },
           "predictedFinding": {
-            "id": "477360f4470ca416",
+            "id": "a69bde101a1c654c",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "lodash@4.17.20 is affected by GHSA-29mw-wpgm-hmr9",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The lodash package at version 4.17.20 in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue. Certain inputs passed to the toNumber, trim and trimEnd functions can cause very slow regex processing, which can tie up CPU and stall the application. The package is a direct production dependency and is imported directly, so the vulnerable functions may be reachable from application code.",
-            "remediation": "Upgrade lodash to the fixed version 4.17.21 in the dependency manifest and bun.lock, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
+            "summary": "The lodash 4.17.20 package installed in bun.lock is affected by GHSA-29mw-wpgm-hmr9 (CVE-2020-28500), a Regular Expression Denial of Service issue in the toNumber, trim and trimEnd functions. Crafted long strings with many repeated whitespace characters can make these calls take a very long time, which can tie up CPU. The package is a direct production dependency and is imported directly, so the vulnerable code path is reachable.",
+            "remediation": "Upgrade lodash to version 4.17.21 in bun.lock and the package manifest, then reinstall dependencies and confirm that the lockfile resolves lodash to 4.17.21.",
             "summarySource": "model",
             "packageName": "lodash",
             "version": "4.17.20",
@@ -1313,7 +1261,7 @@
       "missedExpectations": [],
       "preExistingFindings": [
         {
-          "id": "750fb94df1640009",
+          "id": "ecc3348cca0152d4",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1337,7 +1285,7 @@
           "matcherAgreement": "both"
         },
         {
-          "id": "0efc42b86bf50113",
+          "id": "3a2eac58f301f7aa",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1361,8 +1309,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.008779200000000001,
-      "durationMs": 3615
+      "costUsd": 0.009426,
+      "durationMs": 1400
     },
     {
       "caseId": "dependency-10-bun-lock-only",
@@ -1380,15 +1328,15 @@
             "advisoryId": "GHSA-869p-cjfg-cm3x"
           },
           "predictedFinding": {
-            "id": "4988df57ece212b0",
+            "id": "4ad3bb2c71aea3a1",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
             "file": "bun.lock",
             "isIntroducedByPullRequest": true,
-            "summary": "The jws package at version 3.2.2 is affected by GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only matters when the application calls jws.createVerify() for HMAC algorithms and takes the HMAC secret from user-supplied header or payload data. This is a transitive production dependency pulled in through jsonwebtoken@9.0.2, and jsonwebtoken uses jws.verify(), which the advisory says is not affected.",
-            "remediation": "Upgrade jws to version 3.2.3 by updating the jsonwebtoken dependency chain or adding an override in bun.lock. Also confirm that your code does not call jws.createVerify() with HMAC secrets looked up from untrusted token data.",
+            "summary": "The jws package installed at 3.2.2 (pulled in transitively through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification issue. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS header or payload to look up the HMAC secret. The advisory states that applications using jws.verify() interfaces, including auth0/node-jsonwebtoken users, are not affected, and that applications using only asymmetric algorithms or not using such header or payload data in secret lookups are not affected. Impact depends on how this code path is used, so it should be checked against the application's verification code.",
+            "remediation": "Upgrade jws to version 3.2.3 in bun.lock, or to 4.0.1 if moving to the 4.x line. Then confirm the application does not call jws.createVerify() with HMAC algorithms while deriving the secret from user-supplied header or payload data.",
             "summarySource": "model",
             "packageName": "jws",
             "version": "3.2.2",
@@ -1409,7 +1357,7 @@
       "missedExpectations": [],
       "preExistingFindings": [
         {
-          "id": "afbf4e83d5d40eab",
+          "id": "741c8e54ad65d848",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1433,7 +1381,7 @@
           "matcherAgreement": "both"
         },
         {
-          "id": "e7bef7af5775624b",
+          "id": "d9aa96b1dea1b7b8",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1458,7 +1406,7 @@
         }
       ],
       "costUsd": 0,
-      "durationMs": 81
+      "durationMs": 61
     },
     {
       "caseId": "dependency-11-package-lock-only",
@@ -1476,15 +1424,15 @@
             "advisoryId": "GHSA-869p-cjfg-cm3x"
           },
           "predictedFinding": {
-            "id": "e995154dba75e657",
+            "id": "9d3cf45d9b068ee3",
             "detector": "dependency",
             "severity": "medium",
             "confidence": 0.5,
             "title": "jws@3.2.2 is affected by GHSA-869p-cjfg-cm3x",
             "file": "package-lock.json",
             "isIntroducedByPullRequest": true,
-            "summary": "The jws package at 3.2.2 has an improper HMAC signature verification flaw (GHSA-869p-cjfg-cm3x, CVE-2025-65945). It is pulled in transitively through jsonwebtoken@9.0.2, which is a production dependency. The advisory says the issue only applies when the application uses jws.createVerify() with HMAC algorithms and takes the HMAC secret from user-provided data in the protected header or payload. Applications that use jws.verify() (including jsonwebtoken users), only asymmetric algorithms, or do not derive secrets from user input are not affected.",
-            "remediation": "Upgrade the jws dependency to version 3.2.3 (or 4.0.1 if you are on the 4.x line) in package-lock.json. Then confirm that your code does not call jws.createVerify() with HMAC algorithms using secrets looked up from untrusted header or payload values; if it does, change that logic so the secret does not come from user-provided data.",
+            "summary": "The jws package at version 3.2.2 (pulled in as a transitive production dependency through jsonwebtoken@9.0.2) has advisory GHSA-869p-cjfg-cm3x (CVE-2025-65945), an improper HMAC signature verification flaw. It only applies when the application uses jws.createVerify() for HMAC algorithms and takes user-provided data from the JWS protected header or payload in its HMAC secret lookup. Applications that use jws.verify() (including jsonwebtoken users), use only asymmetric algorithms such as RS256, or do not use such user-provided data in secret lookups are not affected. Exposure therefore depends on how the application calls jws, so it should be checked rather than assumed.",
+            "remediation": "Upgrade the jws package to version 3.2.3 in package-lock.json, for example by updating jsonwebtoken so that it resolves jws 3.2.3 or later, and then confirm that no code calls jws.createVerify() with HMAC secrets derived from unvalidated header or payload data.",
             "summarySource": "model",
             "packageName": "jws",
             "version": "3.2.2",
@@ -1505,7 +1453,7 @@
       "missedExpectations": [],
       "preExistingFindings": [
         {
-          "id": "27a90351a7178f6c",
+          "id": "b6c6a6f0ff18ffd3",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1529,7 +1477,7 @@
           "matcherAgreement": "both"
         },
         {
-          "id": "c02a94b3a22e8de7",
+          "id": "6dfbc884c3c681e9",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1553,8 +1501,8 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.00033410000000000004,
-      "durationMs": 1955
+      "costUsd": 0,
+      "durationMs": 62
     },
     {
       "caseId": "dependency-12-bump-to-fixed-version",
@@ -1569,7 +1517,7 @@
       "missedExpectations": [],
       "preExistingFindings": [
         {
-          "id": "afbf4e83d5d40eab",
+          "id": "741c8e54ad65d848",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1593,7 +1541,7 @@
           "matcherAgreement": "both"
         },
         {
-          "id": "e7bef7af5775624b",
+          "id": "d9aa96b1dea1b7b8",
           "detector": "dependency",
           "severity": "medium",
           "confidence": 0.5,
@@ -1617,8 +1565,56 @@
           "matcherAgreement": "both"
         }
       ],
-      "costUsd": 0.00838,
-      "durationMs": 1932
+      "costUsd": 0.00935,
+      "durationMs": 1259
+    },
+    {
+      "caseId": "real-world-03-qs",
+      "category": "real-world",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-gqgv-6jq5-jjj9",
+          "vulnerabilityType": "CWE-20",
+          "file": "lib/parse.js",
+          "startLine": 58,
+          "endLine": 116
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.026328,
+      "durationMs": 6189
+    },
+    {
+      "caseId": "real-world-06-express",
+      "category": "real-world",
+      "split": "test",
+      "status": "completed",
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "matchedPairs": [],
+      "unmatchedPredictions": [],
+      "missedExpectations": [
+        {
+          "detector": "code-review",
+          "advisoryId": "GHSA-qw6h-vgh9-j6wx",
+          "vulnerabilityType": "CWE-79",
+          "file": "lib/response.js",
+          "startLine": 972,
+          "endLine": 972
+        }
+      ],
+      "preExistingFindings": [],
+      "costUsd": 0.02257,
+      "durationMs": 4907
     },
     {
       "caseId": "secrets-04-generic-high-entropy-token",
@@ -1645,8 +1641,8 @@
             "startLine": 4,
             "endLine": 4,
             "isIntroducedByPullRequest": true,
-            "summary": "A line added in src/metrics.ts at line 4 appears to assign a secret value directly in source code. Credentials committed to the repository can be copied by anyone with read access, including through history, and may let an attacker reach the service they unlock.",
-            "remediation": "Remove the hardcoded value from src/metrics.ts and load it from an environment variable or a secret manager instead. Rotate the credential, since it is now exposed in the repository history, and check the git history for other copies.",
+            "summary": "A hardcoded secret value was added to src/metrics.ts at line 4 and flagged by the generic-secret rule. Committing credentials in source code exposes them to anyone with repository access, including its history, and they can be reused against the service they protect.",
+            "remediation": "Remove the literal secret from src/metrics.ts line 4 and load it from an environment variable or a secrets manager instead. Rotate the exposed credential, since it remains in git history, and confirm the new value is not committed.",
             "summarySource": "model",
             "ruleId": "generic-secret",
             "fingerprint": "feff02663d60"
@@ -1656,8 +1652,8 @@
       "unmatchedPredictions": [],
       "missedExpectations": [],
       "preExistingFindings": [],
-      "costUsd": 0.0090278,
-      "durationMs": 3022
+      "costUsd": 0.009838,
+      "durationMs": 1007
     }
   ],
   "warnings": []
